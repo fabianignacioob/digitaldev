@@ -181,16 +181,15 @@
                         <div class="col-md-4 col-xs-12 my-2 text-center">
                             <img style="width: 40px;" src="img/logo_lg.png" alt="">
                             <a 
+                                target="_blank"
                                 style="cursor: pointer;"
-                                data-toggle="modal"
-                                data-target="#"
                                 data-description="Sitio web diseñado a la medida del cliente, basado en php 5.4 y diseñado con bootstrap 3 con el fin de mostrar todas las propiedades en venta y/o arriendo.
                                 Agregando filtros amigables para filtrar los items y así llegar rapidamente al objetivo de la busqueda, ademas se agrego un carrito de propiedades,
                                 el cual consta de agregar diferentes propiedades y así generar una orden de visita para ver en detalle cada propiedad seleccionada. Conto con un desarrollo de 4 meses,
                                 Realizando el analisis, Creando el Modelo de Datos y posterior al desarrollo las pruebas e integración en los servidores del cliente. Se integro también
                                 Google Analitycs que por medio de su plataforma se puede tener datos en tiempo real e informes historicos sohre las visitas y navegación de los usuarios."
                                 data-title="Sitio Web LG Propiedades"
-                                data-url="https://lgpropiedades.cl"
+                                href="https://lgpropiedades.cl"
                                 data-img="img/lgpropiedades.png">
                                 <h4>LG PROPIEDADES</h4>
                                 
@@ -199,14 +198,13 @@
                         <div class="col-md-4 col-xs-12 my-2 text-center">
                             <div style="font-size: 1.7em;">KASA</div>
                             <a 
+                                target="_blank"                            
                                 style="cursor: pointer;"
-                                data-toggle="modal"
-                                data-target="#"
                                 data-description="CMS Interno basado en Laravel 5 y conectado a una base de datos que gestiona todo el comportamiento interno del sitio web LG Propiedades.
                                 Se encarga de agregar datos para posicionamiento web, SEO, administración general de las propiedades, usuarios internos, etc.
                                 Este sistema se desarrollo de forma paralela al sitio web y conto con un tiempo de desarrollo de 5 meses."
                                 data-title="KASA LG Propiedades"
-                                data-url="https://admin.lgpropiedades.cl"
+                                href="https://admin.lgpropiedades.cl"
                                 data-img="img/cms.png">
                                 <h4>LG PROPIEDADES</h4>
                                 
@@ -215,42 +213,25 @@
                         <div class="col-md-4 col-xs-12 my-2 text-center">
                             <img style="width: 40px;" src="img/logolkf.png" alt="">
                             <a 
+                                target="_blank"
                                 style="cursor: pointer;"
-                                data-toggle="modal"
-                                data-target="#"
                                 data-description="Sitio Web estatico tipo landing page basado en Laravel 6 con el objetivo de mostrar y promocionar las diferentes modalidades
                                 y clases de KickBoxing."
                                 data-title="Sitio Web LKF"
-                                data-url="https://clublkf.com"
+                                href="https://clublkf.com"
                                 data-img="img/lgpropiedades.png">
                                 <h4>LOW KICK FIGHT</h4>
                                 
                             </a>
                         </div>
                         <div class="col-md-4 col-xs-12 my-2 text-center">
-                            <img style="width: 90px;" src="img/logoikonnex.png" alt="">
-                            <a 
-                                style="cursor: pointer;"
-                                data-toggle="modal"
-                                data-target="#"
-                                data-description="Sitio Web estatico tipo landing page basado en Laravel 6 con el objetivo de mostrar y promocionar las diferentes modalidades
-                                y clases de KickBoxing."
-                                data-title="Sistema 3E"
-                                data-url="https://ikonnex.com"
-                                data-img="img/lgpropiedades.png">
-                                <h4>Inmobiliaria Ikonnex</h4>
-                                
-                            </a>
-                        </div>
-                        <div class="col-md-4 col-xs-12 my-2 text-center">
                             <img style="width: 90px;" src="img/cmastv.png" alt="">
                             <a 
+                                target="_blank"
                                 style="cursor: pointer;"
-                                data-toggle="modal"
-                                data-target="#"
                                 data-description=""
                                 data-title="Sitio Web CMASTV"
-                                data-url="https://clublkf.com"
+                                href="https://clublkf.com"
                                 data-img="img/lgpropiedades.png">
                                 <h4>MEDIO DE COMUNICACIÓN CMASTV</h4>
                                 
@@ -259,12 +240,11 @@
                         <div class="col-md-4 col-xs-12 my-2 text-center">
                             <img style="width: 150px; background-color: #00607a; padding: 5px;" src="img/dccp.png" alt="">
                             <a 
+                                target="_blank"
                                 style="cursor: pointer;"
-                                data-toggle="modal"
-                                data-target="#"
                                 data-description=""
                                 data-title="Ad Manager Diario Concepción"
-                                data-url="https://diarioconcepcion.cl"
+                                href="https://diarioconcepcion.cl"
                                 data-img="img/lgpropiedades.png">
                                 <h4>DIARIO CONCEPCIÓN</h4>
                                 
@@ -273,12 +253,11 @@
                         <div class="col-md-4 col-xs-12 my-2 text-center">
                             <img style="width: 50px;" src="img/TVU.png" alt="">
                             <a 
+                                target="_blank"
                                 style="cursor: pointer;"
-                                data-toggle="modal"
-                                data-target="#"
                                 data-description=""
                                 data-title="Ad Manager Tvu"
-                                data-url="https://tvu.cl"
+                                href="https://tvu.cl"
                                 data-img="img/lgpropiedades.png">
                                 <h4>CANAL TVU</h4>
                                 
@@ -287,15 +266,39 @@
                         <div class="col-md-4 col-xs-12 my-2 text-center">
                             <img style="width: 160px;" src="img/ldcl.jpg" alt="">
                             <a 
+                                target="_blank"
                                 style="cursor: pointer;"
-                                data-toggle="modal"
-                                data-target="#"
                                 data-description=""
                                 data-title="Ad Manager La Discusión"
-                                data-url="https://ladiscusion.cl"
+                                href="https://ladiscusion.cl"
                                 data-img="img/lgpropiedades.png">
                                 <h4 style="margin-top: 40px;">DIARIO LA DISCUSIÓN</h4>
                                 
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-xs-12 text-center">
+                            <img style="width: 60px;" src="img/3e.png" alt="">
+                            <a 
+                                target="_blank"
+                                style="cursor: pointer;"
+                                data-description="Sitio Web estatico tipo landing page basado en Laravel 6 con el objetivo de mostrar y promocionar las diferentes modalidades
+                                y clases de KickBoxing."
+                                data-title="Sistema 3E"
+                                href="https://desarrollo.3e.cl"
+                                data-img="img/lgpropiedades.png">
+                                <h4>INMOBILIARIA IKONNEX</h4>                                
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-xs-12 text-center">
+                            <img style="width: 100px;" src="img/Logo_Inntek.gif" alt="">
+                            <a 
+                                target="_blank"
+                                style="cursor: pointer;"
+                                data-description=""
+                                data-title="Sistema 3E"
+                                href="https://inntek.digitaldev.cl"
+                                data-img="img/Logo_Inntek.gif">
+                                <h4>INNTEK</h4>                                
                             </a>
                         </div>
                     </div>
@@ -403,7 +406,7 @@
         <script src="js/common.js"></script>
         <script src="js/main.js"></script>
         <script src="https://kit.fontawesome.com/e0af1d2bbb.js" crossorigin="anonymous"></script>
-        <script src="https://unpkg.com/jquery-aniview/dist/jquery.aniview.js"></script>
+        <!--<script src="https://unpkg.com/jquery-aniview/dist/jquery.aniview.js"></script>-->
         <script>
             $('.aniview').AniView();
             $("#modalProyectos").on("show.bs.modal", function (t) {
@@ -420,7 +423,7 @@
                 var url = "resultado_contacto.php";
                 $.ajax({
                     type: "POST",
-                    url: url,
+                    url: url,   
                     dataType: "json",
                     data: datos,
                     success: function(data)

@@ -42,7 +42,7 @@
             $mail->Host = 'mail.digitaldev.cl';                           // Specify main and backup SMTP servers
             $mail->SMTPAuth = true;                                 // Enable SMTP authentication
             $mail->Username = 'contacto@digitaldev.cl';          // SMTP username
-            $mail->Password = 'Be}^,u]&_yop';                         // SMTP password
+            $mail->Password = '7H5E*BMX&Nh*';                         // SMTP password
             $mail->SMTPSecure = 'tls';                              // Enable TLS encryption, `ssl` also accepted
             $mail->Port = 587;                                      // TCP port to connect to
             $mail->CharSet = 'UTF-8';
