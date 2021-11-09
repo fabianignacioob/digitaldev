@@ -231,7 +231,7 @@
                                 style="cursor: pointer;"
                                 data-description=""
                                 data-title="Sitio Web CMASTV"
-                                href="https://clublkf.com"
+                                href="https://cmastv.cl"
                                 data-img="img/lgpropiedades.png">
                                 <h4>MEDIO DE COMUNICACIÓN CMASTV</h4>
                                 
