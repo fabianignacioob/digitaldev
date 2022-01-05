@@ -3,12 +3,13 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Fabián Olivas</title>
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css?v=1" rel="stylesheet">
         <link rel="stylesheet" href="css/owl.carousel.min.css">
         <link rel="stylesheet" href="css/owl.theme.default.min.css">
-        <link href="css/main.css" rel="stylesheet">
+        <link href="css/main.css?v=4" rel="stylesheet">
         <link rel="stylesheet" href="css/jquery.animatedheadline.css">
         <link rel="stylesheet" href="css/ionicons.min.css">
         <link rel="stylesheet" href="css/normalize.css">
@@ -18,16 +19,21 @@
         <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+        <style>
+        .videosList {
+            overflow: hidden;
+        }        
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+        
+    </style>
     </head>
     <body>
         <!-- Preloader -->
-        <div class="preloader-wrap">
+        <div class="preloader-wrap ">
             <div class="preloader">
-                <div class="lines">
-                    <div class="line line-1"></div>
-                    <div class="line line-2"></div>
-                    <div class="line line-3"></div>
-                </div>
+                <img class="img-fluid" src="img/DIGITALDEV_LOGO.gif" alt="">
             </div>
         </div>
     
@@ -61,10 +67,9 @@
                 </nav>
                 <div class="header-wrapper">
                     <div class="col-md-12 col-xs-12 text-center">                        
-                        <div class="selector">                            
-                            <h1 class="ah-headline">
-                            <span>I ' Am</span>
-                                <span class="ah-words-wrapper">
+                        <div class="selector text-center">                            
+                            <h1 class="ah-headline text-center">
+                            <span class="ah-words-wrapper text-center">
                                 <b class="is-visible">WEB DEVELOPER</b>
                                 <b>AD MANAGER</b>
                                 <b>WEB DESIGNER</b>
@@ -160,8 +165,8 @@
                             <i class="fa fa-headset" aria-hidden="true"></i>
                             <h4>SOPORTE</h4>
                             <p>
-                                Se entrega soporte general de 6 meses como mínimo desde que se realizo la integración. Con el fin de realizar un
-                                seguimiento y resolver insidencias dentro de producción.
+                                Se entrega soporte general desde que se realizo la integración. Con el fin de realizar un
+                                seguimiento y resolver insidencias dentro de producción por un tiempo determinado.
                             </p>
                         </div>
                     </div>
@@ -173,13 +178,12 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12 text-center">
-                            <h5 class="title">PROYECTOS Y ASESORIAS</h5>
+                            <h5 class="title">CLIENTES</h5>
                             <hr class="line">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 col-xs-12 my-2 text-center">
-                            <img style="width: 40px;" src="img/logo_lg.png" alt="">
+                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">                            
                             <a 
                                 target="_blank"
                                 style="cursor: pointer;"
@@ -191,12 +195,10 @@
                                 data-title="Sitio Web LG Propiedades"
                                 href="https://lgpropiedades.cl"
                                 data-img="img/lgpropiedades.png">
-                                <h4>LG PROPIEDADES</h4>
-                                
+                                <img style="width: 40px;" src="img/logo_lg.png" alt="">                                
                             </a>
                         </div>
-                        <div class="col-md-4 col-xs-12 my-2 text-center">
-                            <div style="font-size: 1.7em;">KASA</div>
+                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">
                             <a 
                                 target="_blank"                            
                                 style="cursor: pointer;"
@@ -206,12 +208,10 @@
                                 data-title="KASA LG Propiedades"
                                 href="https://admin.lgpropiedades.cl"
                                 data-img="img/cms.png">
-                                <h4>LG PROPIEDADES</h4>
-                                
+                                <div style="font-size: 1.7em;">KASA</div>                            
                             </a>
                         </div>
-                        <div class="col-md-4 col-xs-12 my-2 text-center">
-                            <img style="width: 40px;" src="img/logolkf.png" alt="">
+                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">
                             <a 
                                 target="_blank"
                                 style="cursor: pointer;"
@@ -220,12 +220,10 @@
                                 data-title="Sitio Web LKF"
                                 href="https://clublkf.com"
                                 data-img="img/lgpropiedades.png">
-                                <h4>LOW KICK FIGHT</h4>
-                                
+                                <img style="width: 40px;" src="img/logolkf.png" alt="">
                             </a>
                         </div>
-                        <div class="col-md-4 col-xs-12 my-2 text-center">
-                            <img style="width: 90px;" src="img/cmastv.png" alt="">
+                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">
                             <a 
                                 target="_blank"
                                 style="cursor: pointer;"
@@ -233,12 +231,21 @@
                                 data-title="Sitio Web CMASTV"
                                 href="https://cmastv.cl"
                                 data-img="img/lgpropiedades.png">
-                                <h4>MEDIO DE COMUNICACIÓN CMASTV</h4>
-                                
+                                <img style="width: 90px;" src="img/cmastv.png" alt="">                                
                             </a>
                         </div>
-                        <div class="col-md-4 col-xs-12 my-2 text-center">
-                            <img style="width: 150px; background-color: #00607a; padding: 5px;" src="img/dccp.png" alt="">
+                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">
+                            <a 
+                                target="_blank"
+                                style="cursor: pointer;"
+                                data-description=""
+                                data-title="Sitio Web CMASTV"
+                                href="https://cmas.cl"
+                                data-img="img/lgpropiedades.png">
+                                <img style="width: 90px;" src="img/cmas.png" alt="">                                
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">
                             <a 
                                 target="_blank"
                                 style="cursor: pointer;"
@@ -246,12 +253,10 @@
                                 data-title="Ad Manager Diario Concepción"
                                 href="https://diarioconcepcion.cl"
                                 data-img="img/lgpropiedades.png">
-                                <h4>DIARIO CONCEPCIÓN</h4>
-                                
+                                <img style="width: 150px; background-color: #00607a; padding: 5px;" src="img/dccp.png" alt="">                                
                             </a>
                         </div>
-                        <div class="col-md-4 col-xs-12 my-2 text-center">
-                            <img style="width: 50px;" src="img/TVU.png" alt="">
+                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">
                             <a 
                                 target="_blank"
                                 style="cursor: pointer;"
@@ -259,12 +264,10 @@
                                 data-title="Ad Manager Tvu"
                                 href="https://tvu.cl"
                                 data-img="img/lgpropiedades.png">
-                                <h4>CANAL TVU</h4>
-                                
+                                <img style="width: 50px;" src="img/tvu.png" alt="">                                
                             </a>
                         </div>
-                        <div class="col-md-4 col-xs-12 my-2 text-center">
-                            <img style="width: 160px;" src="img/ldcl.jpg" alt="">
+                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">
                             <a 
                                 target="_blank"
                                 style="cursor: pointer;"
@@ -272,12 +275,10 @@
                                 data-title="Ad Manager La Discusión"
                                 href="https://ladiscusion.cl"
                                 data-img="img/lgpropiedades.png">
-                                <h4 style="margin-top: 40px;">DIARIO LA DISCUSIÓN</h4>
-                                
+                                <img style="width: 160px;" src="img/ldcl.jpg" alt="">                                
                             </a>
                         </div>
-                        <div class="col-md-4 col-xs-12 text-center">
-                            <img style="width: 60px;" src="img/3e.png" alt="">
+                        <div class="col-md-4 col-xs-12 text-center my-5">
                             <a 
                                 target="_blank"
                                 style="cursor: pointer;"
@@ -286,11 +287,10 @@
                                 data-title="Sistema 3E"
                                 href="https://desarrollo.3e.cl"
                                 data-img="img/lgpropiedades.png">
-                                <h4>INMOBILIARIA IKONNEX</h4>                                
+                                <img style="width: 60px;" src="img/3e.png" alt="">
                             </a>
                         </div>
-                        <div class="col-md-4 col-xs-12 text-center">
-                            <img style="width: 100px;" src="img/Logo_Inntek.gif" alt="">
+                        <div class="col-md-4 col-xs-12 text-center my-5">
                             <a 
                                 target="_blank"
                                 style="cursor: pointer;"
@@ -298,7 +298,7 @@
                                 data-title="Sistema 3E"
                                 href="https://inntek.digitaldev.cl"
                                 data-img="img/Logo_Inntek.gif">
-                                <h4>INNTEK</h4>                                
+                                <img style="width: 120px;" src="img/Logo_Inntek.gif" alt="">
                             </a>
                         </div>
                     </div>
@@ -404,7 +404,7 @@
         <script src="js/particles.js"></script>
         <script src="js/swiper.min.js"></script>
         <script src="js/common.js"></script>
-        <script src="js/main.js"></script>
+        <script src="js/main.js?v=5"></script>
         <script src="https://kit.fontawesome.com/e0af1d2bbb.js" crossorigin="anonymous"></script>
         <!--<script src="https://unpkg.com/jquery-aniview/dist/jquery.aniview.js"></script>-->
         <script>
