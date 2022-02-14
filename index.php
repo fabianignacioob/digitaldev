@@ -30,12 +30,17 @@
     </style>
     </head>
     <body>
-        <!-- Preloader -->
-        <div class="preloader-wrap ">
+        <!-- Preloader 
+    <div class="preloader-wrap ">
             <div class="preloader">
-                <img class="img-fluid" src="img/DIGITALDEV_LOGO.gif" alt="">
+                <!--<img class="img-fluid" src="img/DIGITALDEV_LOGO.gif" alt="">
+                <video autoplay muted loop preload="auto">
+                    <source src="img/DIGITALDEV_LOGO.mp4" type="video/mp4">
+                </video>
             </div>
         </div>
+    -->
+        
     
         <!-- Header Section --> 
         <div class="header" id="header">
@@ -194,7 +199,7 @@
                                 Google Analitycs que por medio de su plataforma se puede tener datos en tiempo real e informes historicos sohre las visitas y navegación de los usuarios."
                                 data-title="Sitio Web LG Propiedades"
                                 href="https://lgpropiedades.cl"
-                                data-img="img/lgpropiedades.png">
+                                data-img="img/logo_lg.png">
                                 <img style="width: 40px;" src="img/logo_lg.png" alt="">                                
                             </a>
                         </div>
@@ -219,7 +224,7 @@
                                 y clases de KickBoxing."
                                 data-title="Sitio Web LKF"
                                 href="https://clublkf.com"
-                                data-img="img/lgpropiedades.png">
+                                data-img="img/logolkf.png">
                                 <img style="width: 40px;" src="img/logolkf.png" alt="">
                             </a>
                         </div>
@@ -230,7 +235,7 @@
                                 data-description=""
                                 data-title="Sitio Web CMASTV"
                                 href="https://cmastv.cl"
-                                data-img="img/lgpropiedades.png">
+                                data-img="img/cmastv.png">
                                 <img style="width: 90px;" src="img/cmastv.png" alt="">                                
                             </a>
                         </div>
@@ -239,10 +244,21 @@
                                 target="_blank"
                                 style="cursor: pointer;"
                                 data-description=""
-                                data-title="Sitio Web CMASTV"
+                                data-title="Sitio Web CMAS"
                                 href="https://cmas.cl"
-                                data-img="img/lgpropiedades.png">
+                                data-img="img/cmas.png">
                                 <img style="width: 90px;" src="img/cmas.png" alt="">                                
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">
+                            <a 
+                                target="_blank"
+                                style="cursor: pointer;"
+                                data-description=""
+                                data-title="Sitio Web CMAS COMUNICACIONES"
+                                href="https://cmascomunicaciones.cl"
+                                data-img="img/cmas_comunicaciones.png">
+                                <img style="width: 90px;" src="img/cmas_comunicaciones.png" alt="">                                
                             </a>
                         </div>
                         <div class="col-md-4 col-xs-12 my-2 text-center my-5">
@@ -252,7 +268,7 @@
                                 data-description=""
                                 data-title="Ad Manager Diario Concepción"
                                 href="https://diarioconcepcion.cl"
-                                data-img="img/lgpropiedades.png">
+                                data-img="img/dccp.png">
                                 <img style="width: 150px; background-color: #00607a; padding: 5px;" src="img/dccp.png" alt="">                                
                             </a>
                         </div>
@@ -263,7 +279,7 @@
                                 data-description=""
                                 data-title="Ad Manager Tvu"
                                 href="https://tvu.cl"
-                                data-img="img/lgpropiedades.png">
+                                data-img="img/tvu.png">
                                 <img style="width: 50px;" src="img/tvu.png" alt="">                                
                             </a>
                         </div>
@@ -274,7 +290,7 @@
                                 data-description=""
                                 data-title="Ad Manager La Discusión"
                                 href="https://ladiscusion.cl"
-                                data-img="img/lgpropiedades.png">
+                                data-img="img/ldcl.jpg">
                                 <img style="width: 160px;" src="img/ldcl.jpg" alt="">                                
                             </a>
                         </div>
@@ -286,7 +302,7 @@
                                 y clases de KickBoxing."
                                 data-title="Sistema 3E"
                                 href="https://desarrollo.3e.cl"
-                                data-img="img/lgpropiedades.png">
+                                data-img="img/3e.png">
                                 <img style="width: 60px;" src="img/3e.png" alt="">
                             </a>
                         </div>
@@ -295,10 +311,21 @@
                                 target="_blank"
                                 style="cursor: pointer;"
                                 data-description=""
-                                data-title="Sistema 3E"
+                                data-title="Inntek"
                                 href="https://inntek.digitaldev.cl"
                                 data-img="img/Logo_Inntek.gif">
                                 <img style="width: 120px;" src="img/Logo_Inntek.gif" alt="">
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-xs-12 text-center my-5">
+                            <a 
+                                target="_blank"
+                                style="cursor: pointer;"
+                                data-description=""
+                                data-title="Service Office"
+                                href="https://serviceoffice.cl"
+                                data-img="img/logo-so.png">
+                                <img style="width: 120px;" src="img/logo-so.png" alt="">
                             </a>
                         </div>
                     </div>
