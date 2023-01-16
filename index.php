@@ -205,19 +205,6 @@
                         </div>
                         <div class="col-md-4 col-xs-12 my-2 text-center my-5">
                             <a 
-                                target="_blank"                            
-                                style="cursor: pointer;"
-                                data-description="CMS Interno basado en Laravel 5 y conectado a una base de datos que gestiona todo el comportamiento interno del sitio web LG Propiedades.
-                                Se encarga de agregar datos para posicionamiento web, SEO, administración general de las propiedades, usuarios internos, etc.
-                                Este sistema se desarrollo de forma paralela al sitio web y conto con un tiempo de desarrollo de 5 meses."
-                                data-title="KASA LG Propiedades"
-                                href="https://admin.lgpropiedades.cl"
-                                data-img="img/cms.png">
-                                <div style="font-size: 1.7em;">KASA</div>                            
-                            </a>
-                        </div>
-                        <div class="col-md-4 col-xs-12 my-2 text-center my-5">
-                            <a 
                                 target="_blank"
                                 style="cursor: pointer;"
                                 data-description="Sitio Web estatico tipo landing page basado en Laravel 6 con el objetivo de mostrar y promocionar las diferentes modalidades
@@ -328,6 +315,17 @@
                                 <img style="width: 120px;" src="img/logo-so.png" alt="">
                             </a>
                         </div>
+                        <div class="col-md-4 col-xs-12 text-center">
+                            <a 
+                                target="_blank"
+                                style="cursor: pointer;"
+                                data-description=""
+                                data-title="Service Office"
+                                href="https://andresmarchant.cl"
+                                data-img="img/logo-am.png">
+                                <img style="width: 180px;" src="img/logo-am.png" alt="">
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -346,7 +344,7 @@
                                 <i class="fa fa-phone-square" aria-hidden="true"></i>
                                 <h4>Teléfono:</h4>
                                 <a href="#">
-                                    <p>9 82058987</p>
+                                    <p>9 32239292</p>
                                 </a>
                                 </div>
                                 <div class="contact-wrap">
