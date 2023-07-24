@@ -61,7 +61,10 @@
                                     <a class="nav-link" href="#about">SOBRE MI</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#work">PROYECTOS</a>
+                                    <a class="nav-link" href="#services">SERVICIOS</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#work">CLIENTES</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#contact">CONTACTAME</a>
