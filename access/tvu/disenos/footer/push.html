@@ -1,0 +1,82 @@
+
+
+<script>
+    if (window.addEventListener) {
+      window.addEventListener('load', function () {
+        var target_origin = 'https://www.diarioconcepcion.cl';
+        function closePos() {
+            parent.postMessage({ 'task': 'close-footer', 'bannerid': 'ads-push' }, target_origin);      
+        }        
+       
+      }, false);
+    }
+    </script>
+
+<style> 
+#contenedor {display:block;overflow:hiddent;min-width:970px;min-height:90px;} 
+#click {display:block; position:absolute; top:0px; height:250px; width:970px;z-index:1000;}
+#bannerss {display:block; bottom:0px; height:90px; width:970px;}
+#expandidoss {position:absolute; right:0; top:0; width:970px;height:250px; z-index:80; display:none;
+    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 2s; /* Firefox < 16 */
+        -ms-animation: fadein 2s; /* Internet Explorer */
+         -o-animation: fadein 2s; /* Opera < 12.1 */
+            animation: fadein 2s;
+} 
+@keyframes fadein { 
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+} 
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */ 
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; } 
+}
+</style>
+
+
+
+<script type="text/javascript">    
+var myVar3;
+var myVar4;
+var target_origin = 'https://www.diarioconcepcion.cl/';
+function myFunctionss() {
+	myVar4 = document.getElementById('expandidoss').style.display = 'block';
+	document.getElementById('bannerss').style.display = 'none';
+    parent.postMessage({ 'task': 'grow-iframe', 'bannerid': 'ads-push' }, target_origin);
+}
+function myStopFunctionss() {
+    clearTimeout(myVar3);
+	document.getElementById('expandidoss').style.display = 'none';
+	document.getElementById('bannerss').style.display = 'block';
+    parent.postMessage({ 'task': 'shrink-iframe', 'bannerid': 'ads-push' }, target_origin);
+}
+</script>
+
+
+<div id="contenedor">
+    <div id="expandidoss" onMouseOut="myStopFunctionss();">
+        <a id="click" href="%%CLICK_URL_ESC%%%%DEST_URL%%" target="parent"> 
+            <img  width="970" height="250" src="dos.jpg">
+        </a>
+    </div>
+    <div id="bannerss">
+        <a style="display:block; cursor: pointer; bottom:0px; height:90px; width:970px;" onMouseOver="myFunctionss();"  href="%%CLICK_URL_ESC%%%%DEST_URL%%">
+        <img  width="970" height="90" src="uno.jpg">
+        </a>
+    </div>
+</div>
+
+

@@ -1,0 +1,210 @@
+<script>
+  if (window.addEventListener) {
+    window.addEventListener('load', function () {
+      var btn = document.getElementById('close');     
+      var target_origin = 'https://www.diarioconcepcion.cl/';
+      function closePos() {
+          parent.postMessage({ 'task': 'close-footer', 'bannerid': 'ads-footerexpan'}, target_origin);      
+      }     
+      btn.onclick = function(e){
+        closePos();
+        var ev = e || window.event;
+        ev.preventDefault();
+      }   
+    }, false);
+  }
+</script>
+
+
+
+ 
+<style>         
+  @media screen and (min-width: 1562px) {
+    #infooter {
+      display:block; 
+      position:fixed; 
+      bottom:0px; 
+      height:auto; 
+      width:100%;
+      max-width:1920px;
+      max-height:80px;
+      text-align:center;
+      z-index:100;
+    }    
+  }
+
+  @media screen and (max-width: 1560px) {   
+    #infooter {
+      display:block; 
+      position:fixed; 
+      bottom:5px; 
+      height:auto; 
+      width:100%;
+      max-width:
+      1920px;
+      max-height:
+      56px;
+      text-align:center;
+      z-index:100;
+    }    
+  }                                            
+  
+  .img-bg {
+    display:block; 
+    height:auto; 
+    width:100%;
+    text-align:center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover; 
+    background-size: cover;
+    position:absolute; 
+  }
+  #itt { 
+    position:fixed; 
+    left:0; 
+    top:0; 
+    width:100%;
+    height:100%; 
+    z-index:2147483647;
+    background:url("dos.jpg") center center fixed;  
+    display:none;    
+    background-size: 100% 100%;  
+    -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */          
+    -moz-animation: fadein 1s; /* Firefox < 16 */
+    -ms-animation: fadein 1s; /* Internet Explorer */  
+    -o-animation: fadein 1s; /* Opera < 12.1 */  
+    animation: fadein 1s;  
+  }
+         
+  @keyframes fadein {
+      from { opacity: 0; }  
+      to   { opacity: 1; }  
+  }
+         
+  /* Firefox < 16 */
+  @-moz-keyframes fadein {    
+      from { opacity: 0; }
+      to   { opacity: 1; }    
+  }
+         
+  /* Safari, Chrome and Opera > 12.1 */
+  @-webkit-keyframes fadein {
+      from { opacity: 0; }
+      to   { opacity: 1; }  
+  }
+         
+  /* Internet Explorer */  
+  @-ms-keyframes fadein {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+  }
+  
+  .banner {display:block; width:980px;height:80px; margin:0 auto;}
+  #contar {display:none; width:70px; height:70px; margin:0 auto; bottom:10px; left: 50%; position:absolute;z-index:10; }
+  #cerrar {display:block;float: right ; height: 50px;  width: 50px;z-index:2;margin:0 auto;}
+  #cerrar a {display:block; height: 50px;  width: 50px;background:url(https://tpc.googlesyndication.com/pagead/imgad?id=CICAgKDbj-vAYxABGAEoATIIBo-iazYahexAm_vg4wU) top ;}  
+  #cerrar a:hover {background:url(https://tpc.googlesyndication.com/pagead/imgad?id=CICAgKDbj-vAYxABGAEoATIIBo-iazYahexAm_vg4wU) bottom ;}
+         
+  #cerrar-in {cursor:pointer;display:block;float:right; height:49px; margin:6px; width:49px;position:relative;z-index:10px;top: -150%;;}
+  #cerrar-in a {display:block; height: 50px;  width: 50px;background:url(https://tpc.googlesyndication.com/pagead/imgad?id=CICAgKDbj-vAYxABGAEoATIIBo-iazYahexAm_vg4wU) top ;}
+  #cerrar-in a:hover {background:url(https://tpc.googlesyndication.com/pagead/imgad?id=CICAgKDbj-vAYxABGAEoATIIBo-iazYahexAm_vg4wU) bottom ;}
+         
+  #video  {
+    background: #000 none repeat scroll 0 0;
+    height: 230px;
+    margin: -30px 300px;
+    padding: 39px -9px 49px 11px;
+    width: 30%;z-index:1;
+  }
+  
+  .link-bg {width:100%; height:100%;display:block;z-index:-1;position:absolute;}
+         
+  .video-responsive iframe, a,
+  .video-responsive object,
+  .video-responsive embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+<script type="text/javascript">    
+  var myVar3;
+  var myVar4;
+  var target_origin = 'https://www.diarioconcepcion.cl/';
+  function myFunctionss() {
+    myVar4 = document.getElementById('expandidoss').style.display = 'block';
+    document.getElementById('bannerss').style.display = 'none';
+      parent.postMessage({ 'task': 'grow-iframe', 'bannerid': 'footer-desk' }, target_origin);
+  }
+  function myStopFunctionss() {
+      clearTimeout(myVar3);
+    document.getElementById('expandidoss').style.display = 'none';
+    document.getElementById('bannerss').style.display = 'block';
+      parent.postMessage({ 'task': 'shrink-iframe', 'bannerid': 'footer-desk' }, target_origin);
+  }
+</script>
+         
+  <div id="itt">
+    <a class="link-bg" href="%%CLICK_URL_ESC%%http://google.cl" target="_blank"></a>
+    <div style="width:1px;height:44.5%;"></div>
+    <!--<div id="video">
+        <a href="%%CLICK_URL_ESC%%%%DEST_URL%%" target="_blank"><div style="width:100%;height:100%;position:absolute;"></div></a>
+      <iframe class="video-responsive" style="width:100%;height:100%;" src="https://rudo.video/vod/bHSDuz/start/true/volume/0"
+    allowscriptaccess="always" allowfullscreen="true" webkitallowfullscreen="true" frameborder="0" scrolling="no"></iframe>
+    </div>-->
+    <div id="cerrar">
+      <a  href="#" style="cursor: pointer;text-align:right;display:block;z-index:2;" onclick="ocultar()"></a>
+    </div>         
+  </div>
+  
+  <div id="infooter">         
+    <img class="img-bg" src="uno.jpg">
+    <div id="cerrar-in"><a id="close"></a></div>
+    <img id="contar" src="https://tpc.googlesyndication.com/pagead/imgad?id=CICAgKDbj-vFlAEQARgBKAEyCLtH1SsS3dWdQJv74OMF">
+    <a style="display:block; cursor: pointer; bottom:0px; height:80px; width:96%;position: absolute;" onMouseOut="myStopFunction();" onMouseOver="myFunction();"></a>
+  </div>
+  
+  <img src="[%PIXELTRACKINGURL%]" width="1" height="1" style="width:1px;height:1px;">
+         
+<script type="text/javascript">
+  (function() {
+    var useSSL = 'https:' == document.location.protocol;
+    var src = (useSSL ? 'https:' : 'http:') +
+        '//www.googletagservices.com/tag/js/gpt.js';
+    document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+  })();         
+             
+  var i = 0;
+  var myVar;
+  var myVar2;
+  var myVar3;
+  var target_origin = 'https://www.diarioconcepcion.cl/';         
+         
+  function myFunction() {
+    //document.getElementById('footer-desk').style.minHeight = '100%';
+    myVar = document.getElementById('contar').style.display = 'block';
+    myVar2 = setTimeout(function(){
+      document.getElementById('itt').style.display = 'block';
+      //toggleVideo('show');
+      parent.postMessage({ 'task': 'grow-iframe', 'bannerid': 'footer-desk' }, target_origin);      
+    }, 1200);          
+  }            
+  function myStopFunction() {
+      clearInterval();
+      clearTimeout(myVar2);
+      document.getElementById('contar').style.display = 'none';
+  }
+  function ocultar(){
+    document.getElementById('itt').style.display = 'none';    
+    parent.postMessage({ 'task': 'shrink-iframe', 'bannerid': 'footer-desk' }, target_origin);      
+  }
+  function ocultarin(){
+    document.getElementById('infooter').style.display = 'none';
+  }
+  function stoper() {
+    clearTimeout(mostrar);
+  } 
+</script>
