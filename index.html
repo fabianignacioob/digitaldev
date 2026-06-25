@@ -607,6 +607,15 @@
             padding: 18px 0 8px;
         }
 
+        .collab-title {
+            margin: 52px 0 0;
+            color: var(--ink);
+            font-size: clamp(24px, 3vw, 36px);
+            font-weight: 800;
+            line-height: 1.1;
+            text-align: center;
+        }
+
         .client-logo {
             display: flex;
             width: clamp(116px, 13vw, 156px);
@@ -720,6 +729,17 @@
         .client-logo:nth-child(12) {
             transform: translateY(18px) rotate(1.5deg);
             animation-delay: -6.2s;
+        }
+
+        .client-logo-wide {
+            width: clamp(190px, 24vw, 300px);
+            transform: translateY(-8px) rotate(-1deg);
+            animation-delay: -2.8s;
+        }
+
+        .client-logo-wide img {
+            max-width: 100%;
+            max-height: 76px;
         }
 
         @keyframes floatLogo {
@@ -1200,6 +1220,7 @@
                         </article>
                     </div>
                     <br><br>
+                    <h2 class="collab-title reveal">Algunas Colaboraciones</h2>
                     <div class="client-strip reveal" aria-label="Clientes y proyectos">
                         <div class="client-logo"><img src="img/client-am.png" alt="AM"></div>
                         <div class="client-logo"><img src="img/client-ikonnex.png" alt="Ikonnex Grupo Inmobiliario"></div>
@@ -1213,6 +1234,7 @@
                         <div class="client-logo"><img src="img/tvu.png" alt="TVU"></div>
                         <div class="client-logo"><img src="img/innwork.jpeg" alt="Innwork"></div>
                         <div class="client-logo"><img src="img/Logo_Inntek.gif" alt="Inntek"></div>
+                        <div class="client-logo client-logo-wide"><img src="img/client-autismo-conecta.png" alt="Autismo Conecta"></div>
                     </div>
                 </div>
             </section>
