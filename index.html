@@ -1241,12 +1241,14 @@
         <footer>
             <div class="container footer-wrap">
                 <!-- <img src="img/marca-dv-color2.png" alt="Digital Dev"> -->
-                <p>&copy; <?php echo date('Y') ?> Fabián Ignacio. Desarrollo web, sistemas e IA aplicada.</p>
+                <p>&copy; <span id="currentYear">2026</span> Fabián Ignacio. Desarrollo web, sistemas e IA aplicada.</p>
             </div>
         </footer>
     </div>
 
     <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
         const revealItems = document.querySelectorAll('.reveal');
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
