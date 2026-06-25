@@ -1,614 +1,1283 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XHNLYQS1HF"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'G-XHNLYQS1HF');
-    </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6282125682834865" crossorigin="anonymous"></script>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Digital Dev</title>
+    <meta name="description" content="Portafolio de Fabián Olivas, desarrollador web especializado en sitios, sistemas, integraciones y automatizaciones con IA.">
+    <title>Fabián Olivas | Digital Dev</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="css/owl.theme.default.min.css">
-    <link href="css/main.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/jquery.animatedheadline.css">
-    <link rel="stylesheet" href="css/ionicons.min.css">
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/magnific-popup.css">
-    <link rel="stylesheet" href="css/swiper.min.css">
-    <link rel="stylesheet" href="css/animate.css">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --text-size: 45px;
-            --gap: 14px;
-            --wordDuration: 1s;
+            --bg: #fbfaf7;
+            --surface: #ffffff;
+            --ink: #17202a;
+            --muted: #65717c;
+            --line: #e7e0d8;
+            --brand-blue: #4fa8c8;
+            --brand-blue-dark: #2478a8;
+            --accent: #4fa8c8;
+            --accent-2: #21a38f;
+            --peach: #fff1e7;
+            --mint: #eafff7;
+            --sky: #edf7ff;
+            --lavender: #f3f0ff;
+            --butter: #fff9dc;
+            --shadow: 0 18px 44px rgba(42, 54, 71, .09);
         }
 
-        /* body {
-            min-height: 100vh;
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background:
+                linear-gradient(135deg, #fbfaf7 0%, #f1fbff 36%, #fff8ec 70%, #f8fff9 100%);
+            color: var(--ink);
+            font-family: "Inter", Arial, sans-serif;
+            letter-spacing: 0;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .site-shell {
+            overflow: visible;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 252, 248, .9);
+            border-bottom: 1px solid rgba(231, 224, 216, .8);
+            box-shadow: 0 10px 28px rgba(50, 55, 64, .06);
+            backdrop-filter: blur(18px);
+        }
+
+        .nav-wrap {
             display: flex;
+            min-height: 76px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+        }
+
+        .brand img {
+            width: 86px;
+            height: auto;
+            max-height: 34px;
+            object-fit: contain;
+        }
+
+        .brand span {
+            display: block;
+            color: var(--accent-2);
+            font-size: 20px;
+            font-weight: 600;
+            /* text-transform: uppercase; */
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .nav-links a {
+            display: inline-flex;
+            padding: 10px 12px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 999px;
+            transition: background .22s ease, color .22s ease, transform .22s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.is-active {
+            background: var(--sky);
+            color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .btn-main,
+        .btn-ghost {
+            display: inline-flex;
+            min-height: 46px;
             align-items: center;
             justify-content: center;
-            margin: 0;
-            font-family: Inter, system-ui;
-        } */
+            padding: 0 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 800;
+            transition: transform .22s ease, box-shadow .22s ease, background .22s ease;
+        }
+
+        .btn-main {
+            border: 0;
+            background: linear-gradient(135deg, var(--brand-blue), var(--brand-blue-dark) 52%, var(--accent-2));
+            color: #fff;
+            box-shadow: 0 14px 28px rgba(79, 168, 200, .28);
+        }
+
+        .btn-ghost {
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--ink);
+        }
+
+        .btn-main:hover,
+        .btn-ghost:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
 
         .hero {
-            display: flex;
+            min-height: calc(100vh - 76px);
+            display: grid;
             align-items: center;
-            gap: var(--gap);
-            font-weight: 400;
-            font-size: var(--text-size);
-            color: white;
-            letter-spacing: 2px;
+            padding: 56px 0 56px;
+            background:
+                linear-gradient(120deg, rgba(237, 247, 255, .84), rgba(255, 241, 231, .78) 48%, rgba(234, 255, 247, .8));
         }
 
-        .fixed {
-            letter-spacing: 2px;
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+            letter-spacing: 0;
         }
 
-        .rotator {
+        .hero-showcase {
             position: relative;
-            width: 100%;
-            height: calc(var(--text-size)*1.15);
+            min-height: clamp(410px, 58vw, 590px);
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .76);
+            border-radius: 18px;
+            box-shadow: 0 28px 80px rgba(56, 80, 99, .16);
+            isolation: isolate;
         }
 
-        .rotator b p {
+        .hero-progress {
+            position: relative;
+            height: 6px;
+            margin: 16px auto 0;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(79, 168, 200, .16);
+        }
+
+        .hero-progress::before {
+            content: "";
             position: absolute;
-            left: 0;
-            top: 0;
+            inset: 0;
             width: 100%;
-            opacity: 0;
-            transform: translateY(18px);
-            white-space: nowrap;
-            color: white;
-            font-size: 35px;
-            margin: 0.5em 0;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--brand-blue), var(--brand-blue-dark), var(--accent-2));
+            transform: scaleX(0);
+            transform-origin: left center;
+            animation: heroProgress 5s linear infinite;
         }
 
-        @keyframes wAnim {
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: end;
+            padding: clamp(28px, 5vw, 58px);
+            opacity: 0;
+            transform: scale(1.02);
+            animation: heroCarousel 10s infinite;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .hero-slide::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(12, 38, 50, .74), rgba(79, 168, 200, .32) 55%, rgba(255, 255, 255, .08)),
+                linear-gradient(0deg, rgba(12, 38, 50, .46), transparent 55%);
+            z-index: -1;
+        }
+
+        .hero-slide:first-child {
+            background-image: url('img/fondo5.jpg');
+        }
+
+        .hero-slide:nth-child(2) {
+            animation-delay: 5s;
+            background-image: url('img/fondo6.jpg');
+        }
+
+        @keyframes heroCarousel {
             0% {
                 opacity: 0;
-                transform: translateY(18px)
+                transform: scale(1.03);
             }
 
-            8% {
+            8%,
+            46% {
                 opacity: 1;
-                transform: translateY(0)
+                transform: scale(1);
             }
 
-            30% {
-                opacity: 1
-            }
-
-            38% {
+            54%,
+            100% {
                 opacity: 0;
-                transform: translateY(-18px)
+                transform: scale(1.025);
+            }
+        }
+
+        @keyframes heroProgress {
+            0% {
+                transform: scaleX(0);
             }
 
             100% {
-                opacity: 0
+                transform: scaleX(1);
+            }
+        }
+
+        .hero-content {
+            max-width: 820px;
+            color: #fff;
+        }
+
+        .hero-kicker {
+            display: inline-flex;
+            margin-bottom: 16px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, .38);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .16);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 800;
+            backdrop-filter: blur(12px);
+        }
+
+        .hero-title {
+            max-width: 760px;
+            font-size: clamp(30px, 4.3vw, 50px);
+            line-height: 1.06;
+            font-weight: 800;
+        }
+
+        .hero-lead {
+            max-width: 680px;
+            margin-top: 18px;
+            color: rgba(255, 255, 255, .88);
+            font-size: clamp(16px, 2vw, 19px);
+            line-height: 1.65;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .offer-strip {
+            display: block;
+            max-width: 860px;
+            margin: 48px auto 0;
+            text-align: center;
+        }
+
+        .about-intro {
+            padding: 0 clamp(4px, 3vw, 36px);
+        }
+
+        .about-intro strong {
+            display: block;
+            color: var(--ink);
+            font-size: clamp(24px, 3vw, 34px);
+            line-height: 1.1;
+        }
+
+        .about-intro span {
+            display: block;
+            max-width: 760px;
+            margin: 16px auto 0;
+            color: var(--muted);
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.75;
+        }
+
+        section {
+            padding: 72px 0;
+        }
+
+        .section-soft {
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, .86), rgba(238, 250, 255, .68));
+        }
+
+        .section-ai {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 14% 24%, rgba(79, 168, 200, .2) 0 2px, transparent 3px),
+                radial-gradient(circle at 24% 72%, rgba(33, 163, 143, .18) 0 3px, transparent 4px),
+                radial-gradient(circle at 77% 24%, rgba(173, 135, 232, .2) 0 3px, transparent 4px),
+                radial-gradient(circle at 86% 68%, rgba(79, 168, 200, .16) 0 2px, transparent 3px),
+                linear-gradient(115deg, transparent 8%, rgba(79, 168, 200, .12) 8.2%, transparent 24%),
+                linear-gradient(64deg, transparent 56%, rgba(173, 135, 232, .13) 56.2%, transparent 78%),
+                linear-gradient(135deg, rgba(230, 252, 243, .9), rgba(237, 247, 255, .94));
+            background-size: 220px 220px, 260px 260px, 300px 300px, 240px 240px, 100% 100%, 100% 100%, 100% 100%;
+        }
+
+        .section-work {
+            background:
+                linear-gradient(180deg, rgba(255, 247, 237, .7), rgba(247, 243, 255, .7) 54%, rgba(255, 255, 255, .9));
+        }
+
+        .section-head {
+            display: grid;
+            justify-items: center;
+            gap: 14px;
+            margin-bottom: 36px;
+            text-align: center;
+        }
+
+        .section-head h2 {
+            max-width: 620px;
+            font-size: clamp(28px, 3.6vw, 46px);
+            line-height: 1.1;
+            font-weight: 800;
+        }
+
+        .section-head p {
+            max-width: 660px;
+            margin: 0 auto;
+        }
+
+        .ai-grid,
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .service-grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .service-card,
+        .ai-card,
+        .work-card {
+            min-height: 244px;
+            padding: 26px;
+            border: 1px solid rgba(255, 255, 255, .72);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .68);
+            box-shadow: 0 16px 44px rgba(42, 54, 71, .06);
+            transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .service-card {
+            display: grid;
+            grid-template-columns: minmax(290px, .98fr) 1fr;
+            align-items: center;
+            gap: clamp(18px, 4vw, 38px);
+            min-height: 270px;
+            padding: 4px 0;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            backdrop-filter: none;
+        }
+
+        .service-card:nth-child(even) {
+            grid-template-columns: 1fr minmax(290px, .98fr);
+        }
+
+        .service-card:nth-child(even) .service-media {
+            order: 2;
+        }
+
+        .service-copy {
+            padding: 12px clamp(2px, 2vw, 18px);
+        }
+
+        .service-media {
+            min-height: 238px;
+            overflow: hidden;
+            border-radius: 8px;
+            background: var(--sky);
+            box-shadow: 0 18px 40px rgba(42, 54, 71, .08);
+        }
+
+        .service-media img {
+            width: 100%;
+            height: 100%;
+            max-height: 270px;
+            object-fit: cover;
+            display: block;
+            transition: transform .45s ease;
+        }
+
+        .ai-card:hover,
+        .work-card:hover,
+        .tech-item:hover,
+        .contact-box:hover {
+            transform: translateY(-5px);
+            border-color: rgba(36, 120, 168, .28);
+        }
+
+        .service-card:hover .service-media img {
+            transform: scale(1.035);
+        }
+
+        .service-card h3,
+        .ai-card h3,
+        .work-card h3 {
+            margin-bottom: 14px;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 22px;
+        }
+
+        .tag {
+            display: inline-flex;
+            min-height: 30px;
+            align-items: center;
+            padding: 0 10px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .75);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
+            gap: 18px;
+        }
+
+        .tech-item {
+            display: flex;
+            min-height: 118px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, .82);
+            transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+        }
+
+        .tech-item img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+        }
+
+        .tech-item span {
+            margin-top: 12px;
+            color: var(--ink);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .work-card {
+            position: relative;
+            min-height: 260px;
+            overflow: hidden;
+            border: 0;
+            color: #fff;
+            background-position: center;
+            background-size: cover;
+            isolation: isolate;
+        }
+
+        .work-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, rgba(12, 38, 50, .82), rgba(36, 120, 168, .4) 58%, rgba(33, 163, 143, .28)),
+                linear-gradient(0deg, rgba(12, 38, 50, .32), rgba(255, 255, 255, .08));
+            z-index: -1;
+        }
+
+        .work-card>* {
+            position: relative;
+        }
+
+        .work-card-web {
+            background-image:
+                linear-gradient(90deg, rgba(255, 255, 255, .16) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255, 255, 255, .13) 1px, transparent 1px),
+                radial-gradient(circle at 78% 24%, rgba(255, 255, 255, .46) 0 42px, transparent 43px),
+                linear-gradient(135deg, #4fa8c8, #2478a8 54%, #8fd8e7);
+            background-size: 46px 46px, 46px 46px, 100% 100%, 100% 100%;
+        }
+
+        .work-card-systems {
+            background-image:
+                linear-gradient(90deg, rgba(255, 255, 255, .58) 0 12px, transparent 12px 24px),
+                linear-gradient(0deg, rgba(255, 255, 255, .18) 0 1px, transparent 1px),
+                radial-gradient(circle at 22% 76%, rgba(255, 255, 255, .5) 0 34px, transparent 35px),
+                linear-gradient(135deg, #21a38f, #4fa8c8 52%, #c4eadf);
+            background-size: 100% 34px, 100% 34px, 100% 100%, 100% 100%;
+        }
+
+        .work-card-ai {
+            background-image:
+                radial-gradient(circle at 22% 34%, rgba(255, 255, 255, .66) 0 8px, transparent 9px),
+                radial-gradient(circle at 52% 62%, rgba(255, 255, 255, .56) 0 11px, transparent 12px),
+                radial-gradient(circle at 78% 28%, rgba(255, 255, 255, .6) 0 7px, transparent 8px),
+                linear-gradient(34deg, transparent 29%, rgba(255, 255, 255, .34) 29.3%, transparent 42%),
+                linear-gradient(135deg, #8f83e8, #4fa8c8 48%, #ffd6b5);
+        }
+
+        .work-meta {
+            display: block;
+            margin-bottom: 16px;
+            color: rgba(255, 255, 255, .76);
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .work-card p {
+            color: rgba(255, 255, 255, .84);
+        }
+
+        .client-strip {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 20px 50px;
+            margin: 34px auto 0;
+            max-width: 960px;
+            padding: 18px 0 8px;
+        }
+
+        .client-logo {
+            display: flex;
+            width: clamp(116px, 13vw, 156px);
+            min-height: 76px;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            animation: floatLogo 6s ease-in-out infinite;
+        }
+
+        .client-logo img {
+            max-width: 148px;
+            max-height: 58px;
+            object-fit: contain;
+            filter: saturate(.96);
+        }
+
+        .client-logo:nth-child(2) {
+            transform: translateY(18px) rotate(-2deg);
+            animation-delay: -.8s;
+        }
+
+        .client-logo:nth-child(3) {
+            transform: translateY(-12px) rotate(1.5deg);
+            animation-delay: -1.6s;
+        }
+
+        .client-logo:nth-child(4) {
+            transform: translateY(22px) rotate(2deg);
+            animation-delay: -2.2s;
+        }
+
+        .client-logo:nth-child(5) {
+            transform: translateY(-6px) rotate(-1deg);
+            animation-delay: -3s;
+        }
+
+        .client-logo:nth-child(6) {
+            transform: translateY(10px) rotate(1deg);
+            animation-delay: -3.7s;
+        }
+
+        .client-logo:nth-child(7) {
+            width: 95px;
+            padding: 0;
+            overflow: hidden;
+            transform: translateY(-18px) rotate(-2deg);
+            animation-delay: -4.4s;
+        }
+
+        .client-logo:nth-child(7) img {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            max-height: none;
+            object-fit: cover;
+        }
+
+        .client-logo:nth-child(8) {
+            transform: translateY(14px) rotate(2deg);
+            animation-delay: -5s;
+        }
+
+        .client-logo:nth-child(9) {
+            width: 84px;
+            height: 84px;
+            padding: 0;
+            overflow: hidden;
+            border-radius: 50%;
+            box-shadow: 0 16px 34px rgba(42, 54, 71, .08);
+            transform: translateY(-10px) rotate(-1deg);
+            animation-delay: -5.6s;
+        }
+
+        .client-logo:nth-child(9) img {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            max-height: none;
+            object-fit: cover;
+        }
+
+        .client-logo:nth-child(10) {
+            transform: translateY(18px) rotate(1.5deg);
+            animation-delay: -6.2s;
+        }
+
+        .client-logo:nth-child(11) {
+            width: 94px;
+            height: 94px;
+            padding: 0;
+            overflow: hidden;
+            border-radius: 50%;
+            box-shadow: 0 16px 34px rgba(42, 54, 71, .08);
+            transform: translateY(-10px) rotate(-1deg);
+            animation-delay: -5.6s;
+        }
+
+        .client-logo:nth-child(11) img {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            max-height: none;
+            object-fit: cover;
+        }
+
+        .client-logo:nth-child(12) {
+            transform: translateY(18px) rotate(1.5deg);
+            animation-delay: -6.2s;
+        }
+
+        @keyframes floatLogo {
+            0%,
+            100% {
+                translate: 0 0;
+            }
+
+            50% {
+                translate: 0 -8px;
+            }
+        }
+
+        .contact-layout {
+            display: grid;
+            justify-items: center;
+            text-align: center;
+        }
+
+        .contact-box {
+            margin-top: 30px;
+            padding: 0;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            box-shadow: none;
+            transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+        }
+
+        .whatsapp-link {
+            display: inline-flex;
+            width: 92px;
+            height: 92px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #fff;
+            box-shadow: 0 20px 44px rgba(18, 140, 126, .28);
+            transition: transform .24s ease, box-shadow .24s ease;
+        }
+
+        .whatsapp-link:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 24px 52px rgba(18, 140, 126, .34);
+        }
+
+        .whatsapp-link svg {
+            width: 48px;
+            height: 48px;
+            fill: currentColor;
+        }
+
+        .contact-list {
+            display: grid;
+            gap: 16px;
+            margin-top: 26px;
+        }
+
+        .contact-list a,
+        .contact-list span {
+            display: block;
+            color: var(--ink);
+            font-weight: 800;
+        }
+
+        footer {
+            padding: 34px 0;
+            border-top: 1px solid var(--line);
+            background: #fff;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .footer-wrap img {
+            width: 120px;
+        }
+
+        .footer-wrap p {
+            color: var(--accent) !important;
+        }
+
+        @media (max-width: 991px) {
+            .nav-wrap {
+                flex-wrap: wrap;
+                gap: 12px;
+                padding: 10px 15px;
+            }
+
+            .brand {
+                margin-right: auto;
+            }
+
+            .nav-wrap nav {
+                order: 3;
+                width: 100%;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                overflow-x: auto;
+                padding-bottom: 4px;
+                scrollbar-width: none;
+            }
+
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+
+            .offer-strip,
+            .ai-grid,
+            .work-grid,
+            .contact-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .service-card,
+            .service-card:nth-child(even) {
+                grid-template-columns: 1fr;
+            }
+
+            .service-card:nth-child(even) .service-media {
+                order: 0;
+            }
+
+            .service-media {
+                min-height: 220px;
+            }
+
+            .section-head {
+                display: block;
+            }
+
+            .section-head p {
+                margin-top: 18px;
+            }
+
+            .client-strip {
+                gap: 14px;
+            }
+
+            .client-logo {
+                width: min(42vw, 146px);
+                min-height: 70px;
+            }
+
+            .client-logo:nth-child(9) {
+                width: 112px;
+                height: 112px;
+                min-height: 112px;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .nav-wrap {
+                min-height: 68px;
+            }
+
+            .brand img {
+                width: 74px;
+                height: auto;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 36px 0 48px;
+            }
+
+            section {
+                padding: 56px 0;
+            }
+
+            .hero-showcase {
+                min-height: 520px;
+                border-radius: 14px;
+            }
+
+            .hero-slide {
+                padding: 24px;
+            }
+
+            .offer-strip {
+                margin-top: 36px;
+            }
+
+            .ai-card,
+            .work-card,
+            .contact-box {
+                padding: 22px;
+            }
+
+            .service-card {
+                padding: 4px 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Preloader -->
-    <!-- <div class="preloader-wrap">
-        <div class="preloader">
-            <div class="lines">
-                <div class="line line-1"></div>
-                <div class="line line-2"></div>
-                <div class="line line-3"></div>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- Header Section -->
-    <div class="header" id="header">
-        <div class="container">
-            <div class="row">
-                <nav class="navbar fixed-top navbar-expand-lg">
-                    <div class="container">
-                        <a class="navbar-brand" href="#header"><img src="img/marca-dv-color2.png" style="width: 30%; margin-left: 20px;" alt=""></a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"><i class="fa fa-navicon"></i></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav ml-auto mt-2 mt-lg-0 ">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#header">INICIO <span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#about">NOSOTROS</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#work">PROYECTOS</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#contact">CONTACTANOS</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+    <div class="site-shell">
+        <header class="topbar">
+            <div class="container nav-wrap">
+                <a class="brand" href="#inicio" aria-label="Ir al inicio">
+                    <!-- <img src="img/marca-dv-color2.png" alt="Digital Dev"> -->
+                    <strong><span>Fabián Ignacio</span></strong>
+                </a>
+                <nav aria-label="Navegación principal">
+                    <ul class="nav-links">
+                        <li><a href="#servicios">Servicios</a></li>
+                        <li><a href="#ia">IA</a></li>
+                        <li><a href="#proyectos">Proyectos</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
                 </nav>
-                <div class="header-wrapper">
-                    <div class="col-md-12 col-xs-12 text-center">
-                        <div class="selector">
-                            <div class="fixed">somos</div>
-                            <div class="hero">
-                                <div class="rotator" id="rot">
-                                    <b>
-                                        <p>Desarrolladores</p>
-                                    </b>
-                                    <b>
-                                        <p>Ad Managers</p>
-                                    </b>
-                                    <b>
-                                        <p>Especialistas</p>
-                                    </b>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero" id="inicio">
+                <div class="container">
+                    <div class="hero-showcase reveal" aria-label="Servicios destacados">
+                        <div class="hero-slide">
+                            <div class="hero-content">
+                                <!-- <span class="hero-kicker">Digital Dev / Fabian Olivas</span> -->
+                                <h2 class="hero-title">Tu idea convertida en una web o sistema listo para trabajar.</h2>
+                                <p class="hero-lead">Diseño y desarrollo soluciones digitales para captar clientes, ordenar procesos y conectar herramientas.</p>
+                                <div class="hero-actions">
+                                    <a class="btn-main" href="#servicios">Ver servicios</a>
+                                    <a class="btn-ghost" href="#contacto">Conversemos</a>
                                 </div>
                             </div>
                         </div>
-                        <!--<h4 class="sm-title">LOCATED IN NY</h4>-->
+                        <div class="hero-slide">
+                            <div class="hero-content">
+                                <!-- <span class="hero-kicker">IA aplicada a procesos reales</span> -->
+                                <h2 class="hero-title">Automatizaciones inteligentes para ahorrar tiempo operativo.</h2>
+                                <p class="hero-lead">Asistentes, flujos e integraciones que responden, clasifican, reportan y conectan tu negocio.</p>
+                                <div class="hero-actions">
+                                    <a class="btn-main" href="#ia">Ver IA</a>
+                                    <a class="btn-ghost" href="#contacto">Conversemos</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <!-- <div class="col-lg-12 text-center">
-                        <a style="color: #17649f;" target="_blank" href="https://www.linkedin.com/in/fabianignacioob/"><i class="fab fa-linkedin fa-2x"></i></a>
-                        <a style="color: #803080;" target="_blank" href="https://www.instagram.com/fabianignacioob/"><i class="fab fa-instagram fa-2x"></i></a>
-                        <a style="color: #7d7574;" href="mailto:folivas@gmail.com"><i class="far fa-envelope fa-2x"></i></a>
-                        <a style="color: #fffbf0;" target="_blank" href="https://github.com/fabianignacioob"><i class="fab fa-github-square fa-2x"></i></a>
-                    </div> -->
+                    <div class="hero-progress" aria-hidden="true"></div>
+                    <div class="offer-strip reveal" aria-label="Presentación personal">
+                        <div class="about-intro">
+                            <strong>Un poco sobre mí</strong>
+                            <span>¡Hola! Soy Fabián, desarrollador de software y soluciones web con más de 9 años de experiencia. He trabajado creando sitios, sistemas internos, integraciones y automatizaciones para negocios de distintos rubros y tamaños. Me gusta transformar ideas en soluciones claras, útiles y fáciles de mantener.</span>
+                            <span>Si trabajamos juntos, te acompañaré en cada paso para que tu idea se convierta en una realidad.</span>
+                            <a href="https://www.linkedin.com/in/fabianignacioob?utm_source=share_via&utm_content=profile&utm_medium=member_ios" target="_blank" rel="noopener">
+                                <svg width="40px" height="40px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="none">
+                                    <path fill="#0A66C2" d="M12.225 12.225h-1.778V9.44c0-.664-.012-1.519-.925-1.519-.926 0-1.068.724-1.068 1.47v2.834H6.676V6.498h1.707v.783h.024c.348-.594.996-.95 1.684-.925 1.802 0 2.135 1.185 2.135 2.728l-.001 3.14zM4.67 5.715a1.037 1.037 0 01-1.032-1.031c0-.566.466-1.032 1.032-1.032.566 0 1.031.466 1.032 1.032 0 .566-.466 1.032-1.032 1.032zm.889 6.51h-1.78V6.498h1.78v5.727zM13.11 2H2.885A.88.88 0 002 2.866v10.268a.88.88 0 00.885.866h10.226a.882.882 0 00.889-.866V2.865a.88.88 0 00-.889-.864z"/>
+                                </svg>
+                            </a>
+                            <a href="https://www.instagram.com/barbitabad?igsh=MXg0czVsMzk1YW9yMg%3D%3D&utm_source=qr">
+                                <svg width="34px" height="34px" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="2" y="2" width="28" height="28" rx="6" fill="url(#paint0_radial_87_7153)"/>
+                                    <rect x="2" y="2" width="28" height="28" rx="6" fill="url(#paint1_radial_87_7153)"/>
+                                    <rect x="2" y="2" width="28" height="28" rx="6" fill="url(#paint2_radial_87_7153)"/>
+                                    <path d="M23 10.5C23 11.3284 22.3284 12 21.5 12C20.6716 12 20 11.3284 20 10.5C20 9.67157 20.6716 9 21.5 9C22.3284 9 23 9.67157 23 10.5Z" fill="white"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 21C18.7614 21 21 18.7614 21 16C21 13.2386 18.7614 11 16 11C13.2386 11 11 13.2386 11 16C11 18.7614 13.2386 21 16 21ZM16 19C17.6569 19 19 17.6569 19 16C19 14.3431 17.6569 13 16 13C14.3431 13 13 14.3431 13 16C13 17.6569 14.3431 19 16 19Z" fill="white"/>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6 15.6C6 12.2397 6 10.5595 6.65396 9.27606C7.2292 8.14708 8.14708 7.2292 9.27606 6.65396C10.5595 6 12.2397 6 15.6 6H16.4C19.7603 6 21.4405 6 22.7239 6.65396C23.8529 7.2292 24.7708 8.14708 25.346 9.27606C26 10.5595 26 12.2397 26 15.6V16.4C26 19.7603 26 21.4405 25.346 22.7239C24.7708 23.8529 23.8529 24.7708 22.7239 25.346C21.4405 26 19.7603 26 16.4 26H15.6C12.2397 26 10.5595 26 9.27606 25.346C8.14708 24.7708 7.2292 23.8529 6.65396 22.7239C6 21.4405 6 19.7603 6 16.4V15.6ZM15.6 8H16.4C18.1132 8 19.2777 8.00156 20.1779 8.0751C21.0548 8.14674 21.5032 8.27659 21.816 8.43597C22.5686 8.81947 23.1805 9.43139 23.564 10.184C23.7234 10.4968 23.8533 10.9452 23.9249 11.8221C23.9984 12.7223 24 13.8868 24 15.6V16.4C24 18.1132 23.9984 19.2777 23.9249 20.1779C23.8533 21.0548 23.7234 21.5032 23.564 21.816C23.1805 22.5686 22.5686 23.1805 21.816 23.564C21.5032 23.7234 21.0548 23.8533 20.1779 23.9249C19.2777 23.9984 18.1132 24 16.4 24H15.6C13.8868 24 12.7223 23.9984 11.8221 23.9249C10.9452 23.8533 10.4968 23.7234 10.184 23.564C9.43139 23.1805 8.81947 22.5686 8.43597 21.816C8.27659 21.5032 8.14674 21.0548 8.0751 20.1779C8.00156 19.2777 8 18.1132 8 16.4V15.6C8 13.8868 8.00156 12.7223 8.0751 11.8221C8.14674 10.9452 8.27659 10.4968 8.43597 10.184C8.81947 9.43139 9.43139 8.81947 10.184 8.43597C10.4968 8.27659 10.9452 8.14674 11.8221 8.0751C12.7223 8.00156 13.8868 8 15.6 8Z" fill="white"/>
+                                    <defs>
+                                    <radialGradient id="paint0_radial_87_7153" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(12 23) rotate(-55.3758) scale(25.5196)">
+                                    <stop stop-color="#B13589"/>
+                                    <stop offset="0.79309" stop-color="#C62F94"/>
+                                    <stop offset="1" stop-color="#8A3AC8"/>
+                                    </radialGradient>
+                                    <radialGradient id="paint1_radial_87_7153" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(11 31) rotate(-65.1363) scale(22.5942)">
+                                    <stop stop-color="#E0E8B7"/>
+                                    <stop offset="0.444662" stop-color="#FB8A2E"/>
+                                    <stop offset="0.71474" stop-color="#E2425C"/>
+                                    <stop offset="1" stop-color="#E2425C" stop-opacity="0"/>
+                                    </radialGradient>
+                                    <radialGradient id="paint2_radial_87_7153" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(0.500002 3) rotate(-8.1301) scale(38.8909 8.31836)">
+                                    <stop offset="0.156701" stop-color="#406ADC"/>
+                                    <stop offset="0.467799" stop-color="#6A45BE"/>
+                                    <stop offset="1" stop-color="#6A45BE" stop-opacity="0"/>
+                                    </radialGradient>
+                                    </defs>
+                                </svg>
+                            </a>
+                            <a href="https://wa.me/56932239292?text=%C2%A1Hola%21%2C%20tengo%20una%20idea%20para%20mi%20negocio.%20Me%20gustar%C3%ADa%20darle%20forma%20contigo." target="_blank" rel="noopener">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="35px" height="35px" viewBox="-1.5 0 259 259" version="1.1" preserveAspectRatio="xMidYMid">
+                                <g>
+                                    <path d="M67.6631045,221.823373 L71.8484512,223.916047 C89.2873956,234.379413 108.819013,239.262318 128.350631,239.262318 L128.350631,239.262318 C189.735716,239.262318 239.959876,189.038158 239.959876,127.653073 C239.959876,98.3556467 228.101393,69.7557778 207.17466,48.8290445 C186.247927,27.9023111 158.345616,16.0438289 128.350631,16.0438289 C66.9655467,16.0438289 16.7413867,66.2679889 17.4389445,128.350631 C17.4389445,149.277365 23.7169645,169.50654 34.1803311,186.945485 L36.9705622,191.130831 L25.8096378,232.28674 L67.6631045,221.823373 Z" fill="#00E676"></path>
+                                    <path d="M219.033142,37.66812 C195.316178,13.2535978 162.530962,0 129.048189,0 C57.8972956,0 0.697557778,57.8972956 1.39511556,128.350631 C1.39511556,150.67248 7.67313556,172.296771 18.1365022,191.828389 L0,258.096378 L67.6631045,240.657433 C86.4971645,251.1208 107.423898,256.003705 128.350631,256.003705 L128.350631,256.003705 C198.803967,256.003705 256.003705,198.106409 256.003705,127.653073 C256.003705,93.4727423 242.750107,61.3850845 219.033142,37.66812 Z M129.048189,234.379413 L129.048189,234.379413 C110.214129,234.379413 91.380069,229.496509 75.3362401,219.7307 L71.1508934,217.638027 L30.6925422,228.101393 L41.1559089,188.3406 L38.3656778,184.155253 C7.67313556,134.628651 22.3218489,69.05822 72.5460089,38.3656778 C122.770169,7.67313556 187.643042,22.3218489 218.335585,72.5460089 C249.028127,122.770169 234.379413,187.643042 184.155253,218.335585 C168.111425,228.798951 148.579807,234.379413 129.048189,234.379413 Z M190.433273,156.9505 L182.760138,153.462711 C182.760138,153.462711 171.599213,148.579807 164.623636,145.092018 C163.926078,145.092018 163.22852,144.39446 162.530962,144.39446 C160.438289,144.39446 159.043173,145.092018 157.648058,145.789576 L157.648058,145.789576 C157.648058,145.789576 156.9505,146.487133 147.184691,157.648058 C146.487133,159.043173 145.092018,159.740731 143.696902,159.740731 L142.999345,159.740731 C142.301787,159.740731 140.906671,159.043173 140.209113,158.345616 L136.721325,156.9505 L136.721325,156.9505 C129.048189,153.462711 122.072611,149.277365 116.492149,143.696902 C115.097033,142.301787 113.00436,140.906671 111.609245,139.511556 C106.72634,134.628651 101.843436,129.048189 98.3556467,122.770169 L97.658089,121.375053 C96.9605312,120.677496 96.9605312,119.979938 96.2629734,118.584822 C96.2629734,117.189707 96.2629734,115.794591 96.9605312,115.097033 C96.9605312,115.097033 99.7507623,111.609245 101.843436,109.516571 C103.238551,108.121456 103.936109,106.028782 105.331225,104.633667 C106.72634,102.540993 107.423898,99.7507623 106.72634,97.658089 C106.028782,94.1703001 97.658089,75.3362401 95.5654156,71.1508934 C94.1703001,69.05822 92.7751845,68.3606623 90.6825112,67.6631045 L88.5898378,67.6631045 C87.1947223,67.6631045 85.1020489,67.6631045 83.0093756,67.6631045 C81.6142601,67.6631045 80.2191445,68.3606623 78.8240289,68.3606623 L78.1264712,69.05822 C76.7313556,69.7557778 75.3362401,71.1508934 73.9411245,71.8484512 C72.5460089,73.2435667 71.8484512,74.6386823 70.4533356,76.0337978 C65.5704312,82.3118178 62.7802,89.9849534 62.7802,97.658089 L62.7802,97.658089 C62.7802,103.238551 64.1753156,108.819013 66.2679889,113.701918 L66.9655467,115.794591 C73.2435667,129.048189 81.6142601,140.906671 92.7751845,151.370038 L95.5654156,154.160269 C97.658089,156.252942 99.7507623,157.648058 101.145878,159.740731 C115.794591,172.296771 132.535978,181.365022 151.370038,186.247927 C153.462711,186.945485 156.252942,186.945485 158.345616,187.643042 L158.345616,187.643042 C160.438289,187.643042 163.22852,187.643042 165.321193,187.643042 C168.808982,187.643042 172.994329,186.247927 175.78456,184.852811 C177.877233,183.457696 179.272349,183.457696 180.667465,182.06258 L182.06258,180.667465 C183.457696,179.272349 184.852811,178.574791 186.247927,177.179676 C187.643042,175.78456 189.038158,174.389445 189.735716,172.994329 C191.130831,170.204098 191.828389,166.716309 192.525947,163.22852 C192.525947,161.833405 192.525947,159.740731 192.525947,158.345616 C192.525947,158.345616 191.828389,157.648058 190.433273,156.9505 Z" fill="#FFFFFF"></path>
+                                </g>
+                            </svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
+            </section>
 
-    <div class="main-wrapper">
-        <!-- About Section -->
-        <div class="about mt-5" id="about">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 col-xs-12 text-center">
-                        <h4 class="title">NOSOTROS</h4>
-                        <hr class="line">
-                        <p class="main-text aniview slow" data-av-animation="slideInRight">
-                            Somos un equipo apasionado por el desarrollo web, con una sólida base técnica y más de 7 años de experiencia creando soluciones digitales a medida, participado en proyectos que abarcan desde la creación de interfaces intuitivas hasta la modernización de sistemas y la optimización de infraestructuras de software.
-                        </p>
-                        <p class="main-text aniview slow" data-av-animation="slideInLeft">
-                            Entendemos que cada cliente tiene necesidades únicas, por eso seleccionamos las tecnologías más adecuadas para cada proyecto, garantizando una experiencia de usuario ágil, segura y eficiente. Nos involucramos en todo el proceso de desarrollo, tanto en el frontend como en el backend, proponiendo ideas innovadoras y mejoras continuas que aportan valor real.
-                        </p>
-                        <p class="main-text aniview slow" data-av-animation="slideInRight">
-                            Nuestra filosofía se basa en la búsqueda constante de nuevos desafíos y en la incorporación de tecnologías emergentes que nos permitan crecer y ofrecer soluciones cada vez más robustas, seguras y rápidas. Creemos en la transparencia, la comunicación efectiva y el compromiso con la excelencia, para que nuestros clientes no solo obtengan un producto, sino un aliado tecnológico de confianza.
-                        </p>
+            <section class="section-soft" id="servicios">
+                <div class="container">
+                    <div class="section-head reveal">
+                        <h2>Soluciones digitales simples y firmes.</h2>
+                        <p>Construyo desde cero o mejoro lo que ya existe, cuidando experiencia, rendimiento, datos y mantenimiento.</p>
+                    </div>
+                    <div class="service-grid">
+                        <article class="service-card reveal">
+                            <div class="service-media">
+                                <img src="img/service-web.png" alt="Bocetos de interfaces web">
+                            </div>
+                            <div class="service-copy">
+                                <h3>Páginas que generan confianza</h3>
+                                <p>Sitios modernos, rápidos y claros para explicar qué haces, mostrar servicios y recibir nuevos contactos.</p>
+                                <div class="tag-list">
+                                    <span class="tag">SEO técnico</span>
+                                    <span class="tag">Responsive</span>
+                                    <span class="tag">Analytics</span>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="service-card reveal">
+                            <div class="service-media">
+                                <img src="img/service-systems.png" alt="Bocetos de sistemas y pantallas">
+                            </div>
+                            <div class="service-copy">
+                                <h3>Sistemas para trabajar mejor</h3>
+                                <p>Herramientas internas para gestionar clientes, solicitudes, inventario, procesos, archivos o reportes.</p>
+                                <div class="tag-list">
+                                    <span class="tag">CRUD</span>
+                                    <span class="tag">Roles</span>
+                                    <span class="tag">Dashboards</span>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="service-card reveal">
+                            <div class="service-media">
+                                <img src="img/service-automation.png" alt="Bocetos de aplicaciones y flujos">
+                            </div>
+                            <div class="service-copy">
+                                <h3>Conexiones entre plataformas</h3>
+                                <p>Formularios, correos, APIs, bases de datos y servicios externos conversando sin trabajo manual repetido.</p>
+                                <div class="tag-list">
+                                    <span class="tag">APIs</span>
+                                    <span class="tag">Webhooks</span>
+                                    <span class="tag">SMTP</span>
+                                </div>
+                            </div>
+                        </article>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Services Section -->
-        <div class="services aniview slow" data-av-animation="slideInUp" id="services">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <h5 class="title">SERVICIOS</h5>
-                        <hr class="line">
+            <section class="section-ai" id="ia">
+                <div class="container">
+                    <div class="section-head reveal">
+                        <h2>IA para ahorrar horas.</h2>
+                        <p>La IA sirve cuando queda conectada a un proceso: recibir, entender, clasificar, responder, crear registros y avisar.</p>
+                    </div>
+                    <div class="ai-grid">
+                        <article class="ai-card reveal">
+                            <h3>Asistentes para clientes o equipo</h3>
+                            <p>Responden preguntas, guían solicitudes y ayudan a encontrar información desde documentos o datos del negocio.</p>
+                            <div class="tag-list">
+                                <span class="tag">Soporte</span>
+                                <span class="tag">Ventas</span>
+                                <span class="tag">Onboarding</span>
+                            </div>
+                        </article>
+                        <article class="ai-card reveal">
+                            <h3>Flujos que hacen seguimiento</h3>
+                            <p>Leen mensajes, detectan intenciones, preparan respuestas, crean tareas y notifican al canal correcto.</p>
+                            <div class="tag-list">
+                                <span class="tag">Email</span>
+                                <span class="tag">CRM</span>
+                                <span class="tag">Reportes</span>
+                            </div>
+                        </article>
+                        <article class="ai-card reveal">
+                            <h3>Datos y contenido más ordenados</h3>
+                            <p>Extraen información, resumen documentos, generan propuestas y dejan insumos listos para decidir o publicar.</p>
+                            <div class="tag-list">
+                                <span class="tag">OCR</span>
+                                <span class="tag">Prompts</span>
+                                <span class="tag">Datos</span>
+                            </div>
+                        </article>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <img src="img/fondo7.jpg" alt="">
-                    </div>
-                    <div class="col-lg-8">
-                        <div class="row">
-                            <div class="col-md-4 col-xs-12">
-                                <p><i class="fa fa-crop" aria-hidden="true"></i> DISEÑO WEB</p>
-                                <p class="text-justify">
-                                    Diseños que se adaptan a ti: ya sea desde cero o con plantillas personalizadas, creamos la imagen perfecta para tu proyecto.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-xs-12">
-                                <p><i class="fa fa-laptop-code" aria-hidden="true"></i> BACKEND</p>
-                                <p class="text-justify">
-                                    Datos al instante y con seguridad: conecta tu interfaz con la información de manera veloz y totalmente protegida.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-xs-12">
-                                <p><i class="fa fa-code" aria-hidden="true"></i> FRONTEND</p>
-                                <p class="text-justify">
-                                    Experiencias digitales que enamoran: interfaces intuitivas y fáciles de usar para que tus usuarios se sientan como en casa.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-xs-12">
-                                <p><i class="fa fa-link" aria-hidden="true"></i> API's</p>
-                                <p class="text-justify">
-                                    API's que conectan el mundo: integramos y desarrollamos conexiones entre sistemas para que todo fluya sin límites.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-xs-12">
-                                <p><i class="fa fa-database" aria-hidden="true"></i> BASES DE DATOS</p>
-                                <p class="text-justify">
-                                    De la idea al negocio real: diseñamos el esquema completo de tu proyecto para que puedas verlo y hacerlo crecer.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-xs-12">
-                                <p><i class="fa fa-google" aria-hidden="true"></i> GOOGLE ADS</p>
-                                <p class="text-justify">
-                                    Publicidad que genera resultados: optimizamos tu sitio con las herramientas de Google para aumentar ingresos y oportunidades.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-xs-12">
-                                <p><i class="fa fa-headset" aria-hidden="true"></i> SOPORTE</p>
-                                <p class="text-justify">
-                                    Acompañamiento post-lanzamiento: soporte técnico de al menos 6 meses para que todo funcione como debe y sin sorpresas.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-xs-12">
-                                <p><i class="fa fa-cloud" aria-hidden="true"></i> DEPLOYS</p>
-                                <p class="text-justify">
-                                    Despliegue en la nube: llevamos tu proyecto a producción, asegurando que sea estable, seguro y optimo.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- proyectos Section -->
-        <div class="work aniview slow" data-av-animation="slideInUp" id="work">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <h5 class="title">QUIENES HAN CONFIADO</h5>
-                        <hr class="line">
+            <section id="stack" hidden>
+                <div class="container">
+                    <div class="section-head reveal">
+                        <h2>Tecnologías a medida.</h2>
+                        <p>Elijo el stack según el proyecto: rapidez para lanzar, facilidad para mantener y espacio para crecer.</p>
+                    </div>
+                    <div class="tech-grid reveal">
+                        <div class="tech-item"><img src="icons/html5.svg" alt="HTML5"><span>HTML5</span></div>
+                        <div class="tech-item"><img src="icons/css.svg" alt="CSS"><span>CSS</span></div>
+                        <div class="tech-item"><img src="icons/sass.svg" alt="Sass"><span>Sass</span></div>
+                        <div class="tech-item"><img src="icons/bootstrap.svg" alt="Bootstrap"><span>Bootstrap</span></div>
+                        <div class="tech-item"><img src="icons/javascript.svg" alt="JavaScript"><span>JavaScript</span></div>
+                        <div class="tech-item"><img src="icons/typescript.svg" alt="TypeScript"><span>TypeScript</span></div>
+                        <div class="tech-item"><img src="icons/react.svg" alt="React"><span>React</span></div>
+                        <div class="tech-item"><img src="icons/vuedotjs.svg" alt="Vue.js"><span>Vue.js</span></div>
+                        <div class="tech-item"><img src="icons/angular.svg" alt="Angular"><span>Angular</span></div>
+                        <div class="tech-item"><img src="icons/php.svg" alt="PHP"><span>PHP</span></div>
+                        <div class="tech-item"><img src="icons/cakephp.svg" alt="CakePHP"><span>CakePHP</span></div>
+                        <div class="tech-item"><img src="icons/laravel.svg" alt="Laravel"><span>Laravel</span></div>
+                        <div class="tech-item"><img src="icons/composer.svg" alt="Composer"><span>Composer</span></div>
+                        <div class="tech-item"><img src="icons/nodedotjs.svg" alt="Node.js"><span>Node.js</span></div>
+                        <div class="tech-item"><img src="icons/npm.svg" alt="npm"><span>npm</span></div>
+                        <div class="tech-item"><img src="icons/python.svg" alt="Python"><span>Python</span></div>
+                        <div class="tech-item"><img src="icons/django.svg" alt="Django"><span>Django</span></div>
+                        <div class="tech-item"><img src="icons/mysql.svg" alt="MySQL"><span>MySQL</span></div>
+                        <div class="tech-item"><img src="icons/mariadb.svg" alt="MariaDB"><span>MariaDB</span></div>
+                        <div class="tech-item"><img src="icons/postgresql.svg" alt="PostgreSQL"><span>PostgreSQL</span></div>
+                        <div class="tech-item"><img src="icons/github.svg" alt="GitHub"><span>GitHub</span></div>
+                        <div class="tech-item"><img src="icons/linux.svg" alt="Linux"><span>Linux</span></div>
+                        <div class="tech-item"><img src="icons/cursor.svg" alt="Cursor"><span>Cursor</span></div>
+                        <div class="tech-item"><img src="icons/googleads.svg" alt="Google Ads"><span>Google Ads</span></div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4 col-xs-12 my-2 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>LG Propiedades</p>
-                            </div>
-                            <div class="card-body">
-                                <img style="max-height: 150px; width:auto" src="img/logo_lg.png" alt="">
-                            </div>
-                        </div>
-                    </div>
+            </section>
 
-                    <div class="col-md-4 col-xs-12 my-2 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>Club LKF</p>
-                            </div>
-                            <div class="body">
-                                <img style="max-height: 150px; width:auto; margin:20px" src="img/logo-lkf-new.png" alt="">
-                            </div>
-                        </div>
+            <section class="section-work" id="proyectos">
+                <div class="container">
+                    <div class="section-head reveal">
+                        <h2>Formas en que puedo ayudarte.</h2>
+                        <p>Algunas soluciones habituales para negocios que quieren vender mejor, ordenar procesos o automatizar tareas sin inflar el proyecto.</p>
                     </div>
-                    <div class="col-md-4 col-xs-12 my-2 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>C Mas</p>
-                            </div>
-                            <div class="body">
-                                <img style="max-height: 80px; width:auto; margin:55px 0px" src="img/logo-cmas.png" alt="">
-                            </div>
-                        </div>
+                    <div class="work-grid">
+                        <article class="work-card work-card-web reveal">
+                            <span class="work-meta">Captación</span>
+                            <h3>Webs para servicios y marcas</h3>
+                            <p>Presentan la oferta, explican beneficios, integran contacto y dejan lista la base para campañas.</p>
+                        </article>
+                        <article class="work-card work-card-systems reveal">
+                            <span class="work-meta">Operación</span>
+                            <h3>Herramientas internas</h3>
+                            <p>Paneles y flujos para centralizar datos, reducir planillas sueltas y dar visibilidad al equipo.</p>
+                        </article>
+                        <article class="work-card work-card-ai reveal">
+                            <span class="work-meta">Automatización</span>
+                            <h3>Procesos conectados</h3>
+                            <p>Integraciones entre correo, formularios, bases de datos, IA, anuncios y notificaciones.</p>
+                        </article>
                     </div>
-                    <div class="col-md-4 col-xs-12 my-2 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>Service Office</p>
-                            </div>
-                            <div class="body">
-                                <img style="max-height: 150px; width:auto; margin:25px 0px" src="img/marca-so-color.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-12 my-2 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>Diario Concepción</p>
-                            </div>
-                            <div class="body">
-                                <img style="max-width: 200px; background-color: #00607a; padding: 5px; margin:80px 0px" src="img/dccp.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-12 my-2 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>TVU</p>
-                            </div>
-                            <div class="body">
-                                <img style="max-height: 100px; width:auto; margin:75px 0px" src="img/tvu.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-12 my-2 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>La Discusión</p>
-                            </div>
-                            <div class="body">
-                                <img style="width:250px; margin:80px 0px" src="img/ldcl.jpg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-12 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>3E</p>
-                            </div>
-                            <div class="body">
-                                <img style="max-width: 150px; margin:25px 0px" src="img/3e.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-12 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>Inntek</p>
-                            </div>
-                            <div class="body">
-                                <img style="max-width: 200px; margin:45px 0px" src="img/Logo_Inntek.gif" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <!--
-                    <div class="col-md-4 col-xs-12 text-center">
-                        <div class="card">
-                            <div class="card-header bg-transparent">
-                                <p>Autismo Conecta</p>
-                            </div>
-                            <div class="body">
-                                <img style="max-width: 200px; margin:60px 0px" src="img/marca-ac-color.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    -->
-                </div>
-            </div>
-            <div class="container mt-5">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <h5 class="title">ALGUNAS TECNOLOGIAS</h5>
-                        <hr class="line">
+                    <br><br>
+                    <div class="client-strip reveal" aria-label="Clientes y proyectos">
+                        <div class="client-logo"><img src="img/client-am.png" alt="AM"></div>
+                        <div class="client-logo"><img src="img/client-ikonnex.png" alt="Ikonnex Grupo Inmobiliario"></div>
+                        <div class="client-logo"><img src="img/client-pagina7.png" alt="Página 7"></div>
+                        <div class="client-logo"><img src="img/client-ladiscusion.png" alt="La Discusión"></div>
+                        <div class="client-logo"><img src="img/logo_lg.png" alt="LG Propiedades"></div>
+                        <div class="client-logo"><img src="img/logo-lkf-new.png" alt="Club LKF"></div>
+                        <div class="client-logo"><img src="img/logo-cmas.png" alt="C Mas"></div>
+                        <div class="client-logo"><img src="img/marca-so-color.png" alt="Service Office"></div>
+                        <div class="client-logo"><img src="img/client-diario-concepcion.png" alt="Diario Concepción"></div>
+                        <div class="client-logo"><img src="img/tvu.png" alt="TVU"></div>
+                        <div class="client-logo"><img src="img/innwork.jpeg" alt="Innwork"></div>
+                        <div class="client-logo"><img src="img/Logo_Inntek.gif" alt="Inntek"></div>
                     </div>
                 </div>
-                <div class="row text-center owl-carousel owl-theme owl-loaded">
-                    <div class="owl-stage-outer">
-                        <div class="owl-stage">
-                            <div class="col-sm-12 owl-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
-                                    <path d="M 25 12 C 18.507813 12 12.621094 13.359375 8.273438 15.628906 C 3.925781 17.898438 1 21.167969 1 25 C 1 28.832031 3.925781 32.101563 8.273438 34.371094 C 12.621094 36.640625 18.507813 38 25 38 C 31.492188 38 37.378906 36.640625 41.726563 34.371094 C 46.074219 32.101563 49 28.832031 49 25 C 49 21.167969 46.074219 17.898438 41.726563 15.628906 C 37.378906 13.359375 31.492188 12 25 12 Z M 25 14 C 31.210938 14 36.824219 15.324219 40.800781 17.402344 C 44.777344 19.476563 47 22.203125 47 25 C 47 27.796875 44.777344 30.523438 40.800781 32.597656 C 36.824219 34.675781 31.210938 36 25 36 C 18.789063 36 13.175781 34.675781 9.199219 32.597656 C 5.222656 30.523438 3 27.796875 3 25 C 3 22.203125 5.222656 19.476563 9.199219 17.402344 C 13.175781 15.324219 18.789063 14 25 14 Z M 22.507813 16 L 20 28 L 22.625 28 L 23.890625 22 L 25.988281 22 C 26.65625 22 27.101563 22.109375 27.308594 22.332031 C 27.511719 22.554688 27.554688 22.976563 27.4375 23.582031 L 26.480469 28 L 29.144531 28 L 30.183594 23.222656 C 30.40625 22.078125 30.238281 21.238281 29.683594 20.726563 C 29.117188 20.207031 28.121094 20 26.636719 20 L 24.296875 20 L 25.128906 16 Z M 11 20 L 8.972656 31 L 11.617188 31 L 12.144531 28 L 13.792969 28 C 17.238281 28 19.113281 27.203125 19.8125 24.246094 C 20.414063 21.703125 18.875 20 16.332031 20 Z M 32 20 L 29.972656 31 L 32.617188 31 L 33.144531 28 L 34.792969 28 C 38.238281 28 40.113281 27.203125 40.8125 24.246094 C 41.414063 21.703125 39.875 20 37.332031 20 Z M 13.273438 22 L 15.332031 22 C 17.042969 22 17.402344 22.769531 17.3125 23.625 C 17.082031 25.832031 15.707031 26 14.230469 26 L 12.515625 26 Z M 34.273438 22 L 36.332031 22 C 38.042969 22 38.402344 22.769531 38.3125 23.625 C 38.082031 25.832031 36.707031 26 35.230469 26 L 33.515625 26 Z"></path>
-                                </svg>
-                            </div>
-                            <div class="col-sm-12 owl-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
-                                    <path d="M 39.375 3.9882812 A 1.0001 1.0001 0 0 0 39.205078 4.0019531 L 30.621094 4.0019531 A 1.0001 1.0001 0 0 0 29.757812 4.4960938 L 25 12.625 L 20.244141 4.4960938 A 1.0001 1.0001 0 0 0 19.380859 4.0019531 L 10.751953 4.0019531 A 1.0001 1.0001 0 0 0 10.542969 4.0019531 L 1.0039062 4.0019531 A 1.0001 1.0001 0 0 0 0.140625 5.5058594 L 24.138672 46.505859 A 1.0001 1.0001 0 0 0 25.863281 46.505859 L 49.863281 5.5058594 A 1.0001 1.0001 0 0 0 49.001953 4.0019531 L 39.519531 4.0019531 A 1.0001 1.0001 0 0 0 39.375 3.9882812 z M 2.7480469 6.0019531 L 10.074219 6.0019531 L 24.136719 30.029297 A 1.0001 1.0001 0 0 0 25.863281 30.029297 L 39.925781 6.0019531 L 47.257812 6.0019531 L 25.001953 44.023438 L 2.7480469 6.0019531 z M 12.390625 6.0019531 L 18.806641 6.0019531 L 24.138672 15.109375 A 1.0001 1.0001 0 0 0 25.863281 15.109375 L 31.195312 6.0019531 L 37.609375 6.0019531 L 25 27.544922 L 12.390625 6.0019531 z"></path>
-                                </svg>
-                            </div>
-                            <div class="col-sm-12 owl-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
-                                    <path d="M 31.167969 8 C 30.699219 7.988281 30.289063 8.167969 30.078125 8.6875 C 29.71875 9.558594 30.613281 10.410156 30.933594 10.855469 C 31.15625 11.164063 31.445313 11.511719 31.605469 11.859375 C 31.710938 12.089844 31.726563 12.320313 31.816406 12.5625 C 32.039063 13.160156 32.394531 13.839844 32.679688 14.394531 C 32.824219 14.675781 32.984375 14.96875 33.167969 15.21875 C 33.28125 15.371094 33.472656 15.441406 33.503906 15.675781 C 33.316406 15.941406 33.304688 16.351563 33.199219 16.6875 C 32.722656 18.191406 32.902344 20.0625 33.59375 21.171875 C 33.808594 21.515625 34.3125 22.246094 35 21.96875 C 35.601563 21.722656 35.46875 20.960938 35.640625 20.285156 C 35.679688 20.136719 35.65625 20.023438 35.734375 19.921875 L 35.734375 19.953125 C 35.914063 20.320313 36.097656 20.6875 36.28125 21.050781 C 36.691406 21.707031 37.414063 22.390625 38.023438 22.855469 C 38.339844 23.09375 38.589844 23.507813 39 23.648438 L 39 23.617188 L 38.96875 23.617188 C 38.890625 23.492188 38.765625 23.441406 38.664063 23.34375 C 38.425781 23.109375 38.160156 22.816406 37.964844 22.546875 C 37.40625 21.792969 36.914063 20.964844 36.46875 20.105469 C 36.253906 19.695313 36.066406 19.242188 35.886719 18.824219 C 35.816406 18.660156 35.816406 18.417969 35.671875 18.332031 C 35.472656 18.640625 35.183594 18.886719 35.03125 19.25 C 34.789063 19.828125 34.753906 20.535156 34.664063 21.265625 C 34.609375 21.285156 34.632813 21.269531 34.605469 21.296875 C 34.179688 21.191406 34.027344 20.753906 33.871094 20.378906 C 33.472656 19.429688 33.394531 17.898438 33.75 16.808594 C 33.839844 16.523438 34.25 15.632813 34.085938 15.371094 C 34.007813 15.109375 33.742188 14.960938 33.597656 14.761719 C 33.414063 14.515625 33.234375 14.191406 33.109375 13.90625 C 32.78125 13.164063 32.472656 12.304688 32.125 11.554688 C 31.960938 11.195313 31.683594 10.835938 31.453125 10.515625 C 31.199219 10.164063 30.917969 9.90625 30.71875 9.476563 C 30.652344 9.328125 30.554688 9.085938 30.660156 8.929688 C 30.691406 8.824219 30.738281 8.78125 30.84375 8.746094 C 31.019531 8.609375 31.511719 8.789063 31.699219 8.867188 C 32.1875 9.070313 32.597656 9.265625 33.011719 9.539063 C 33.210938 9.671875 33.410156 9.925781 33.652344 10 L 33.925781 10 C 34.359375 10.097656 34.839844 10.027344 35.238281 10.152344 C 35.949219 10.367188 36.585938 10.703125 37.160156 11.066406 C 38.921875 12.175781 40.363281 13.757813 41.34375 15.644531 C 41.503906 15.949219 41.574219 16.242188 41.714844 16.5625 C 41.992188 17.210938 42.347656 17.882813 42.628906 18.515625 C 42.90625 19.152344 43.179688 19.789063 43.574219 20.316406 C 43.78125 20.59375 44.585938 20.746094 44.949219 20.898438 C 45.203125 21.007813 45.625 21.121094 45.863281 21.265625 C 46.328125 21.542969 46.773438 21.875 47.207031 22.183594 C 47.425781 22.335938 48.089844 22.667969 48.125 22.945313 C 47.050781 22.917969 46.230469 23.015625 45.53125 23.3125 C 45.332031 23.398438 45.011719 23.398438 44.980469 23.648438 C 45.085938 23.761719 45.105469 23.933594 45.191406 24.074219 C 45.359375 24.34375 45.640625 24.707031 45.894531 24.898438 C 46.171875 25.105469 46.453125 25.328125 46.75 25.511719 C 47.273438 25.828125 47.859375 26.011719 48.367188 26.332031 C 48.664063 26.523438 48.964844 26.761719 49.253906 26.972656 C 49.398438 27.082031 49.492188 27.246094 49.679688 27.3125 L 49.679688 27.28125 C 49.582031 27.15625 49.558594 26.984375 49.46875 26.855469 L 49.066406 26.453125 C 48.679688 25.941406 48.1875 25.488281 47.664063 25.113281 C 47.246094 24.8125 46.3125 24.40625 46.140625 23.921875 L 46.109375 23.890625 C 46.402344 23.859375 46.75 23.75 47.023438 23.675781 C 47.484375 23.554688 47.890625 23.585938 48.363281 23.464844 C 48.578125 23.402344 48.792969 23.339844 49.007813 23.28125 L 49.007813 23.15625 C 48.769531 22.914063 48.597656 22.585938 48.335938 22.363281 C 47.652344 21.78125 46.90625 21.199219 46.136719 20.714844 C 45.710938 20.445313 45.183594 20.269531 44.734375 20.042969 C 44.582031 19.964844 44.316406 19.925781 44.214844 19.796875 C 43.976563 19.496094 43.847656 19.113281 43.664063 18.761719 C 43.28125 18.023438 42.90625 17.21875 42.566406 16.441406 C 42.335938 15.914063 42.183594 15.390625 41.894531 14.914063 C 40.507813 12.636719 39.015625 11.257813 36.703125 9.90625 C 36.210938 9.617188 35.621094 9.507813 34.996094 9.359375 C 34.65625 9.335938 34.324219 9.316406 33.984375 9.296875 C 33.78125 9.210938 33.566406 8.960938 33.375 8.835938 C 32.894531 8.535156 31.949219 8.011719 31.167969 8 Z M 34.476563 11.3125 C 34.253906 11.308594 34.09375 11.339844 33.925781 11.375 L 33.925781 11.40625 L 33.957031 11.40625 C 34.0625 11.625 34.253906 11.765625 34.386719 11.953125 C 34.488281 12.167969 34.585938 12.382813 34.6875 12.597656 L 34.71875 12.566406 C 34.90625 12.433594 34.996094 12.21875 34.996094 11.894531 C 34.917969 11.816406 34.90625 11.714844 34.84375 11.621094 C 34.753906 11.492188 34.585938 11.421875 34.476563 11.3125 Z M 1.867188 23.996094 C 1.566406 24.007813 1.238281 24.066406 0.882813 24.179688 C 0.289063 24.359375 -0.00390625 24.714844 -0.00390625 25.4375 L -0.00390625 33 L 2 33 L 2 25.621094 L 4.777344 31.929688 C 5.121094 32.714844 5.589844 32.996094 6.507813 32.996094 C 7.429688 32.996094 7.878906 32.714844 8.222656 31.929688 L 11 25.78125 L 11 33 L 13 33 L 13 25.4375 C 13 24.714844 12.710938 24.359375 12.113281 24.179688 C 10.691406 23.730469 9.734375 24.117188 9.304688 25.089844 L 6.453125 31.503906 L 3.695313 25.089844 C 3.382813 24.359375 2.757813 23.960938 1.867188 23.996094 Z M 26.246094 24 C 25.457031 24 23 24.09375 23 26 L 23 27.234375 C 23 28.109375 23.769531 28.824219 25.4375 29 C 25.625 29.011719 25.8125 29.027344 26 29.027344 C 26 29.027344 27.945313 28.988281 28 29 C 29.125 29 29 29.875 29 30 L 29 31 C 29 31.136719 28.96875 32 27.988281 32 L 23 32 L 23 33 L 28.007813 33 C 28.664063 33 29.300781 32.863281 29.808594 32.625 C 30.652344 32.238281 31 31.714844 31 31.027344 L 31 29.597656 C 31 28.0625 29.09375 28 28 28 L 26 28 C 25.214844 28 25.09375 27.523438 25 27 L 25 26 C 25.09375 25.601563 25.269531 25.0625 25.964844 25 L 31 25 L 31 24 Z M 33.980469 24 C 32.503906 24.203125 31.984375 24.9375 31.984375 26 L 31.984375 31 C 31.984375 31.972656 32.527344 32.558594 33.644531 32.863281 C 34.019531 32.96875 34.359375 33.011719 34.679688 33.011719 L 36.90625 33 L 38.214844 33 L 39.328125 34 L 41.578125 34 L 40.03125 32.605469 C 40.757813 32.304688 40.984375 31.84375 40.984375 30.980469 L 40.984375 26 C 40.984375 24.9375 40.292969 24.203125 38.816406 24 Z M 42 24 L 42 30.957031 C 42 32.164063 42.683594 32.84375 44.492188 32.980469 C 44.660156 32.988281 44.832031 33 45 33 L 50 33 L 50 32 L 45.378906 32 C 44.347656 32 44 31.566406 44 30.949219 L 44 24 Z M 35.171875 25 L 37.746094 25 C 38.425781 25 38.882813 25.546875 38.984375 26 C 38.984375 26 39 30.65625 39 31 C 39 31.34375 38.808594 31.5 38.808594 31.5 L 38.265625 31 L 36 31 L 37.113281 32 L 35.171875 32 C 34.476563 32 34.085938 31.484375 33.984375 31 L 33.984375 26.101563 C 33.984375 25.570313 34.390625 25 35.171875 25 Z M 14 27 C 14.039063 27.039063 14 31.261719 14 31.34375 C 14.015625 32.21875 15.125 32.984375 16.863281 33 L 20 33 L 20 33.066406 C 20 33.253906 20.136719 33.878906 19 34 C 18.988281 34 14.011719 34 14 34 L 14 35 L 19.214844 35 C 20.097656 34.972656 22.011719 34.773438 22 33.242188 C 22 33.214844 22.007813 27 22 27 L 20 27 L 20 32 C 19.96875 32 17.523438 32.007813 17.03125 32 C 16.066406 31.984375 15.984375 31.433594 16 31.222656 L 16 27 Z"></path>
-                                </svg>
-                            </div>
-                            <div class="col-sm-12 owl-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
-                                    <path d="M 34.902344 2 C 32.863281 2 31.097656 2.550781 29.875 3.09375 C 28.675781 2.691406 26.6875 2.003906 24.300781 2.5 C 22.910156 2.742188 21.632813 3.316406 20.460938 4.195313 C 18.53125 3.265625 16.515625 2.695313 14.402344 2.601563 C 13.101563 2.5 7.800781 3.101563 5.898438 5.898438 C 5.199219 7 4.5 8.398438 4.199219 10.097656 C 3.898438 11.597656 3.898438 13.300781 4.398438 16.800781 C 4.699219 19.199219 5.101563 20.800781 6 24.097656 C 6.101563 24.398438 6.601563 26 8.101563 30.402344 C 8.398438 31.199219 9 32.699219 10.199219 34.097656 C 11 35.097656 11.800781 35.699219 12.800781 35.699219 C 14.101563 35.699219 15 34.800781 15.800781 33.800781 C 15.859375 33.734375 15.921875 33.660156 15.980469 33.59375 C 15.90625 33.710938 15.839844 33.839844 15.800781 34 C 15.601563 35 16.800781 35.800781 17.800781 36.199219 C 18.601563 36.597656 19.5 36.699219 20.199219 36.699219 C 21.097656 36.699219 21.800781 36.5 22.199219 36.402344 C 22.542969 36.285156 23.285156 35.964844 24.078125 35.4375 C 24.113281 37.992188 24.136719 41.007813 24.199219 41.699219 C 24.5 44.300781 25.199219 46.097656 26.5 47.097656 C 27.5 47.898438 29.300781 48 29.402344 48 C 31.199219 48 34 46.800781 35.199219 44.902344 C 35.800781 44 36 43.199219 36.199219 42.097656 C 36.398438 41.5 36.597656 38 36.699219 37.300781 C 36.835938 36.195313 36.941406 35.105469 37.046875 34.046875 C 37.707031 34.21875 38.519531 34.402344 39.402344 34.402344 C 41 34.402344 43.101563 33.300781 43.5 33.097656 C 44.300781 32.5 45.898438 31.101563 45.199219 29.902344 C 44.800781 29.199219 44.199219 29.199219 42.699219 29.402344 C 42.699219 29.402344 40.300781 29.699219 40.097656 29.597656 C 39.953125 29.542969 39.730469 29.402344 39.480469 29.21875 C 40 28.414063 40.460938 27.617188 41 26.902344 C 42.199219 24.601563 42.902344 22.800781 43.402344 21.402344 C 44.300781 18.902344 44.800781 16.898438 45.097656 15.5 C 45.800781 12.5 46 11.101563 45.597656 9.5 C 44.800781 6.699219 41.898438 4.300781 40.699219 3.601563 C 39.898438 3.199219 37.902344 2 34.902344 2 Z M 34.902344 4 C 37.402344 4 39.101563 5 40 5.398438 C 41.101563 6 43.601563 8 43.800781 9.898438 C 43.902344 11 44 12.101563 43.300781 15 C 42.902344 16.398438 42.5 18.199219 41.597656 20.699219 C 41.097656 22.097656 40.5 23.800781 39.300781 25.902344 C 39.269531 25.953125 39.234375 26.007813 39.203125 26.0625 C 39.320313 25.640625 39.402344 25.300781 39.402344 25.300781 C 39.601563 24.300781 39.601563 23.5 39.5 22.300781 C 39.398438 21.699219 39.300781 20.199219 39.300781 19.597656 C 39.300781 19.300781 39.597656 16.199219 39.699219 15.097656 C 39.800781 13.300781 38.699219 11.097656 38.402344 10.699219 C 36.902344 8.398438 36.101563 7.101563 34.5 5.800781 C 34.101563 5.460938 33.417969 4.894531 32.488281 4.324219 C 33.222656 4.144531 34.035156 4 34.902344 4 Z M 26.066406 4.410156 C 27.371094 4.441406 28.476563 4.800781 29.300781 5.101563 C 31.402344 5.800781 32.699219 6.898438 33.300781 7.398438 C 34.601563 8.5 35.300781 9.601563 36.800781 11.902344 C 36.910156 12.121094 37.195313 12.585938 37.421875 13.234375 C 35.375 13.046875 34.015625 13.765625 33.199219 14.5 C 32 15.5 32.097656 17 32.199219 18.097656 C 32.199219 18.898438 32.402344 19.902344 33.902344 23.300781 C 34.5 24.800781 35.097656 26.398438 35.699219 27.5 C 36.011719 28.121094 36.394531 28.691406 36.804688 29.199219 C 36.566406 29.320313 36.324219 29.476563 36.097656 29.699219 C 35.5 30.398438 35.398438 31.101563 35.199219 32.402344 C 35 33.402344 34.800781 35.5 34.699219 37.199219 C 34.699219 37.898438 34.402344 41.300781 34.300781 41.800781 C 34 42.800781 33.898438 43.300781 33.5 43.902344 C 32.800781 45 30.601563 45.902344 29.300781 45.800781 C 28.902344 45.800781 28.300781 45.800781 27.800781 45.402344 C 26.699219 44.601563 26.300781 42.800781 26.199219 41.402344 C 26.097656 40.402344 26.199219 33.199219 26 31.597656 C 25.898438 31.199219 25.800781 30.199219 25 29.5 C 24.664063 29.21875 23.96875 29.074219 23.3125 28.976563 C 23.320313 28.640625 23.339844 28.304688 23.402344 28 C 23.5 27.398438 23.699219 27.097656 23.902344 26.597656 C 24 26.300781 24.199219 25.902344 24.402344 25.402344 C 25.300781 22.601563 25.097656 18.898438 24.597656 16.597656 C 24.5 16.398438 24.097656 14.800781 22.699219 13.902344 C 21.199219 13 19.597656 13.5 18.699219 13.800781 C 18.328125 13.902344 17.960938 14.0625 17.59375 14.25 C 17.65625 13.832031 17.710938 13.410156 17.800781 13 C 18.199219 11 18.601563 9.300781 19.902344 7.601563 C 21.300781 5.898438 22.898438 4.800781 24.699219 4.5 C 25.175781 4.425781 25.632813 4.398438 26.066406 4.410156 Z M 13.71875 4.585938 C 13.953125 4.582031 14.152344 4.585938 14.300781 4.601563 C 15.863281 4.683594 17.359375 5.050781 18.84375 5.675781 C 18.660156 5.878906 18.476563 6.082031 18.300781 6.300781 C 16.601563 8.300781 16.199219 10.398438 15.800781 12.5 C 15.300781 15 15.199219 17.597656 15.597656 20.199219 L 15.402344 22.097656 C 15.300781 23.097656 15.097656 25 16.199219 27 C 16.585938 27.664063 17.011719 28.226563 17.480469 28.707031 C 16.464844 30.050781 15.386719 31.320313 14.300781 32.5 C 13.699219 33.199219 13.199219 33.699219 12.800781 33.699219 C 12.699219 33.699219 12.300781 33.5 11.699219 32.800781 C 10.597656 31.601563 10.199219 30.300781 10 29.800781 C 8.800781 26.199219 8.101563 23.898438 8 23.597656 C 7.199219 20.398438 6.800781 18.800781 6.398438 16.5 C 5.898438 13.300781 5.898438 11.699219 6.199219 10.402344 C 6.5 9 7 7.898438 7.5 7.101563 C 8.726563 5.175781 12.09375 4.628906 13.71875 4.585938 Z M 36.664063 15.125 C 36.984375 15.125 37.332031 15.164063 37.699219 15.242188 C 37.6875 16.175781 37.300781 19.105469 37.300781 19.5 C 37.300781 20.300781 37.5 21.898438 37.5 22.5 C 37.601563 23.601563 37.601563 24.199219 37.5 25 C 37.5 25 37.351563 25.714844 37.199219 26.222656 C 36.734375 25.171875 36.21875 23.917969 35.597656 22.5 C 34.097656 19.101563 34 18.402344 34 17.902344 C 34 17.199219 34 16.300781 34.597656 15.902344 C 35.160156 15.402344 35.84375 15.132813 36.664063 15.125 Z M 21.140625 15.417969 C 21.339844 15.441406 21.523438 15.5 21.699219 15.597656 C 22.5 16 22.699219 17 22.699219 17 C 23.199219 19.199219 23.398438 22.5 22.597656 24.699219 C 22.5 25.097656 22.300781 25.398438 22.199219 25.699219 C 22 26.199219 21.800781 26.699219 21.597656 27.597656 C 21.546875 27.96875 21.523438 28.335938 21.511719 28.703125 C 20.820313 28.558594 20.167969 28.3125 19.699219 28 C 18.898438 27.601563 18.300781 26.898438 17.902344 26.097656 C 17.199219 24.597656 17.300781 23.199219 17.402344 22.402344 L 17.597656 20.097656 C 17.457031 18.972656 17.390625 17.84375 17.40625 16.722656 C 17.867188 16.328125 18.46875 15.925781 19.300781 15.699219 C 19.902344 15.550781 20.558594 15.34375 21.140625 15.417969 Z M 35.886719 16.089844 C 35.625 16.101563 35.347656 16.148438 35.199219 16.199219 C 34.800781 16.300781 34.699219 16.300781 34.597656 16.5 C 34.5 16.699219 34.800781 17 34.902344 17.199219 C 35 17.199219 35.300781 17.5 35.699219 17.402344 C 36 17.300781 36.199219 17.101563 36.300781 17 C 36.402344 16.898438 36.800781 16.398438 36.5 16.199219 C 36.398438 16.097656 36.148438 16.074219 35.886719 16.089844 Z M 20.914063 16.816406 C 20.804688 16.824219 20.699219 16.851563 20.597656 16.902344 C 20.5 16.902344 20.300781 17 20.199219 17.199219 C 20.097656 17.398438 20.199219 17.597656 20.300781 17.699219 C 20.5 18 20.800781 18.300781 21.300781 18.300781 C 21.402344 18.300781 21.800781 18.300781 22.097656 18 C 22.097656 18 22.402344 17.699219 22.402344 17.402344 C 22.300781 17.199219 22.101563 17.101563 21.800781 17 C 21.574219 16.925781 21.238281 16.792969 20.914063 16.816406 Z M 19.074219 29.902344 C 19.6875 30.230469 20.425781 30.496094 21.234375 30.679688 C 21.019531 31.109375 20.710938 31.464844 20.402344 31.699219 C 19.699219 32.199219 18.800781 32.5 17.902344 32.699219 C 17.699219 32.699219 17.601563 32.800781 17.402344 32.800781 C 16.917969 32.9375 16.449219 33.089844 16.128906 33.421875 C 17.109375 32.332031 18.09375 31.128906 19.074219 29.902344 Z M 38.355469 30.703125 C 38.792969 31.03125 39.222656 31.273438 39.597656 31.402344 C 40.199219 31.601563 40.699219 31.601563 42.5 31.402344 C 42.199219 31.699219 41.300781 32.199219 40 32.402344 C 39.164063 32.484375 38.125 32.285156 37.28125 32.042969 C 37.359375 31.476563 37.449219 31.152344 37.597656 31 C 37.652344 30.949219 37.984375 30.847656 38.355469 30.703125 Z M 23.296875 31.003906 C 23.503906 31.039063 23.667969 31.066406 23.699219 31.097656 C 23.898438 31.300781 24 31.800781 24 32 C 24.011719 32.171875 24.019531 32.605469 24.027344 32.90625 C 23.203125 33.871094 21.878906 34.40625 21.597656 34.5 C 21.199219 34.699219 20 34.898438 18.800781 34.5 C 19.800781 34.199219 20.800781 33.902344 21.597656 33.300781 C 22.296875 32.800781 22.898438 32.003906 23.296875 31.003906 Z"></path>
-                                </svg>
-                            </div>
-                            <div class="col-sm-12 owl-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
-                                    <path d="M 25 2 C 12.311335 2 2 12.311335 2 25 C 2 37.688665 12.311335 48 25 48 C 37.688665 48 48 37.688665 48 25 C 48 12.311335 37.688665 2 25 2 z M 25 4 C 36.607335 4 46 13.392665 46 25 C 46 25.071371 45.994849 25.141688 45.994141 25.212891 C 45.354527 25.153853 44.615508 25.097776 43.675781 25.064453 C 42.347063 25.017336 40.672259 25.030987 38.773438 25.125 C 38.843852 24.634651 38.893205 24.137377 38.894531 23.626953 C 38.991361 21.754332 38.362521 20.002464 37.339844 18.455078 C 37.586913 17.601352 37.876747 16.515218 37.949219 15.283203 C 38.031819 13.878925 37.910599 12.321765 36.783203 11.269531 L 36.494141 11 L 36.099609 11 C 33.416539 11 31.580023 12.12321 30.457031 13.013672 C 28.835529 12.386022 27.01222 12 25 12 C 22.976367 12 21.135525 12.391416 19.447266 13.017578 C 18.324911 12.126691 16.486785 11 13.800781 11 L 13.408203 11 L 13.119141 11.267578 C 12.020956 12.287321 11.919778 13.801759 11.988281 15.199219 C 12.048691 16.431506 12.321732 17.552142 12.564453 18.447266 C 11.524489 20.02486 10.900391 21.822018 10.900391 23.599609 C 10.900391 24.111237 10.947969 24.610071 11.017578 25.101562 C 9.2118173 25.017808 7.6020996 25.001668 6.3242188 25.046875 C 5.3845143 25.080118 4.6454422 25.135713 4.0058594 25.195312 C 4.0052628 25.129972 4 25.065482 4 25 C 4 13.392665 13.392665 4 25 4 z M 14.396484 13.130859 C 16.414067 13.322043 17.931995 14.222972 18.634766 14.847656 L 19.103516 15.261719 L 19.681641 15.025391 C 21.263092 14.374205 23.026984 14 25 14 C 26.973016 14 28.737393 14.376076 30.199219 15.015625 L 30.785156 15.273438 L 31.263672 14.847656 C 31.966683 14.222758 33.487184 13.321554 35.505859 13.130859 C 35.774256 13.575841 36.007486 14.208668 35.951172 15.166016 C 35.883772 16.311737 35.577304 17.559658 35.345703 18.300781 L 35.195312 18.783203 L 35.494141 19.191406 C 36.483616 20.540691 36.988121 22.000937 36.902344 23.544922 L 36.900391 23.572266 L 36.900391 23.599609 C 36.900391 26.095064 36.00178 28.092339 34.087891 29.572266 C 32.174048 31.052199 29.152663 32 24.900391 32 C 20.648118 32 17.624827 31.052192 15.710938 29.572266 C 13.797047 28.092339 12.900391 26.095064 12.900391 23.599609 C 12.900391 22.134903 13.429308 20.523599 14.40625 19.191406 L 14.699219 18.792969 L 14.558594 18.318359 C 14.326866 17.530484 14.042825 16.254103 13.986328 15.101562 C 13.939338 14.14294 14.166221 13.537027 14.396484 13.130859 z M 8.8847656 26.021484 C 9.5914575 26.03051 10.40146 26.068656 11.212891 26.109375 C 11.290419 26.421172 11.378822 26.727898 11.486328 27.027344 C 8.178972 27.097092 5.7047309 27.429674 4.1796875 27.714844 C 4.1152068 27.214494 4.0638483 26.710021 4.0351562 26.199219 C 5.1622058 26.092262 6.7509972 25.994233 8.8847656 26.021484 z M 41.115234 26.037109 C 43.247527 26.010033 44.835728 26.108156 45.962891 26.214844 C 45.934234 26.718328 45.883749 27.215664 45.820312 27.708984 C 44.24077 27.41921 41.699674 27.086688 38.306641 27.033203 C 38.411945 26.739677 38.499627 26.438219 38.576172 26.132812 C 39.471291 26.084833 40.344564 26.046896 41.115234 26.037109 z M 11.912109 28.019531 C 12.508849 29.215327 13.361516 30.283019 14.488281 31.154297 C 16.028825 32.345531 18.031623 33.177838 20.476562 33.623047 C 20.156699 33.951698 19.86578 34.312595 19.607422 34.693359 L 19.546875 34.640625 C 19.552375 34.634325 19.04975 34.885878 18.298828 34.953125 C 17.547906 35.020374 16.621615 35 15.800781 35 C 14.575781 35 14.03621 34.42121 13.173828 33.367188 C 12.696283 32.72356 12.114101 32.202331 11.548828 31.806641 C 10.970021 31.401475 10.476259 31.115509 9.8652344 31.013672 L 9.7832031 31 L 9.6992188 31 C 9.2325521 31 8.7809835 31.03379 8.359375 31.515625 C 8.1485707 31.756544 8.003277 32.202561 8.0976562 32.580078 C 8.1920352 32.957595 8.4308563 33.189581 8.6445312 33.332031 C 10.011254 34.24318 10.252795 36.046511 11.109375 37.650391 C 11.909298 39.244315 13.635662 40 15.400391 40 L 18 40 L 18 44.802734 C 10.967811 42.320535 5.6646795 36.204613 4.3320312 28.703125 C 5.8629338 28.414776 8.4265387 28.068108 11.912109 28.019531 z M 37.882812 28.027344 C 41.445538 28.05784 44.08105 28.404061 45.669922 28.697266 C 44.339047 36.201504 39.034072 42.31987 32 44.802734 L 32 39.599609 C 32 38.015041 31.479642 36.267712 30.574219 34.810547 C 30.299322 34.368135 29.975945 33.949736 29.615234 33.574219 C 31.930453 33.11684 33.832364 32.298821 35.3125 31.154297 C 36.436824 30.284907 37.287588 29.220424 37.882812 28.027344 z M 23.699219 34.099609 L 26.5 34.099609 C 27.312821 34.099609 28.180423 34.7474 28.875 35.865234 C 29.569577 36.983069 30 38.484177 30 39.599609 L 30 45.398438 C 28.397408 45.789234 26.72379 46 25 46 C 23.27621 46 21.602592 45.789234 20 45.398438 L 20 39.599609 C 20 38.508869 20.467828 37.011307 21.208984 35.888672 C 21.950141 34.766037 22.886398 34.099609 23.699219 34.099609 z M 12.308594 35.28125 C 13.174368 36.179258 14.222525 37 15.800781 37 C 16.579948 37 17.552484 37.028073 18.476562 36.945312 C 18.479848 36.945018 18.483042 36.943654 18.486328 36.943359 C 18.36458 37.293361 18.273744 37.645529 18.197266 38 L 15.400391 38 C 14.167057 38 13.29577 37.55443 12.894531 36.751953 L 12.886719 36.738281 L 12.880859 36.726562 C 12.716457 36.421191 12.500645 35.81059 12.308594 35.28125 z"></path>
-                                </svg>
-                            </div>
-                            <div class="col-sm-12 owl-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
-                                    <path d="M 24.960938 2 A 1.0001 1.0001 0 0 0 24.603516 2.0546875 L 3.671875 9.3398438 A 1.0001 1.0001 0 0 0 3.0078125 10.40625 L 6.3144531 37.529297 A 1.0001 1.0001 0 0 0 6.8300781 38.287109 L 24.476562 47.878906 A 1.0001 1.0001 0 0 0 25.435547 47.876953 L 43.173828 38.154297 A 1.0001 1.0001 0 0 0 43.685547 37.398438 L 46.992188 10.277344 A 1.0001 1.0001 0 0 0 46.322266 9.2089844 L 25.253906 2.0527344 A 1.0001 1.0001 0 0 0 24.960938 2 z M 24.9375 4.0585938 L 44.908203 10.841797 L 41.761719 36.648438 L 24.953125 45.861328 L 8.2382812 36.775391 L 5.0898438 10.964844 L 24.9375 4.0585938 z M 25.035156 6 A 1.0001 1.0001 0 0 0 24.09375 6.578125 L 11.09375 34.578125 A 1.0001 1.0001 0 0 0 12 36 L 16.4375 36 A 1.0001 1.0001 0 0 0 17.34375 35.421875 L 19.857422 30.007812 L 30.142578 30.007812 L 32.65625 35.421875 A 1.0001 1.0001 0 0 0 33.5625 36 L 38 36 A 1.0001 1.0001 0 0 0 38.90625 34.578125 L 25.90625 6.578125 A 1.0001 1.0001 0 0 0 25.035156 6 z M 25 9.3730469 L 36.433594 34 L 34.201172 34 L 31.6875 28.585938 A 1.0001 1.0001 0 0 0 30.78125 28.007812 L 19.21875 28.007812 A 1.0001 1.0001 0 0 0 18.3125 28.585938 L 15.796875 34 L 13.566406 34 L 25 9.3730469 z M 25.039062 15.5 A 1.0001 1.0001 0 0 0 24.091797 16.082031 L 20.166016 24.59375 A 1.0001 1.0001 0 0 0 21.074219 26.011719 L 28.925781 26.011719 A 1.0001 1.0001 0 0 0 29.833984 24.59375 L 25.908203 16.082031 A 1.0001 1.0001 0 0 0 25.039062 15.5 z M 25 18.886719 L 27.363281 24.011719 L 22.636719 24.011719 L 25 18.886719 z"></path>
-                                </svg>
-                            </div>
-                            <div class="col-sm-12 owl-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
-                                    <path d="M 6.667969 4 C 5.207031 4 4 5.207031 4 6.667969 L 4 43.332031 C 4 44.792969 5.207031 46 6.667969 46 L 43.332031 46 C 44.792969 46 46 44.796875 46 43.332031 L 46 6.667969 C 46 5.207031 44.796875 4 43.332031 4 Z M 6.667969 6 L 43.332031 6 C 43.703125 6 44 6.296875 44 6.667969 L 44 43.332031 C 44 43.703125 43.703125 44 43.332031 44 L 6.667969 44 C 6.296875 44 6 43.703125 6 43.332031 L 6 6.667969 C 6 6.296875 6.296875 6 6.667969 6 Z M 23 23 L 23 35.574219 C 23 37.503906 22.269531 38 21 38 C 19.671875 38 18.75 37.171875 18.140625 36.097656 L 15 38 C 15.910156 39.925781 18.140625 42 21.234375 42 C 24.65625 42 27 40.179688 27 36.183594 L 27 23 Z M 35.453125 23 C 32.046875 23 29.863281 25.179688 29.863281 28.042969 C 29.863281 31.148438 31.695313 32.617188 34.449219 33.789063 L 35.402344 34.199219 C 37.140625 34.960938 38 35.425781 38 36.734375 C 38 37.824219 37.171875 38.613281 35.589844 38.613281 C 33.707031 38.613281 32.816406 37.335938 32 36 L 29 38 C 30.121094 40.214844 32.132813 42 35.675781 42 C 39.300781 42 42 40.117188 42 36.683594 C 42 33.496094 40.171875 32.078125 36.925781 30.6875 L 35.972656 30.28125 C 34.335938 29.570313 33.625 29.109375 33.625 27.964844 C 33.625 27.039063 34.335938 26.328125 35.453125 26.328125 C 36.550781 26.328125 37.253906 26.792969 37.90625 27.964844 L 40.878906 26.058594 C 39.625 23.84375 37.878906 23 35.453125 23 Z"></path>
-                                </svg>
-                            </div>
-                            <div class="col-sm-12 owl-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
-                                    <path d="M 5 4 A 1.0001 1.0001 0 0 0 4 5 L 4 45 A 1.0001 1.0001 0 0 0 5 46 L 45 46 A 1.0001 1.0001 0 0 0 46 45 L 46 5 A 1.0001 1.0001 0 0 0 45 4 L 5 4 z M 6 6 L 44 6 L 44 44 L 6 44 L 6 6 z M 15 23 L 15 26.445312 L 20 26.445312 L 20 42 L 24 42 L 24 26.445312 L 29 26.445312 L 29 23 L 15 23 z M 36.691406 23.009766 C 33.576782 22.997369 30.017578 23.941219 30.017578 28.324219 C 30.017578 34.054219 37.738281 34.055625 37.738281 36.640625 C 37.738281 36.885625 37.842187 38.666016 35.117188 38.666016 C 32.392187 38.666016 30.121094 36.953125 30.121094 36.953125 L 30.121094 41.111328 C 30.121094 41.111328 42.001953 44.954062 42.001953 36.289062 C 42.000953 30.664063 34.208984 30.945391 34.208984 28.150391 C 34.208984 27.067391 34.978375 26.054687 37.109375 26.054688 C 39.240375 26.054688 41.126953 27.3125 41.126953 27.3125 L 41.267578 23.607422 C 41.267578 23.607422 39.113892 23.019408 36.691406 23.009766 z"></path>
-                                </svg>
-                            </div>
-                            <div class="col-sm-12 owl-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
-                                    <path d="M 25.167969 5.0058594 C 24.781877 4.9968865 24.394532 5.014912 24.007812 5.0625 C 22.976561 5.1894012 21.954004 5.5214624 21 6.0722656 C 19.738126 6.8008205 18.867614 7.8795934 18.189453 9.0625 L 18.074219 8.9960938 L 4.0742188 32.996094 L 4.1894531 33.0625 C 3.5013617 34.243015 3 35.539748 3 37 C 3 41.406432 6.5935644 45 11 45 C 13.946182 45 16.422265 43.319288 17.810547 40.9375 L 17.925781 41.003906 L 25 28.876953 L 32.074219 41.003906 C 34.278505 44.817 39.185255 46.130214 43 43.927734 C 46.816027 41.724515 48.130947 36.816015 45.927734 33 L 45.927734 32.998047 L 31.927734 9 C 30.481872 6.4957324 27.870611 5.0686695 25.167969 5.0058594 z M 25.130859 6.9960938 C 27.155284 7.0392142 29.104113 8.1100176 30.195312 10 L 30.197266 10.001953 L 30.197266 10.003906 L 44.197266 34.003906 C 45.856861 36.883192 44.878669 40.533286 42 42.195312 C 39.120015 43.8581 35.467467 42.879973 33.804688 40 L 33.802734 39.998047 L 19.804688 16 L 19.804688 15.998047 L 19.802734 15.996094 C 18.143139 13.116808 19.121331 9.4667144 22 7.8046875 C 22.719996 7.3889907 23.488252 7.1380832 24.261719 7.0410156 C 24.551769 7.0046153 24.841656 6.9899337 25.130859 6.9960938 z M 17.212891 14.441406 C 17.372969 15.315284 17.603702 16.188437 18.072266 17 L 18.072266 17.001953 L 23.841797 26.892578 L 18.728516 35.658203 C 18.065728 31.912371 14.931107 29 11 29 C 10.084587 29 9.236334 29.238188 8.4160156 29.523438 L 17.212891 14.441406 z M 11 31 C 14.325556 31 17 33.674446 17 37 C 17 40.325554 14.325556 43 11 43 C 7.6744439 43 5 40.325554 5 37 C 5 33.674446 7.6744439 31 11 31 z"></path>
-                                </svg>
-                            </div>
-                            <div class="col-sm-12 owl-item">
-                                <img style="width: 50px;" src="https://img.icons8.com/ios/50/laravel.png" alt="laravel" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Contact Section -->
-        <div class="contact aniview" data-av-animation="slideInUp" id="contact">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <h3>CONTACTO</h3>
-                        <hr class="line">
-                    </div>
-                    <div class="no-padding col-lg-6 col-md-12 col-xs-12">
-                        <div class="main-text">
-                            <div class="contact-wrap">
-                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                <h4>Email:</h4>
-                                <a href="#">
-                                    <p>contacto@digitaldev.cl</p>
-                                </a>
+            <section class="section-soft" id="contacto">
+                <div class="container">
+                    <div class="contact-layout">
+                        <div class="reveal">
+                            <div class="section-head">
+                                <h2>Cuéntame qué quieres construir.</h2>
+                                <p>Puede ser una web simple, un sistema para tu equipo o una automatización con IA. Partimos por entender el objetivo y bajarlo a una solución posible.</p>
                             </div>
-                            <div class="contact-wrap">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                <h4>Ubicación:</h4>
-                                <a href="#">
-                                    <p>Talcahuano - Bio-Bio</p>
+                            <div class="contact-box">
+                                <a class="whatsapp-link" href="https://wa.me/56932239292?text=%C2%A1Hola%21%2C%20tengo%20una%20idea%20para%20mi%20negocio.%20Me%20gustar%C3%ADa%20darle%20forma%20contigo." target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">
+                                    <svg viewBox="0 0 32 32" aria-hidden="true">
+                                        <path d="M16.04 3.2c-7.02 0-12.72 5.62-12.72 12.54 0 2.2.58 4.34 1.69 6.23L3.2 28.8l7.02-1.79a12.9 12.9 0 0 0 5.82 1.42c7.02 0 12.72-5.62 12.72-12.54S23.06 3.2 16.04 3.2Zm0 22.98c-1.84 0-3.64-.48-5.21-1.38l-.38-.22-4.17 1.06 1.1-4.01-.25-.41a10.24 10.24 0 0 1-1.56-5.48c0-5.67 4.7-10.29 10.47-10.29s10.47 4.62 10.47 10.29-4.7 10.44-10.47 10.44Zm5.74-7.7c-.31-.16-1.85-.9-2.13-1-.29-.1-.5-.16-.7.16-.21.31-.81 1-.99 1.2-.18.21-.36.23-.67.08-.31-.16-1.31-.48-2.5-1.52-.92-.81-1.55-1.82-1.73-2.13-.18-.31-.02-.48.14-.63.14-.14.31-.36.47-.54.16-.18.21-.31.31-.52.1-.21.05-.39-.03-.54-.08-.16-.7-1.67-.96-2.28-.25-.6-.51-.52-.7-.53h-.6c-.21 0-.54.08-.82.39-.29.31-1.09 1.06-1.09 2.59s1.12 3.01 1.28 3.22c.16.21 2.21 3.34 5.35 4.68.75.32 1.33.51 1.79.65.75.24 1.44.2 1.98.12.6-.09 1.85-.75 2.11-1.47.26-.72.26-1.34.18-1.47-.08-.13-.29-.21-.6-.36Z" />
+                                    </svg>
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <div class="no-padding col-lg-6 col-md-12 col-xs-12">
-                        <div class="form-bg">
-                            <form id="form">
-                                <input type="text" class="name" name="name" placeholder="Nombre" required /><br />
-                                <input type="email" class="email" name="email" placeholder="Email" required /><br />
-                                <textarea type="text" class="msg" name="text" placeholder="Mensaje" required></textarea>
-                                <button type="button" id="boton_enviar_contacto" class="btn btn-block">ENVIAR MENSAJE</button>
-                            </form>
-                        </div>
-                    </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
 
-        <!-- Footer Section -->
         <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 col-xs-12 text-center">
-                        <img src="img/marca-dv-blanco2.png" style="width: 25%; margin-top:30px" alt="">
-                        <h4>&copy; Todos los derechos reservados. <?php echo date('Y') ?></h4>
-                    </div>
-                </div>
+            <div class="container footer-wrap">
+                <!-- <img src="img/marca-dv-color2.png" alt="Digital Dev"> -->
+                <p>&copy; <?php echo date('Y') ?> Fabián Ignacio. Desarrollo web, sistemas e IA aplicada.</p>
             </div>
         </footer>
     </div>
 
-    <div id="modalProyectos" class="modal fade" role="dialog" aria-hidden="true">
-        <div class="modal-dialog classes-details modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h4 class="description-text text-justify"></h4>
-                    <div class="row">
-                        <div class="col-sm-5 order-sm-2 text-right">
-                            <img class="modal-img" src="" alt="foto">
-                        </div>
-                        <div class="col-sm-7 order-sm-1">
-                            <h5>Datos Generales</h5>
-                            <ul class="timetable">
-                                <li> Sitio Web: <a target="_blank" class="url" href=""></a> </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <?php
-    include 'modal_error_orden_alerta.php';
-    include 'modal_bien_orden_alerta.php';
-    ?>
-
-    <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.animatedheadline.min.js"></script>
-    <script src="js/particles.js"></script>
-    <script src="js/swiper.min.js"></script>
-    <script src="js/common.js"></script>
-    <script src="js/main.js"></script>
-    <script src="https://kit.fontawesome.com/e0af1d2bbb.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/jquery-aniview/dist/jquery.aniview.js"></script>
     <script>
-        $(document).ready(function() {
-            // var owl = $('.owl-carousel');
-        });
-        $(".owl-carousel").owlCarousel({
-            items: 7,
-            dots: false,
-            loop: true,
-            margin: 50,
-            autoplay: true,
-            autoplayTimeout: 1000,
-            autoplayHoverPause: true
-        });
-        // $('.aniview').AniView();
-        $("#modalProyectos").on("show.bs.modal", function(t) {
-            var e = $(t.relatedTarget),
-                n = e.data("title"),
-                i = e.data("img"),
-                d = e.data("description"),
-                u = e.data("url"),
-                r = $(this);
-            r.find(".modal-title").text(n), r.find(".description-text").text(d), r.find(".modal-img").attr("src", i), r.find(".url").attr("href", u), r.find(".url").text(u);
-        });
-        $('#boton_enviar_contacto').click(function() {
-            var datos = $('#form').serialize();
-            var url = "resultado_contacto.php";
-            $.ajax({
-                type: "POST",
-                url: url,
-                dataType: "json",
-                data: datos,
-                success: function(data) {
-                    if (data.status == 1) {
-                        $('#modal_bien_orden_alerta').modal("show");
-                        $('#resp_bien_orden').html(data.msg);
-                        setTimeout(function() {
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        $('#modal_error_orden_alerta').modal("show");
-                        $('#resp_error_orden').html(data.msg);
-                    }
+        const revealItems = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    revealObserver.unobserve(entry.target);
                 }
             });
-            return false;
+        }, {
+            threshold: 0.16
         });
-    </script>
-    <script>
-        (function() {
-            const rot = document.getElementById('rot');
-            const words = Array.from(rot.querySelectorAll('p'));
-            const dur = 3; // segundos por palabra visible
-            const total = dur * words.length;
-            // Generar estilos dinámicos
-            const style = document.createElement('style');
-            words.forEach((w, i) => {
-                w.style.animation = `wAnim ${total}s linear infinite`;
-                w.style.animationDelay = (i * dur) + 's';
+
+        revealItems.forEach((item) => revealObserver.observe(item));
+
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const pageSections = document.querySelectorAll('main section');
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+
+                navLinks.forEach((link) => {
+                    link.classList.toggle('is-active', link.getAttribute('href') === `#${entry.target.id}`);
+                });
             });
-            document.head.appendChild(style);
-        })();
+        }, {
+            rootMargin: '-35% 0px -55% 0px'
+        });
+
+        pageSections.forEach((section) => navObserver.observe(section));
     </script>
 </body>
 
