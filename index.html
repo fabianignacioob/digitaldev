@@ -135,6 +135,70 @@
             transform: translateY(-1px);
         }
 
+        .nav-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            place-items: center;
+            padding: 0;
+            border: 1px solid rgba(79, 168, 200, .28);
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(79, 168, 200, .14), rgba(33, 163, 143, .12));
+            color: var(--brand-blue-dark);
+            cursor: pointer;
+            transition: transform .22s ease, box-shadow .22s ease, background .22s ease;
+        }
+
+        .nav-toggle:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 28px rgba(79, 168, 200, .18);
+        }
+
+        .nav-toggle span,
+        .nav-toggle::before,
+        .nav-toggle::after {
+            display: block;
+            width: 18px;
+            height: 2px;
+            border-radius: 999px;
+            background: currentColor;
+            transition: transform .22s ease, opacity .22s ease;
+        }
+
+        .nav-toggle::before,
+        .nav-toggle::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -1px;
+            margin-left: -9px;
+        }
+
+        .nav-toggle {
+            position: relative;
+        }
+
+        .nav-toggle::before {
+            transform: translateY(-6px);
+        }
+
+        .nav-toggle::after {
+            transform: translateY(6px);
+        }
+
+        .nav-wrap.is-open .nav-toggle span {
+            opacity: 0;
+        }
+
+        .nav-wrap.is-open .nav-toggle::before {
+            transform: rotate(45deg);
+        }
+
+        .nav-wrap.is-open .nav-toggle::after {
+            transform: rotate(-45deg);
+        }
+
         .btn-main,
         .btn-ghost {
             display: inline-flex;
@@ -345,6 +409,7 @@
 
         section {
             padding: 72px 0;
+            scroll-margin-top: 96px;
         }
 
         .section-soft {
@@ -970,17 +1035,39 @@
                 margin-right: auto;
             }
 
+            .nav-toggle {
+                display: grid;
+            }
+
             .nav-wrap nav {
                 order: 3;
                 width: 100%;
+                display: grid;
+                grid-template-rows: 0fr;
+                opacity: 0;
+                overflow: hidden;
+                transition: grid-template-rows .26s ease, opacity .22s ease;
+            }
+
+            .nav-wrap.is-open nav {
+                grid-template-rows: 1fr;
+                opacity: 1;
             }
 
             .nav-links {
+                min-height: 0;
                 width: 100%;
+                flex-direction: column;
                 justify-content: center;
-                overflow-x: auto;
-                padding-bottom: 4px;
+                gap: 8px;
+                overflow: hidden;
+                padding: 8px 0 4px;
                 scrollbar-width: none;
+            }
+
+            .nav-links a {
+                width: min(100%, 240px);
+                justify-content: center;
             }
 
             .nav-links::-webkit-scrollbar {
@@ -988,11 +1075,29 @@
             }
 
             .offer-strip,
-            .ideas-grid,
             .ai-grid,
             .work-grid,
             .contact-layout {
                 grid-template-columns: 1fr;
+            }
+
+            .ideas-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+            }
+
+            .idea-link {
+                width: min(100%, 210px);
+                padding: 20px;
+            }
+
+            .idea-copy strong {
+                font-size: 20px;
+            }
+
+            .idea-copy span {
+                font-size: 12px;
+                line-height: 1.4;
             }
 
             .service-card,
@@ -1042,6 +1147,14 @@
                 height: auto;
             }
 
+            .ideas-grid {
+                gap: 14px;
+            }
+
+            .idea-link {
+                padding: 16px;
+            }
+
             .hero {
                 min-height: auto;
                 padding: 36px 0 48px;
@@ -1049,6 +1162,7 @@
 
             section {
                 padding: 56px 0;
+                scroll-margin-top: 86px;
             }
 
             .hero-showcase {
@@ -1102,9 +1216,13 @@
                     <!-- <img src="img/marca-dv-color2.png" alt="Digital Dev"> -->
                     <strong><span>Fabián Ignacio</span></strong>
                 </a>
+                <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="primaryMenu">
+                    <span></span>
+                </button>
                 <nav aria-label="Navegación principal">
-                    <ul class="nav-links">
+                    <ul class="nav-links" id="primaryMenu">
                         <li><a href="#servicios">Servicios</a></li>
+                        <li><a href="#ideas">Ideas</a></li>
                         <li><a href="#ia">IA</a></li>
                         <li><a href="#proyectos">Proyectos</a></li>
                         <li><a href="#contacto">Contacto</a></li>
@@ -1454,8 +1572,50 @@
 
         revealItems.forEach((item) => revealObserver.observe(item));
 
+        const navWrap = document.querySelector('.nav-wrap');
+        const navToggle = document.querySelector('.nav-toggle');
         const navLinks = document.querySelectorAll('.nav-links a');
         const pageSections = document.querySelectorAll('main section');
+
+        const closeMobileMenu = () => {
+            navWrap.classList.remove('is-open');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggle.setAttribute('aria-label', 'Abrir menú');
+        };
+
+        navToggle.addEventListener('click', () => {
+            const isOpen = navWrap.classList.toggle('is-open');
+            navToggle.setAttribute('aria-expanded', String(isOpen));
+            navToggle.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+        });
+
+        navLinks.forEach((link) => {
+            link.addEventListener('click', (event) => {
+                const href = link.getAttribute('href');
+                const target = href && href.startsWith('#') ? document.querySelector(href) : null;
+
+                if (!target) {
+                    closeMobileMenu();
+                    return;
+                }
+
+                event.preventDefault();
+                closeMobileMenu();
+
+                window.setTimeout(() => {
+                    const topbarHeight = document.querySelector('.topbar').offsetHeight;
+                    const top = target.getBoundingClientRect().top + window.pageYOffset - topbarHeight - 16;
+
+                    window.scrollTo({
+                        top,
+                        behavior: 'smooth',
+                    });
+
+                    history.pushState(null, '', href);
+                }, 280);
+            });
+        });
+
         const navObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (!entry.isIntersecting) {
