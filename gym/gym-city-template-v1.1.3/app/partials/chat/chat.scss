@@ -1,0 +1,41 @@
+.chat {
+  position: fixed;
+  right: 24px;
+  bottom: -100%;
+  z-index: 9990;
+  opacity: 0;
+  transition: all 0.7s ease-in-out;
+
+  &.visible {
+    opacity: 0.7;
+    bottom: 25px;
+
+    &:hover {
+      opacity: 1;
+      color: #ffffff;
+    }
+  }
+}
+
+a.chat-link {
+  display: block;
+  width: 64px;
+  height: 64px;
+  text-decoration: none;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 50%;
+  line-height: 46px;
+  background: url(img/chat.png) no-repeat center $action-color;
+  background-size: 36px 36px;
+
+  &.visible {
+    opacity: 0.4;
+    bottom: 25px;
+
+    &:hover {
+      opacity: 0.8;
+      color: #ffffff;
+    }
+  }
+}

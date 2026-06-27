@@ -1,0 +1,22 @@
+.free-pass-form {
+  max-width: 760px;
+  margin: 0 auto;
+
+  .form-control {
+    border-color: $border-color;
+    border-radius: $border-radius;
+    font-size: 14px;
+    color: $text-color;
+    padding: 10px;
+    line-height: 1.5;
+  }
+
+  .contact-message {
+    @include customScroll();
+    height: 156px;
+  }
+}
+
+.btn-contact {
+  text-transform: uppercase;
+}

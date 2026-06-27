@@ -1,0 +1,42 @@
+
+/*=============================================
+=            section title            =
+=============================================*/
+
+.section-title {
+    width: 525px;
+    max-width: 100%;
+
+    &__sub {
+        font-size: 36px;
+        font-weight: 400;
+        line-height: 1;
+
+        @media #{$tablet-device} {
+            font-size: 25px;
+        }
+
+        @media #{$large-mobile} {
+            font-size: 25px;
+        }
+    }
+
+    &__title {
+        font-size: 42px;
+        line-height: 1.1;
+
+        margin-bottom: 20px;
+
+        @media #{$tablet-device} {
+            font-size: 35px;
+        }
+
+        @media #{$large-mobile} {
+            font-size: 30px;
+        }
+    }
+}
+
+
+/*=====  End of section title  ======*/
+

@@ -1,0 +1,111 @@
+.media.media-blog{
+    .media-body{
+        padding-top:20px; 
+        @include tablet{
+            padding: 25px 0 20px;
+        }
+    } 
+    .sep{
+        padding-bottom: 20px;
+    }
+}
+.pagination-block{
+        // padding-top: 1.7em;
+        // padding-bottom: 2.7em;
+        // @include desktops{
+        //     padding-bottom: 0em;
+        // }
+    a.pagination-btn {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border: 1px solid #e5e5e5;
+        text-align: center;
+        @include desktops{
+            margin: 0 5px;
+            width: 45px;
+            height: 45px;
+            line-height: 45px;
+        }
+    }
+}
+
+.sidebar-recent-news{
+    .single-news{
+        padding: 20px 0;
+        border-bottom: 1px solid #e5e5e5;
+        .media-img{
+            margin-right: 10px;
+
+        }
+        .media-body{
+            padding: 7px 0;
+            h5{
+                margin-bottom:4px; 
+            }
+        }
+    }
+}
+
+
+/* Comments & Replies*/
+.single-comment{
+    margin-bottom:30px;
+    .comment,.reply{
+        overflow: hidden;
+        }
+        .comment-img,.reply-img{
+            float: left;
+            img{
+                &.rounded-img{
+                    border-radius: 50%
+                }
+            }
+        }
+        .comment-text,.reply-text{
+            padding-left: 90px;
+            @include tablet{
+                padding-left: 100px;
+            }
+            h4{
+                font-size: 20px;
+                margin-bottom: 10px;
+                font-family: 'PT Serif', serif;
+            } 
+            .date{
+                margin-bottom: 10px;
+                i.fa{
+                    margin-right: 7px;
+                }
+            }
+            p{
+                font-size: 15px;
+                color: $gray-dark;
+            }
+        }
+        .comment{
+            margin-bottom: 20px;
+            .replay-link {
+                color: $primary-color;
+                text-transform: capitalize;
+                font-family: 'Open Sans', sans-serif;
+                padding-bottom: 25px;
+            }
+        }
+        .reply{
+            padding-left: 40px;
+            @include tablet{
+                padding-left: 100px;
+            }
+            
+        }
+    } 
+
+    .corporex-single-blog{
+        input.form-control, textarea.form-control, select.form-control{
+            background: #fff;
+        }
+        form.comment_box{
+            margin-top: 25px;
+        }
+    }

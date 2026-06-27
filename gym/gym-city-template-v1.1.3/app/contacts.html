@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+@@include('partials/head.html')
+<body class="gym-city">
+
+@@include('partials/loading/loading.html')
+@@include('partials/nav/nav.html')
+
+<!-- contacts page content-->
+@@include('pages/contacts/header/contacts-header.html')
+@@include('pages/contacts/form/contacts-form.html')
+@@include('pages/contacts/map/map.html')
+<!-- end of contacts page content-->
+
+@@include('partials/footer/footer.html')
+@@include('partials/chat/chat.html')
+
+<!-- change "key=AI..." to your own google map api key: https://developers.google.com/maps/documentation/javascript/get-api-key -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AI..."></script>
+
+@@include('partials/scripts.html')
+</body>
+</html>

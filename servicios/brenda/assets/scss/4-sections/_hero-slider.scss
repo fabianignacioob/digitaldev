@@ -1,0 +1,287 @@
+/*=============================================
+=            hero slider            =
+=============================================*/
+
+.single-hero-slider {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+
+    height: 820px;
+
+    @media #{$tablet-device} {
+        height: 600px;
+    }
+
+    @media #{$large-mobile} {
+        height: 500px;
+    }
+
+    &--background {
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    &--overlay {
+        &:before {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            content: "";
+
+            opacity: 0.6;
+            background-color: $black;
+        }
+    }
+    &__abs-img {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        width: 950px;
+
+        @media #{$laptop-device} {
+            width: 800px;
+        }
+        @media #{$desktop-device} {
+            width: 600px;
+        }
+
+        @media #{$tablet-device} {
+            width: 500px;
+        }
+
+        @media #{$large-mobile} {
+            width: 300px;
+        }
+        @media #{$extra-small-mobile} {
+            width: 200px;
+        }
+        img {
+            width: 100%;
+        }
+    }
+}
+
+
+
+/* hero slick slider */
+
+.hero-slick-slider-wrapper {
+    .slick-active {
+        .hero-slider-content {
+            > * {
+                &:nth-child(1) {
+                    animation-name: fadeInBottom;
+                    animation-duration: 1s;
+                    animation-delay: 0.5s;
+                }
+                &:nth-child(2) {
+                    animation-name: fadeInBottom;
+                    animation-duration: 1s;
+                    animation-delay: 1.5s;
+                }
+                &:nth-child(3) {
+                    animation-name: fadeInBottom;
+                    animation-duration: 1s;
+                    animation-delay: 2.5s;
+                }
+            }
+        }
+    }
+
+    .slick-arrow {
+        font-size: 30px;
+        line-height: 50px;
+
+        position: absolute;
+        z-index: 2;
+        top: calc(50% - 35px);
+
+        visibility: hidden;
+
+        width: 50px;
+        height: 50px;
+        padding: 0;
+
+        transform: translateY(-50%);
+
+        opacity: 0;
+        color: #FFFFFF;
+        border: none;
+        background: none;
+        background-color: rgba(255, 255, 255, 0.3);
+
+        @media #{$tablet-device,
+        $large-mobile} {
+            display: none;
+        }
+
+        &.slick-next {
+            right: 120px;
+            @media #{$laptop-device,
+            $desktop-device} {
+                right: 15px;
+            }
+        }
+
+        &.slick-prev {
+            left: 120px;
+            @media #{$laptop-device,
+            $desktop-device} {
+                left: 15px;
+            }
+        }
+    }
+
+    .slick-dots {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+
+        transform: translateX(-50%);
+        li {
+            display: inline-block;
+
+            margin-right: 10px;
+            button {
+                font-size: 0;
+
+                width: 15px;
+                height: 15px;
+                padding: 0;
+
+                border: none;
+                border-radius: 50%;
+                background: none;
+                background-color: rgba(255, 255, 255, 0.3);
+            }
+
+            &.slick-active {
+                button {
+                    background-color: $white;
+                }
+            }
+
+            &:hover {
+                button {
+                    background-color: $white;
+                }
+            }
+        }
+    }
+
+    &:hover {
+        .slick-arrow {
+            visibility: visible;
+
+            opacity: 1;
+            &.slick-next {
+                right: 100px;
+                @media #{$laptop-device,
+                $desktop-device} {
+                    right: 15px;
+                }
+            }
+            &.slick-prev {
+                left: 100px;
+                @media #{$laptop-device,
+                $desktop-device} {
+                    left: 15px;
+                }
+            }
+        }
+    }
+}
+
+
+/* hero slider content */
+
+.hero-slider-content {
+    width: 800px;
+    max-width: 100%;
+
+    & > * {
+        animation-name: fadeOutTop;
+        animation-duration: 1s;
+
+        animation-fill-mode: both;
+    }
+
+    @media #{$tablet-device} {
+        width: 400px;
+        max-width: 100%;
+    }
+
+    @media #{$large-mobile} {
+        width: 400px;
+        max-width: 100%;
+    }
+
+    &__subtitle {
+        font-size: 45px;
+        line-height: 1.3;
+
+        margin-bottom: 0;
+
+        color: #FCFCFC;
+
+        &--dark {
+            color: $theme-color--black;
+        }
+
+        @media #{$tablet-device} {
+            font-size: 35px;
+            line-height: 1;
+
+            margin-bottom: 15px;
+        }
+
+        @media #{$large-mobile} {
+            font-size: 30px;
+
+            margin-bottom: 15px;
+        }
+    }
+    &__title {
+        font-size: 80px;
+        line-height: 1;
+
+        color: #FCFCFC;
+        &--dark {
+            color: $theme-color--black;
+        }
+
+        @media #{$tablet-device} {
+            font-size: 50px;
+            line-height: 1.1;
+        }
+        @media #{$large-mobile} {
+            font-size: 40px;
+            line-height: 1.1;
+        }
+    }
+
+    &--extra-space {
+        margin-top: 55px;
+        @media #{$tablet-device,
+        $large-mobile} {
+            margin-top: 0;
+        }
+    }
+}
+
+.hero-area-wrapper {
+    .hero-slider-content {
+        & > * {
+            animation: none;
+        }
+    }
+}
+
+/*=====  End of hero slider  ======*/
+

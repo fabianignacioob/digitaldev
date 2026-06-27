@@ -1,0 +1,170 @@
+.navbar-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-width: 320px;
+  z-index: 99;
+  background: none;
+  height: $nav-height-mobile;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  background: rgba(12, 12, 12, 0.7);
+
+  @include large-desktop-layout {
+    padding: 0;
+    height: $nav-height-expanded;
+  }
+
+  a.navbar-brand {
+    font-family: $header-font-family;
+    font-size: 28px;
+    text-transform: uppercase;
+    color: #ffffff;
+    padding: 0;
+    font-weight: bold;
+
+    &:hover {
+      color: $action-color;
+    }
+  }
+
+  .nav-item {
+    .dropdown-menu {
+      border-radius: 0;
+      border: none;
+      background: transparent;
+      margin-left: 12px;
+
+      @include large-desktop-layout {
+        margin-top: 32px;
+        background: rgba(12, 12, 12, 0.7);
+        margin-left: 0;
+      }
+
+      a {
+        color: #ffffff;
+
+        &:hover,
+        &.active {
+          background: transparent;
+          color: $action-color;
+        }
+      }
+    }
+  }
+
+  .nav-link {
+    font-size: 15px;
+    color: #ffffff;
+    line-height: 50px;
+    padding: 0 20px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px #000000;
+    display: flex;
+    align-items: center;
+
+    @include large-desktop-layout {
+      line-height: 40px;
+    }
+
+    &:hover,
+    &.active {
+      color: $action-color;
+    }
+  }
+
+  &.nav-scroll {
+    position: fixed;
+    background: #ffffff;
+    border-bottom: 1px solid $border-color;
+    height: $nav-height;
+
+    .navbar-brand {
+      color: $action-color;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      text-shadow: none;
+
+      @include large-desktop-layout {
+        color: $text-color;
+
+        &:hover,
+        &.active {
+          color: $action-color;
+        }
+      }
+    }
+
+    .navbar-toggler {
+      & > i {
+        color: $action-color-dark;
+      }
+    }
+
+    .nav-item {
+      .dropdown-menu {
+        margin-top: 12px;
+        background: #ffffff;
+        border: 1px solid #d8e3eb;
+        border-top: none;
+
+        a {
+          color: $text-color;
+
+          &:hover,
+          &.active {
+            color: $action-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+.navbar-toggler {
+  & > i {
+    color: #ffffff;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.navbar-collapse {
+  padding: 15px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background: rgba(12, 12, 12, 0.9);
+  width: 100%;
+  text-align: center;
+
+  @include large-desktop-layout {
+    padding: 0;
+    position: static;
+    top: auto;
+    left: auto;
+    background: none;
+    width: auto;
+    text-align: left;
+  }
+}
+
+.close-navbar-mobile {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  color: #ffffff;
+  padding: 0.25rem 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+
+  @include large-desktop-layout {
+    display: none;
+  }
+}

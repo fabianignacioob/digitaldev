@@ -1,0 +1,64 @@
+.btn {
+  padding: 10px 0;
+  border-radius: $border-radius;
+  font-size: 14px;
+  line-height: 22px;
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.btn-full-width {
+  width: 100%;
+}
+
+.btn-default {
+  background-color: #ffffff;
+  border: 1px solid $border-color-dark;
+  color: $text-color;
+
+  &:hover,
+  &:active,
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background: $action-color;
+    border-color: $action-color;
+    color: #ffffff;
+  }
+}
+
+.btn-primary {
+  color: #ffffff;
+  background-color: $action-color;
+  border: 1px solid $action-color;
+
+  &:hover,
+  &:active,
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background: $action-color-dark;
+    border-color: $action-color-dark;
+  }
+}
+
+.btn-transparent {
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #ffffff;
+
+  &:hover,
+  &:active,
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active {
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.btn-large {
+  min-width: 200px;
+  padding: 14px 24px;
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 300;
+}

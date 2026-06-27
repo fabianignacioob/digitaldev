@@ -1,0 +1,6 @@
+.map {
+  height: calc(100vh - #{$nav-height});
+  min-height: 500px;
+  width: 100%;
+  background: $border-color;
+}

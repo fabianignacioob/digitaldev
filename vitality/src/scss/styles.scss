@@ -1,0 +1,19 @@
+// Import Variables
+@import 'variables.scss';
+
+// Import Bootstrap
+@import 'bootstrap/scss/bootstrap.scss';
+
+// Import Theme Components
+@import 'global.scss';
+@import 'carousel.scss';
+@import 'navbar.scss';
+@import 'masthead.scss';
+@import 'team.scss';
+@import 'callout.scss';
+@import 'process.scss';
+@import 'portfolio-carousel.scss';
+@import 'portfolio-grid.scss';
+@import 'testimonials.scss';
+@import 'contact.scss';
+@import 'footer.scss';

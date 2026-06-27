@@ -1,0 +1,85 @@
+#navbar-main {
+  min-height: 66px;
+  background: $black;
+  .navbar-brand-logo {
+    height: 2.5rem;
+  }
+  .navbar-toggler {
+    border: 0;
+    color: $white;
+    &:active {
+      color: fade-out($white, 0.5);
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+  .nav-item {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    &:first-child {
+      margin-top: 1rem;
+    }
+    &:last-child {
+      margin-bottom: 1rem;
+    }
+    .nav-link {
+      font-size: 1rem;
+      color: $white;
+      &:active {
+        color: fade-out($white, 0.5);
+      }
+      &.active {
+        color: $primary;
+      }
+    }
+    .dropdown-menu {
+      margin-top: 0;
+      .dropdown-item {
+        font-weight: 300;
+        font-size: 1rem;
+        padding: 0.65rem 1rem;
+        &:hover {
+          background: inherit;
+          color: $primary;
+        }
+        &.active {
+          &:hover {
+            background: $primary;
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+  @include media-breakpoint-up(lg) {
+    transition: padding-top 0.2s ease-in-out, padding-bottom 0.2s ease-in-out;
+    padding: 1.5rem 0;
+    background: transparent;
+    .navbar-brand {
+      transition: $transition-base;
+      &:hover {
+        opacity: 0.75;
+      }
+    }
+    .nav-item {
+      margin: 0 !important;
+      .nav-link {
+        padding: 1rem;
+        border-bottom: 0.3125rem solid transparent;
+        border-top: 0.3125rem solid transparent;
+        transition: $transition-link;
+        &.active {
+          border-bottom: 0.3125rem solid $primary;
+        }
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+    &.collapsed {
+      padding: 0;
+      background: $black;
+    }
+  }
+}

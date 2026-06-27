@@ -403,6 +403,127 @@
             gap: 18px;
         }
 
+        .ideas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            justify-items: center;
+        }
+
+        .idea-link {
+            position: relative;
+            display: grid;
+            width: min(100%, 300px);
+            aspect-ratio: 1;
+            place-items: center;
+            overflow: hidden;
+            padding: 30px;
+            border-radius: 50%;
+            background-position: center;
+            background-size: cover;
+            box-shadow: 0 18px 44px rgba(42, 54, 71, .12);
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            opacity: .88;
+            transition: transform .24s ease, box-shadow .24s ease;
+            isolation: isolate;
+        }
+
+        .idea-link:hover,
+        .idea-link:focus {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .idea-link::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, rgba(12, 38, 50, .76), rgba(36, 120, 168, .44) 56%, rgba(33, 163, 143, .3)),
+                linear-gradient(0deg, rgba(12, 38, 50, .28), rgba(255, 255, 255, .08));
+            transition: background .28s ease, transform .28s ease;
+            z-index: -2;
+        }
+
+        .idea-link::after {
+            content: "";
+            position: absolute;
+            inset: -28%;
+            background: linear-gradient(115deg, transparent 28%, rgba(255, 255, 255, .34) 46%, transparent 62%);
+            opacity: 0;
+            transform: translateX(-42%) rotate(10deg);
+            transition: opacity .28s ease, transform .52s ease;
+            z-index: -1;
+        }
+
+        .idea-link-corporex {
+            background-image: url('img/idea-corporex-bg.png');
+        }
+
+        .idea-link-tulsy {
+            background-image: url('img/idea-tulsy-bg.png');
+        }
+
+        .idea-link-vitality {
+            background-image: url('img/idea-vitality-bg.png');
+        }
+
+        .idea-link-portafolio {
+            background-image: url('img/idea-portafolio-bg.png');
+        }
+
+        .idea-link-servicios {
+            background-image: url('img/idea-servicios-bg.png');
+        }
+
+        .idea-link-gym {
+            background-image: url('img/idea-gym-bg.png');
+        }
+
+        .idea-link:hover {
+            opacity: .98;
+            transform: translateY(-8px) scale(1.035);
+            box-shadow: 0 26px 60px rgba(42, 54, 71, .18);
+        }
+
+        .idea-link:hover::before {
+            background:
+                linear-gradient(135deg, rgba(12, 38, 50, .62), rgba(79, 168, 200, .36) 56%, rgba(33, 163, 143, .28)),
+                linear-gradient(0deg, rgba(12, 38, 50, .18), rgba(255, 255, 255, .14));
+            transform: scale(1.04);
+        }
+
+        .idea-link:hover::after {
+            opacity: 1;
+            transform: translateX(40%) rotate(10deg);
+        }
+
+        .idea-copy strong {
+            display: block;
+            color: #fff;
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .idea-copy span {
+            display: block;
+            margin-top: 8px;
+            color: rgba(255, 255, 255, .86);
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.55;
+        }
+
+        .idea-copy {
+            transition: transform .24s ease;
+        }
+
+        .idea-link:hover .idea-copy {
+            transform: scale(1.03);
+        }
+
         .service-card,
         .ai-card,
         .work-card {
@@ -867,6 +988,7 @@
             }
 
             .offer-strip,
+            .ideas-grid,
             .ai-grid,
             .work-grid,
             .contact-layout {
@@ -1119,6 +1241,53 @@
                                 </div>
                             </div>
                         </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-soft" id="ideas">
+                <div class="container">
+                    <div class="section-head reveal">
+                        <h2>Algunas ideas</h2>
+                        <p>Landings para proyectos con temas y plantillas propias, disponibles para referencias, base de propuestas o despliegues rápidos.</p>
+                    </div>
+                    <div class="ideas-grid">
+                        <a class="idea-link idea-link-corporex reveal" href="corporex/" aria-label="Abrir proyecto Corporex">
+                            <span class="idea-copy">
+                                <strong>Corporex</strong>
+                                <span>Tema corporativo para revisar estilos, secciones y posibles bases visuales.</span>
+                            </span>
+                        </a>
+                        <a class="idea-link idea-link-tulsy reveal" href="Tulsy/" aria-label="Abrir proyecto Tulsy">
+                            <span class="idea-copy">
+                                <strong>Tulsy</strong>
+                                <span>Landing multipropósito para explorar propuestas comerciales, software y servicios.</span>
+                            </span>
+                        </a>
+                        <a class="idea-link idea-link-vitality reveal" href="vitality/dist/" aria-label="Abrir proyecto Vitality">
+                            <span class="idea-copy">
+                                <strong>Vitality</strong>
+                                <span>Template creativo para explorar presencia digital, marca y secciones comerciales.</span>
+                            </span>
+                        </a>
+                        <a class="idea-link idea-link-portafolio reveal" href="portafolio/" aria-label="Abrir proyecto Portafolio">
+                            <span class="idea-copy">
+                                <strong>Portafolio</strong>
+                                <span>Plantilla personal para mostrar perfil, experiencia, proyectos y presencia profesional.</span>
+                            </span>
+                        </a>
+                        <a class="idea-link idea-link-servicios reveal" href="servicios/" aria-label="Abrir proyecto Servicios">
+                            <span class="idea-copy">
+                                <strong>Servicios</strong>
+                                <span>Landing enfocada en presentar servicios, beneficios y rutas de contacto comercial.</span>
+                            </span>
+                        </a>
+                        <a class="idea-link idea-link-gym reveal" href="gym/" aria-label="Abrir proyecto Gym">
+                            <span class="idea-copy">
+                                <strong>Gym</strong>
+                                <span>Propuesta visual para gimnasios, membresías, clases y comunicación deportiva.</span>
+                            </span>
+                        </a>
                     </div>
                 </div>
             </section>

@@ -1,0 +1,97 @@
+.gift-cards-header {
+  background-image: url(img/gift-cards-bg.jpg);
+}
+
+.gift-cards-main {
+  .form-group {
+    margin-bottom: 28px;
+  }
+}
+
+.gift-img {
+  display: flex;
+  height: 100%;
+  align-items: center;
+
+  img {
+    width: 100%;
+  }
+}
+
+.gift-card-form {
+  padding-top: 7px;
+}
+
+.total-value {
+  font-size: 70px;
+  margin-bottom: 18px;
+  font-weight: 300;
+
+  .price-currency {
+    font-size: 30px;
+    font-weight: 400;
+    padding-right: 5px;
+  }
+
+  .total-desc {
+    font-size: 18px;
+    margin-left: 4px;
+    color: $secondary-text-color;
+    font-weight: 300;
+  }
+}
+
+.values-list {
+  display: flex;
+
+  & > span {
+    cursor: pointer;
+    display: block;
+    border: solid 1px #eeeeee;
+    margin-left: 12px;
+    color: $secondary-text-color;
+    padding: 8px 15px;
+    transition: all 0.5s;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &.selected,
+    &:hover {
+      text-decoration: none;
+      background: $action-color;
+      color: #ffffff;
+      border-color: $action-color;
+    }
+  }
+}
+
+.quantity-input {
+  width: 114px;
+
+  .input-group-text {
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.5s;
+
+    &:hover {
+      background: $action-color;
+      border-color: $action-color;
+
+      .fa {
+        color: #ffffff;
+      }
+    }
+  }
+
+  input {
+    text-align: center;
+  }
+
+  .fa {
+    color: $secondary-text-color;
+    font-size: 10px;
+    color: #999999;
+  }
+}

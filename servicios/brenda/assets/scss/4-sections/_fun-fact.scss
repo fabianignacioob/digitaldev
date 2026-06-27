@@ -1,0 +1,39 @@
+
+/*=============================================
+=            Fun Fact            =
+=============================================*/
+
+.fun-fact-wrapper-bg {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.fun-fact-content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    @media #{$large-mobile} {
+        flex-wrap: wrap;
+
+        margin-bottom: -40px;
+    }
+}
+
+.single-fun-fact {
+    flex-basis: 25%;
+
+    text-align: center;
+
+    &__number {
+        font-weight: 800;
+    }
+
+    @media #{$large-mobile} {
+        flex-basis: 50%;
+
+        margin-bottom: 40px;
+    }
+}
+
+/*=====  End of Fun Fact  ======*/
+

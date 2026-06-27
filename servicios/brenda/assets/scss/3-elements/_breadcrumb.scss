@@ -1,0 +1,98 @@
+
+/*=============================================
+=            breadcrumb            =
+=============================================*/
+
+.page-breadcrumb {
+    position: relative;
+    z-index: 1;
+
+    padding: 125px 0 70px;
+
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+
+    &::before {
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        content: "";
+
+        opacity: 0.75;
+        background-color: $black;
+    }
+    // Responsive
+    @media #{$tablet-device} {
+        padding: 60px 0 65px;
+    }
+    @media #{$large-mobile} {
+        padding: 40px 0 45px;
+    }
+    @media #{$small-mobile} {
+        padding: 25px 0 30px;
+    }
+}
+/*-- Page Breadcrumb --*/
+.page-breadcrumb-content {
+    & h1 {
+        font-size: 48px;
+        font-weight: 600;
+
+        letter-spacing: 0.1px;
+
+        color: $white;
+        // Responsive
+        @media #{$tablet-device} {
+            font-size: 36px;
+        }
+        @media #{$large-mobile} {
+            font-size: 30px;
+        }
+    }
+}
+/*-- Page Breadcrumb Links --*/
+.page-breadcrumb-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    list-style: none;
+    & li {
+        font-weight: 400;
+        line-height: 1;
+
+        margin-top: 10px;
+
+        letter-spacing: 0.5px;
+
+        color: $white;
+        // Responsive
+        @media #{$small-mobile} {
+            font-size: 16px;
+        }
+        &::after {
+            margin: 0 6px;
+
+            content: "-";
+        }
+        &:last-child {
+            &::after {
+                display: none;
+            }
+        }
+        & a {
+            &:hover {
+                color: $theme-color--default;
+            }
+        }
+    }
+}
+
+/*=====  End of breadcrumb  ======*/
+

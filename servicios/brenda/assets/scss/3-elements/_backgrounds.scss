@@ -1,0 +1,36 @@
+/*=============================================
+=            backgrounds            =
+=============================================*/
+
+.background-repeat {
+    &--x {
+        background-repeat: repeat-x;
+    }
+    &--x-bottom {
+        background-repeat: repeat-x;
+        background-position: bottom;
+    }
+}
+
+.background-color {
+    &--dark {
+        background-color: $theme-color--black;
+    }
+    &--deep-dark {
+        background-color: #252730;
+    }
+    &--dark-overlay {
+        background-color: rgba(43,45,55, 0.9);
+    }
+    &--default {
+        background-color: $theme-color--default;
+    }
+    &--default-overlay {
+        background-color: rgba(250,188,61, 0.9);
+    }
+    &--default-light-overlay {
+        background-color: rgba(250,188,61, 0.8);
+    }
+}
+
+/*=====  End of backgrounds  ======*/

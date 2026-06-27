@@ -1,0 +1,74 @@
+.masthead {
+  position: relative;
+  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7)), url('../assets/img/bg-masthead.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll;
+  .masthead-logo {
+    height: 10rem;
+  }
+  .masthead-title {
+    font-size: 3rem;
+    line-height: 3rem;
+    font-family: $headings-font-family;
+    font-weight: $headings-font-weight;
+  }
+  .masthead-subtitle {
+    font-size: 1.25rem;
+  }
+  .masthead-scroll {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    .masthead-scroll-btn {
+      display: inline-block;
+      font-size: 1.5rem;
+      height: 3.125rem;
+      width: 3.125rem;
+      line-height: 3.125rem;
+      border-radius: 100%;
+      border: 0.125rem;
+      border-style: solid;
+      border-color: $white;
+      cursor: pointer;
+      transition: $transition-base;
+      color: $white;
+      &:hover {
+        transform: translateY(-0.25rem);
+        border-color: fade-out($white, 0.5);
+        color: fade-out($white, 0.5);
+      }
+      &:active {
+        transform: none;
+      }
+    }
+  }
+  @include media-breakpoint-up(lg) {
+    background-attachment: fixed;
+    .masthead-logo {
+      height: 13rem;
+    }
+    .masthead-title {
+      font-size: 5rem;
+      line-height: 5rem;
+    }
+    .masthead-subtitle {
+      font-size: 2rem;
+    }
+  }
+}
+
+.masthead-full {
+  padding: 10rem 0;
+  @include media-breakpoint-up(lg) {
+    padding: 0;
+    height: 100vh;
+    min-height: 35rem;
+  }
+}
+
+.masthead-partial {
+  padding: 13rem 0;
+}

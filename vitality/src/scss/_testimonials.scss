@@ -1,0 +1,46 @@
+.carousel-testimonials {
+  .slick-next {
+    left: 0;
+  }
+  .slick-prev {
+    right: 0;
+  }
+  .carousel-testimonials-item {
+    &:focus {
+      outline: none;
+    }
+    .carousel-testimonials-item-content {
+      margin-left: 4rem;
+      margin-right: 4rem;
+      .quote {
+        font-size: 1.35rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+      .name {
+        font-size: 1rem;
+      }
+      .small {
+        font-weight: 300;
+      }
+    }
+  }
+  @include media-breakpoint-up(md) {
+    .carousel-testimonials-item {
+      .carousel-testimonials-item-content {
+        margin-left: 7rem;
+        margin-right: 7rem;
+        .quote {
+          font-size: 1.75rem;
+        }
+        p {
+          font-size: 1.15rem;
+        }
+        .name {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}

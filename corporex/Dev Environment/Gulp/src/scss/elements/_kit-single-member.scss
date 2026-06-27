@@ -1,0 +1,36 @@
+.member-title{
+  .single-title-padding {
+      padding-bottom: 5px;
+  }
+  span{
+      color: $gray;
+      font-style: italic;
+  }
+  margin-bottom: 25px;
+}
+
+.social-icons{
+  .share-text {
+    color: #222;
+    font-size: 17px;
+    line-height: 50px;
+    font-weight: 700;
+    margin-right: 15px;
+  }
+  &.gray-color{
+    a{
+      color:$gray-dark;
+    }
+  }
+  a{
+    color: $black;
+    border: 1px solid #e5e5e5;
+    &:hover{
+      background-color: $primary-color;
+      color: $white;
+    }
+  }
+  &.social-icon-padding {
+    padding: 25px 0 35px;
+  }
+}

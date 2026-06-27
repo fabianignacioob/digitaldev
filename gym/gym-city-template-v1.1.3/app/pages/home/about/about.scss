@@ -1,0 +1,40 @@
+.about-main {
+  @include desktop-layout {
+    padding: 99px 0 104px;
+  }
+}
+
+.home-about-text {
+  max-width: 850px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-item {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  margin-bottom: 15px;
+
+  @include desktop-layout {
+    margin-bottom: 0;
+  }
+
+  img {
+    width: 100%;
+  }
+
+  span {
+    display: block;
+    position: absolute;
+    bottom: 10px;
+    left: 18px;
+    right: 18px;
+    color: #ffffff;
+    font-size: 26px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px #000000;
+    text-align: center;
+    background: rgba(12, 12, 12, 0.4);
+  }
+}

@@ -1,0 +1,80 @@
+.contact-item {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  padding-left: 56px;
+  background: no-repeat 0 2px;
+
+  &:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  h6 {
+    font-weight: normal;
+    font-size: 16px;
+    text-transform: capitalize;
+    margin-bottom: 6px;
+    color: $text-color;
+  }
+
+  p {
+    margin-bottom: 0;
+    line-height: 24px;
+    color: $secondary-text-color;
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  a {
+    color: $secondary-text-color;
+
+    &:hover {
+      color: $action-color;
+      text-decoration: none;
+    }
+  }
+
+  &.contact-item-phone {
+    background-image: url(img/contact-phone.png);
+    background-size: 24px;
+    background-position-x: 3px;
+  }
+
+  &.contact-item-mail {
+    background-image: url(img/contact-email.png);
+    background-size: 30px;
+  }
+
+  &.contact-item-address {
+    background-image: url(img/contact-address.png);
+    background-size: 30px;
+  }
+}
+
+.contacts-row {
+  @include desktop-layout {
+    flex-direction: row-reverse;
+  }
+}
+
+.contact-form {
+  margin-bottom: 48px;
+
+  @include desktop-layout {
+    margin-bottom: 0;
+  }
+
+  .form-control {
+    border-color: $border-color;
+    border-radius: $border-radius;
+    font-size: 14px;
+    color: $text-color;
+    padding: 10px;
+    line-height: 1.5;
+  }
+
+  .contact-message {
+    @include customScroll();
+    height: 156px;
+  }
+}

@@ -1,0 +1,131 @@
+a {
+  transition: all 0.5s;
+}
+
+a:focus {
+  outline: none;
+}
+
+.page-header {
+  background-size: cover;
+  background-attachment: scroll;
+  position: relative;
+  padding: $nav-height-mobile 0 0;
+  text-align: center;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include desktop-layout {
+    background-attachment: fixed;
+  }
+
+  @include large-desktop-layout {
+    padding: $nav-height-expanded 0 0;
+  }
+
+  h1 {
+    max-width: 1140px;
+    position: relative;
+    color: #ffffff;
+    font-size: 36px;
+    font-family: $header-font-family;
+    text-transform: uppercase;
+    padding: 4px 15px 0;
+
+    @include desktop-layout {
+      font-size: 48px;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
+
+.bg-darken {
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .container {
+    position: relative;
+  }
+}
+
+.content-block {
+  padding: 70px 0;
+
+  @include desktop-layout {
+    padding: 105px 0;
+  }
+}
+
+.content-block-text {
+  padding: 61px 0;
+}
+
+.top-text {
+  color: $text-color;
+  font-weight: 300;
+  font-size: 21px;
+  line-height: 36px;
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+.blink-on-hover {
+  &:after {
+    content: '';
+    width: 100%;
+    height: 300%;
+    transform: rotate(45deg);
+    background: rgba(255, 255, 255, 0.07);
+    position: absolute;
+    top: -30%;
+    left: -100%;
+    opacity: 0;
+    transition: left 0.5s;
+    z-index: 9;
+  }
+
+  &:hover {
+    &:after {
+      left: 120%;
+      opacity: 1;
+    }
+  }
+}
+
+.hover-overlay {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  transition: all 0.5s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+h2 {
+  font-family: $header-font-family;
+  font-weight: 500;
+  font-size: 28px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  text-align: center;
+  color: $text-color;
+
+  @include desktop-layout {
+    margin-bottom: 38px;
+    font-size: 32px;
+  }
+}

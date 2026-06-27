@@ -1,0 +1,156 @@
+.schedule-header {
+  background-image: url(img/schedule-bg.jpg);
+}
+
+.schedule {
+  .nav-tabs {
+    border-bottom: 2px solid $action-color;
+  }
+
+  .nav-link {
+    flex: 1;
+    font-size: 12px;
+    text-align: center;
+    text-transform: uppercase;
+    color: $text-color;
+    font-weight: 500;
+    transition: none;
+    border-radius: $border-radius $border-radius 0 0;
+    padding-left: 0;
+    padding-right: 0;
+    cursor: pointer;
+
+    @include desktop-layout {
+      font-size: 16px;
+    }
+
+    &.active {
+      background: $action-color;
+      border-color: $action-color;
+      color: #ffffff;
+
+      &:focus {
+        border-color: $action-color;
+      }
+    }
+
+    &:hover:not(.active) {
+      background: #f4f4f4;
+      border-color: #f4f4f4;
+    }
+  }
+
+  .tab-pane {
+    padding-top: 10px;
+  }
+}
+
+.timetable {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.timetable-item {
+  border: 1px solid $border-color;
+  padding: 15px;
+  margin-top: 20px;
+  position: relative;
+  display: block;
+
+  @include desktop-layout {
+    display: flex;
+  }
+}
+
+.timetable-item-img {
+  overflow: hidden;
+  height: 100px;
+  width: 100px;
+  display: none;
+
+  img {
+    height: 100%;
+  }
+
+  @include desktop-layout {
+    display: block;
+  }
+}
+
+.timetable-item-main {
+  flex: 1;
+  position: relative;
+  margin-top: 12px;
+
+  @include desktop-layout {
+    margin-top: 0;
+    padding-left: 15px;
+  }
+}
+
+.timetable-item-time {
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.timetable-item-name {
+  display: inline-block;
+  font-size: 14px;
+  margin-bottom: 19px;
+  color: $secondary-text-color;
+
+  &:hover {
+    color: $action-color;
+    text-decoration: none;
+  }
+}
+
+.btn-book {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.timetable-item-like {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  font-size: 20px;
+  cursor: pointer;
+  width: 20px;
+
+  .fa-heart-o,
+  .fa-heart {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: all 0.5s;
+  }
+
+  .fa-heart-o {
+    opacity: 1;
+    color: #b7b7b7;
+  }
+
+  .fa-heart {
+    opacity: 0;
+    color: $action-color;
+  }
+
+  &:hover {
+    .fa-heart {
+      opacity: 1;
+    }
+
+    .fa-heart-o {
+      opacity: 0;
+    }
+  }
+}
+
+.timetable-item-like-count {
+  font-size: 12px;
+  text-align: center;
+  padding-top: 25px;
+  color: $secondary-text-color;
+}

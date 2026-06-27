@@ -1,0 +1,28 @@
+.cta-section{
+  &.bg-image{
+    background-image: url(../img/home-page/backgrounds/cta-bg.jpg);
+    background-position: calc(70%);
+    @include tablet{
+      background-position: top center;
+    }
+  }
+}
+.cta-content{
+  h2{
+    font-size:38px;
+    font-weight: 700;
+    color: $white;
+    margin-bottom: 20px;
+    @include tablet{
+      font-size: 55px;
+    }
+  }
+  h4 {
+    font: 400 17px 'Open Sans', sans-serif;
+    color: #fff;
+    margin-bottom: 30px;
+    @include desktops{
+        margin-bottom: 50px;
+    }
+  }
+}

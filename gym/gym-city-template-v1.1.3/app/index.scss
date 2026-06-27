@@ -1,0 +1,40 @@
+@import 'css/variables';
+@import 'css/mixins';
+
+html {
+  @include customScroll();
+}
+
+.gym-city {
+  min-width: 320px;
+  font-family: $font-family;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  @import 'css/main';
+  @import 'css/buttons';
+  @import 'css/tooltip';
+  @import 'partials/nav/nav';
+  @import 'partials/footer/footer';
+  @import 'partials/chat/chat';
+  @import 'partials/loading/loading';
+
+  @import 'pages/home/top-banner/top-banner';
+  @import 'pages/home/about/about';
+  @import 'pages/home/testimonials/testimonials';
+  @import 'pages/home/info/info';
+  @import 'pages/home/classes/classes';
+  @import 'pages/home/classes/details/classes-details';
+  @import 'pages/home/form/home-form';
+  @import 'pages/articles/articles';
+  @import 'pages/article/article';
+  @import 'pages/contacts/header/contacts-header';
+  @import 'pages/contacts/form/contacts-form';
+  @import 'pages/contacts/map/map';
+  @import 'pages/facilities/facilities';
+  @import 'pages/gift-cards/gift-cards';
+  @import 'pages/schedule/schedule';
+  @import 'pages/team/team';
+  @import 'pages/membership/membership';
+}

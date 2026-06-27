@@ -1,0 +1,95 @@
+.home {
+  position: relative;
+
+  .carousel-item {
+    max-height: 580px;
+  }
+
+  .carousel-indicators {
+    li {
+      cursor: pointer;
+    }
+
+    .active {
+      background-color: $action-color;
+    }
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    top: $nav-height-mobile;
+
+    @include large-desktop-layout {
+      top: $nav-height-expanded;
+    }
+
+    .fa {
+      font-size: 60px;
+    }
+
+    &:hover {
+      color: $action-color;
+    }
+  }
+
+  .carousel-caption {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 20px;
+    top: $nav-height-mobile + 20px;
+
+    @include desktop-layout {
+      top: $nav-height-mobile + 62px;
+    }
+
+    @include large-desktop-layout {
+      top: $nav-height-expanded + 62px;
+    }
+
+    .btn {
+      margin-left: 24px;
+      padding: 6px 11px;
+      min-width: 0;
+      font-weight: normal;
+
+      @include tablet-layout {
+        padding: 14px 24px;
+      }
+    }
+  }
+
+  .carousel-caption-text {
+    margin-bottom: 20px;
+
+    @include tablet-layout {
+      margin-bottom: 58px;
+    }
+
+    & > div {
+      font-size: 24px;
+      background: rgba(12, 12, 12, 0.5);
+      padding: 0 24px;
+      float: left;
+      clear: left;
+      text-transform: uppercase;
+      text-shadow: 1px 1px #000000;
+      word-spacing: 2px;
+      white-space: nowrap;
+
+      & + div {
+        margin-left: 24px;
+        margin-top: 4px;
+      }
+
+      @include tablet-layout {
+        font-size: 36px;
+      }
+
+      @include desktop-layout {
+        font-size: 46px;
+      }
+    }
+  }
+}

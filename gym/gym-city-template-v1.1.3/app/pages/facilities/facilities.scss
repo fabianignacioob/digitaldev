@@ -1,0 +1,25 @@
+.facilities-header {
+  background-image: url(img/facilities-bg.jpg);
+}
+
+.facilities-item {
+  margin-bottom: 40px;
+
+  img {
+    width: 100%;
+    margin-bottom: 18px;
+  }
+
+  h3 {
+    color: $text-color;
+    font-size: 21px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  p {
+    color: $secondary-text-color;
+    font-size: 15px;
+    margin-bottom: 0;
+  }
+}

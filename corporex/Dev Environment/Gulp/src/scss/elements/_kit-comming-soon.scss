@@ -1,0 +1,55 @@
+.page-comingsoon{
+    .comming-soon-bg{
+        background:url(../img/bg-img/comming-soon.jpg);
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+    }
+    .comingsoon {
+        path.logo-color {
+        fill:$blue;
+        }
+        h1 {
+            margin-top: 80px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 36px;
+        }
+        p{
+            color: $gray-dark;
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+    }
+    .count-down{
+        padding-top: 25px;
+        padding-bottom: 75px;
+        .tab-val{
+            border-color:#c4d3f8!important;
+            color: $primary-color;
+        }
+    }
+    .form_subscribe {
+            margin: 0 0 80px;
+            position: relative;
+
+        input {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            height: auto;
+            &::placeholeder{
+                color: #222222;
+            }
+        }
+        i {
+            color: $primary-color;
+        }
+
+    }
+    p{
+        color: $black;
+    }
+
+}

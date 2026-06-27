@@ -1,0 +1,37 @@
+// Page Section
+.page-section {
+  padding: 6.25rem 0;
+}
+
+.page-section-heading {
+  font-size: 3rem;
+}
+
+// Horizontal Rule
+hr.primary {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-style: solid;
+  height: 0.125rem;
+  border-color: $primary;
+}
+
+hr.small {
+  max-width: 10rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Button Customization
+.btn {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.0625rem;
+}
+
+
+
+// Background Color Helper
+.bg-black {
+  background-color: $black !important;
+}

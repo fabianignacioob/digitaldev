@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Vitality Documentation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../dist/css/styles.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="css/docs.css">
+
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="docs-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+                    <h1 class="text-uppercase">
+                        <span class="docs-title">Vitality</span><span class="docs-subtitle">Documentation</span></h1>
+                    <hr class="primary small ml-0">
+                    <p class="lead m-0">An overview of the Vitality theme's features along with usage instructions for it's various components.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-9">
+
+                <!-- * * * * * * * * * -->
+                <!-- * Introduction * -->
+                <!-- * * * * * * * * * -->
+
+                <h2 class="pt-5 mb-3" id="intro">Introduction</h2>
+
+                <p class="lead">Vitality is a Bootstrap 4 based theme for building single page websites.</p>
+                <p>Thank you for choosing Vitality by Blackrock Digital! If you have any issues or questions regarding this theme, contact us directly at
+                    <a href="mailto:david@blackrockdigital.io">david@blackrockdigital.io</a>
+                    and we will answer your questions as soon as possible!</p>
+                <p>You must purchase a license to use this theme, which you can do on
+                    <a href="https://wrapbootstrap.com/theme/vitality-one-page-bootstrap-4-theme-WB02K3KK3">WrapBootstrap!</a>
+                </p>
+
+                <!-- * What's Included * -->
+
+                <h4 class="pt-5 mb-3" id="introIncluded">What's Included</h4>
+                <p>When purchsing this theme, the download package will include a
+                    <code class="language-html">/dist</code>
+                    directory which will contain the compiled theme. Within that folder, you will see an
+                    <code class="language-html">index.html</code>
+                    file with the theme itself, along with supporting
+                    <code class="language-html">/css</code>,
+                    <code class="language-html">/assets</code>, and
+                    <code class="language-html">/js</code>
+                    directories.</p>
+                <p>The theme package also includes a
+                    <code class="language-html">/src</code>
+                    directory which includes all of the source files used to create the theme. The
+                    <code class="language-html">/scripts</code>
+                    directory, which creates the development environment, and the
+                    <code class="language-html">package.json</code>
+                    file in the root directory are development files used to build the theme, and should only be used by developers looking to work from the the theme's development files and recompile.</p>
+
+                <!-- * File Tree * -->
+
+                <h4 class="pt-5 mb-3" id="introTree">File System</h4>
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain">theme-vitality
+├── dist/
+    ├── assets/
+        ├── img/
+        ├── mail/
+        ├── plugins/
+    ├── css/
+        ├── styles.css
+    ├── js/
+        ├── scripts.js
+├── docs/
+├── scripts/
+├── src/
+    ├── assets/
+    ├── js/
+    ├── js/
+    ├── pug/
+    ├── scss
+├── .gitignore
+├── LICENSE
+├── package-lock.json
+├── package.json
+├── README.md</script></code></pre>
+                </figure>
+
+                <!-- * Plugins * -->
+
+                <h4 class="pt-5 mb-3" id="introPlugins">Plugins</h4>
+                <p>Vitality utilizes some powerful, third party plugins for certain components. They are:</p>
+                <ul>
+                    <li>Bootstrap 4</li>
+                    <li>jQuery</li>
+                    <li>jQuery Easing</li>
+                    <li>Fancybox</li>
+                    <li>HTML5 Device Mockups</li>
+                    <li>Slick Carousel</li>
+
+                </ul>
+
+                <!-- * * * * * * * * -->
+                <!-- * Components * -->
+                <!-- * * * * * * * * -->
+
+                <h2 class="pt-5 mb-3" id="components">Components</h2>
+
+                <p>Here is a comprehensive overview of how to use and modify the components included with the Vitality theme package.</p>
+
+                <!-- * * * * * * * * -->
+                <!-- * Navigation * -->
+                <!-- * * * * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsNavigation">Navigation</h4>
+
+                <p>There are a few things to note when using the Vitality navbar. It is built on top of the deafult Bootstrap navbar, and the markup is identical, with a few minor additions. The first addition you will see is the usage of the
+                    <code class="language-html">#navbar-main</code>
+                    ID on the
+                    <code class="language-html">nav</code>
+                    component. This sets the custom styling for the navbar, and should not be changed or removed.</p>
+
+                <!-- Changing navbar brand image -->
+                <h6 class="pt-5">Changing the
+                    <code class="language-html">.navbar-brand</code>
+                    image</h6>
+                <p>Next, you will notice that we have replaced the text in the
+                    <code class="language-html">.navbar-brand</code>
+                    element with an SVG image. The HTML appears as follows by default:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><a class="navbar-brand js-scroll-trigger" href="#page-top">
+  <img class="navbar-brand-logo" src="img/logo-navbar.svg" alt="">
+</a></script></code></pre>
+                </figure>
+
+                <p>The easiest way to replace the navbar brand image is to replace and overwrite the
+                    <code class="language-html">logo-navbar.svg</code>
+                    image in the
+                    <code class="language-html">dist/img</code>
+                    directory with your own SVG image. Doing so would mean you don't have to change any of the HTML.</p>
+                <p>If you
+                    <em>are</em>
+                    using a different file type for the navbar brand image, then you will need to make sure the file path and the file type is correct. Let's say, for example, you have a new PNG image that you want to use for the navbar brand imagg; the markup would change from what you see in the box above to the following:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><a class="navbar-brand js-scroll-trigger" href="#page-top">
+  <img class="navbar-brand-logo" src="img/logo-navbar.png" alt="">
+</a></script></code></pre>
+                </figure>
+
+                <p>The above snippet assumes that you have a new image file called
+                    <code class="language-html">logo-navbar.png</code>
+                    in the
+                    <code class="language-html">dist/img</code>
+                    directory.</p>
+                <p>If you want to use text instead of an image, keep in mind you may have to restyle the text on your own. The best way to do this would be to create a new stylesheet and write your own custom CSS. Make sure to load this
+                    <em>after</em>
+                    your
+                    <code class="language-html">theme-default.css</code>
+                    file (or whichever color scheme file you are choosing).</p>
+
+                <div class="alert alert-warning py-4 mt-5">
+                    <h6>Troubleshooting FAQ: Why isn't my brand image showing up?</h6>
+                    <p class="m-0">If your image isn't appearing, first make sure that the file extension of your image matches the file extension you're using in your HTML. After that, check to make sure that the file path is correct.
+                        <strong>Note:</strong>
+                        keep in mind that file extensions can be case sensitive (.jpg is different than .JPG)!</p>
+                </div>
+
+                <!-- Adding/modifying nav links -->
+                <h6 class="pt-5">Adding/modifying navigation links</h6>
+
+                <p>When you items in the
+                    <code class="language-html">.navbar-nav</code>
+                    element, you'll see all of the default Bootstrap classes, along with the
+                    <code class="language-html">.js-scroll-trigger</code>
+                    class. You'll also notice that the links for each
+                    <code class="language-html">.nav-link</code>
+                    are set to an ID. This is how the one page scrolling system works.</p>
+
+                <p>Any time you want a navigation link to scroll to a position on the page, just set an ID on the element you wish to scroll to, make sure the link points to that target, and add the
+                    <code class="language-html">.js-scroll-trigger</code>
+                    class to the link. For example, if you wanted to add a new item to the navbar, you would add the following list item within the
+                    <code class="language-html">.navbar-nav</code>:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><li class="nav-item">
+  <a class="nav-link js-scroll-trigger" href="#new-link">new link</a>
+</li></script></code></pre>
+                </figure>
+
+                <p>From there, you would need a link target, so on the page somewhere in your HTML, you would have a section that has the ID
+                    <code class="language-html">#new-link</code>, like so:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><section id="new-link">...</section></script></code></pre>
+                </figure>
+
+                <div class="alert alert-info py-4 mt-5">
+                    <h6>Quick tip: you can use
+                        <code class="language-html">.js-scroll-trigger</code>
+                        anywhere on the page!</h6>
+                    <p class="m-0">If you look at the first call to action section of the default page, you'll notice a
+                        <code class="language-html">.js-scroll-trigger</code>
+                        on a button within the call to action. You can use scroll triggers anywhere on the page, just set the link target to the ID of the section you want to scroll to, and make sure the link has the
+                        <code class="language-html">.js-scroll-trigger</code>
+                        class!</p>
+                </div>
+
+                <!-- * * * * * * * -->
+                <!-- * Masthead * -->
+                <!-- * * * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsMasthead">Masthead</h4>
+
+                <p>Vitality includes a few different masthead header options. You can have a full or partial page height header, and your header background can be either an image or a video.</p>
+
+                <!-- Masthead Options -->
+                <h6 class="pt-5">Masthead Options</h6>
+                <ul>
+                    <li>
+                        Image Background - Full Page Height - Append <code class="language-css">.masthead-full</code> to the masthead.
+                    </li>
+                    <li>
+                        Image Background - Partial Page Height Append <code class="language-css">.masthead-partial</code> to the masthead.
+                    </li>
+                </ul>
+
+                <!-- Changing masthead bg image -->
+                <h6 class="pt-5">Changing a masthead background image</h6>
+                <p>The best, and easiest way to change the header background image is to replace the image file within the
+                    <code class="language-html">dist/assets/img</code>
+                    directory. You will see a file called
+                    <code class="language-html">bg-header.jpg</code>. Overwrite this file with your own image. We reccommend that you keep the image as a JPG.
+                    <strong>If you want to change image formats, you will need to edit your theme's CSS file.</strong>
+                    To do this, you will need to go into your theme's CSS file, and find the
+                    <code class="language-html">.masthead</code>
+                    class, and modify the URL attached to the background rule. By default, it is set as follows:
+                </p>
+                <p>If you are working from the theme's source files, you will want to replace the <code class="language-html">src/assets/img/bg-header.jpg</code> file instead.</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-css">.masthead {
+  position: relative;
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0.7))), url("../img/bg-masthead.jpg");
+  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7)), url("../img/bg-masthead.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}</code></pre>
+                </figure>
+
+                <p>If you need to change the file name, path, or extension, simply edit the URL in both the normal background rule and the webkit background rule.</p>
+
+                <div class="alert alert-info py-4 mt-5">
+                    <h6>Quick tip: you can change the color and/or opacity of the background overlay!</h6>
+                    <p class="m-0">If you look at the CSS snippet above, before the URL you will see a linear gradient. You can change the RGBA color value (which is black by default) or the opacity of the gradient which will change the overlay of the background image!</p>
+                </div>
+
+                <!-- * * * * * -->
+                <!-- * About * -->
+                <!-- * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsAbout">About</h4>
+
+                <p>The about section has no custom CSS classes added. There are, however, custom icons that are being used for the about section - which can be modified.</p>
+
+                <!-- Modifying about section icons -->
+                <h6 class="pt-5">Modifying the about section icons</h6>
+                <p>The about section icons are from Font Awesome's free library of icons. You will see four
+                    <code class="language-html">i</code>
+                    elements within that section with the
+                    <code class="language-html">.fas</code>,
+                    <code class="language-html">.fa-4x</code>, and
+                    <code class="language-html">.fa-fw</code>
+                    classes, along with another class that identifies which icon to use
+                    <code class="language-html">.fa-*</code>
+                    (where the * is the name of the icon, for example,
+                    <code class="language-html">.fa-code</code>). You will need to change the
+                    <code class="language-html">.fa-*</code>
+                    class to an icon. For a full list of icons, visit
+                    <strong>
+                        <a href="http://fontawesome.com/icons">http://fontawesome.com/icons</a>
+                    </strong>. This theme includes the free version of Font Awesome, but you can upgrade to a pro version to get access to the entire icon library.</p>
+
+                <!-- * * * * * -->
+                <!-- * Team * -->
+                <!-- * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsTeam">Team</h4>
+
+                <p>By default, the team section has 5 team members which are organized on a carousel, using the Slick Carousel plugin. When modifying the team section, you can change the team member images, text content, and social links. You can also add or remove team members from the carousel.</p>
+
+                <!-- Changing masthead bg image -->
+                <h6 class="pt-5">Changing a team member image</h6>
+                <p>The best and easiest way to change the image for a specific team member is by replacing the image file in the
+                    <code class="language-html">dist/assets/img/team</code>
+                    directory. In that directory you will find the 5 default team member images. Replace these images with another JPG with the same name, and it will replace that team members portrait.</p>
+                <p>Change the images in the source files if you are working with the npm based development environment: <code class="language-html">src/assets/img/team</code></p>
+
+                <div class="alert alert-warning">
+                    <h6>Image Dimensions Warning!</h6>
+                    <p class="m-0">It is recommended that you use images that are
+                        <strong>400x400</strong>
+                        in pixels. If your team member images are different sizes, the sizes of the carousel items may appear asymmetrical.</p>
+                </div>
+
+                <!-- Modifying team member social links -->
+                <h6 class="pt-5">Modifying team member social links</h6>
+                <p>Each team member has a variety of links for social profiles. You can add, remove, or modify the existing social links by using icons from the Font Awesome icon library. Each icon has a
+                    <code class="language-html">.fab</code>,
+                    <code class="language-html">.fa-fw</code>, and
+                    <code class="language-html">.fa-*</code>
+                    class (where the * is the social icon being used, for example
+                    <code class="language-html">.fa-facebook-f</code>). To change these icons, you can go to
+                    <strong>
+                        <a href="http://fontawesome.com/icons">http://fontawesome.com/icons</a>
+                    </strong>
+                    and sort by their brand icons to see what is available. You will also want to set the link target for each of the link elements to your team member's social profile on your chosen network.</p>
+
+                <!-- Adding/removing team members from the carousel -->
+                <h6 class="pt-5">Adding/removing team members from the carousel</h6>
+                <p>If you want to add or remove team members from the carousel, you need to do so at the
+                    <code class="language-html">.carousel-team-item</code>
+                    level. Example markup for a single carousel item is:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><!-- team carousel - item * -->
+<div class="carousel-team-item">
+  <div class="carousel-team-item-content d-flex align-items-center justify-content-center">
+    <div class="text-center p-3">
+      <div class="h4 text-uppercase">team member name</div>
+      <hr class="primary my-2">
+      <div class="mb-2">team member subheading</div>
+      <!-- social links -->
+      <div>
+        <a class="mx-1" href="#">
+          <i class="fab fa-facebook fa-fw"></i>
+        </a>
+        <a class="mx-1" href="#">
+          <i class="fab fa-twitter-square fa-fw"></i>
+        </a>
+        <a class="mx-1" href="#">
+          <i class="fab fa-linkedin fa-fw"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="overlay"></div>
+  <!-- team member image -->
+  <img class="img-fluid" src="path/to/image.jpg" alt="">
+</div></script></code></pre>
+                </figure>
+
+                <p>To add items, copy the above snippet and paste it into the team carousel. Make sure to set a path for the team member image, and make sure to modify the social links, and add link targets, as needed.</p>
+
+                <p>To remove items, simply delete the entire
+                    <code class="language-html">.carousel-team-item</code>
+                    element from the carousel.</p>
+
+                <!-- * * * * * * -->
+                <!-- * Process * -->
+                <!-- * * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsProcess">Process</h4>
+
+                <p>The process section of the Vitality theme uses a few custom classes for positioning and spacing purposes. More importantly, if you need to change the icons in the process section, you can select the icons you want to use from the Font Awesome icon library.</p>
+
+                <!-- Process section icons -->
+                <h6 class="pt-5">Modifying process section icons</h6>
+                <p>In the process section, you will see three
+                    <code class="language-html">i</code>
+                    elements with the
+                    <code class="language-html">.fas</code>
+                    class and another
+                    <code class="language-html">.fa-*</code>
+                    class (where the * indicates the icon being used, for example
+                    <code class="language-html">.fa-heart</code>). For a complete list of icons you can use, go to
+                    <a href="http://fontawesome.com/icons">http://fontawesome.com/icons</a>. This theme includes the free version of the Font Awesome icon font, but you can also purcase the pro version to have access to all of the icons available.</p>
+
+                <!-- * * * * * * * * * * * * * -->
+                <!-- * Portfolio (Carousel) * -->
+                <!-- * * * * * * * * * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsPortfolioCarousel">Portfolio (Carousel)</h4>
+
+                <p>The portfolio carousel utilizes the Slick Carousel plugin for slider functionality, along with Bootstrap modals for the individual item popup windows and the HTML5 device mockups plugin for device previews. There are a few things to consider when modifying the portfolio carousel.</p>
+
+                <!-- Modifying portfolio carousel item -->
+                <h6 class="pt-5">Modifying a portfolio carousel item</h6>
+                <p>Each portfolio carousel item has a background image, a preview image, and a modal window that is linked to, along with text content.</p>
+                <p>First, you will need to change the background image of the carousel item, and the preview image of the carousel item. The best and easiest way to do this is by replacing the default images in the
+                    <code class="language-html">dist/assets/img/portfolio/carousel</code>
+                    directory. Make sure to replace the existing demo images with JPG files that have the
+                    <em>same name</em>! Otherwise you will need to modify the theme's CSS.</p>
+                <p>To modify the content of the modal window, look at the
+                    <code class="language-html">data-target</code>
+                    of the View Details button in each item, and find the corresponding modal, all of which are listed below the carousel.
+                    <strong>For example</strong>, Portfolio Carousel - Item 1 has a View Details button with
+                    <code class="language-html">data-target="portfolio-modal-1"</code>. Scrolling down the HTML, you will find a
+                    <code class="language-html">div</code>
+                    with the class name
+                    <code class="language-html">.portfolio-modal</code>
+                    and the ID
+                    <code class="language-html">#portfolio-modal-1</code>. This is where you can edit the contents of the popup modal for that specific item.</p>
+                <p>The theme includes 4 portfolio items by default, and you can edit each one by modifying the carousel item HTML along with it's corresponding modal window.</p>
+
+                <!-- Changing the device type for a carousel item -->
+                <h6 class="pt-5">Changing the device type for a carousel item</h6>
+                <p>By default, all of the portfolio carousel items use a Macbook Pro as the device type being shown. You can change this in the HTML by modifying the data attribute on the
+                    <code class="language-html">.device</code>
+                    element of each carousel item. For example, if you wanted to change from a MacBook Pro to an iPad, your markup would look like this:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><div class="device" data-device="ipad" data-orientation="landscape" data-color="black"></script></code></pre>
+                </figure>
+
+                <p>For full documentation on available device options, visit the documentation page for the HTML5 Device Mockups plugin.</p>
+
+                <!-- Adding portfolio Carousel item -->
+                <h6 class="pt-5">Adding items to the portfolio carousel</h6>
+
+                <p>If you wish to add items to the portfolio carousel, you will need to do so in two steps. First, you will need to add an item to the portfolio carousel, and then you will need to link that item to a corresponding modal window.</p>
+
+                <p>The markup for a portfolio carousel item is as follows:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><!-- portfolio carousel - item -->
+<!-- to create a custom item, you will need to set a background image in the div below! -->
+<div class="carousel-portfolio-item bg-dark text-center text-lg-left">
+  <div class="container h-100">
+    <div class="row h-100 align-items-center">
+      <div class="col-lg-6 col-xl-8">
+        <div class="device-wrapper mb-3 mb-lg-0">
+          <div class="device" data-device="macbookpro" data-orientation="portrait" data-color="black">
+            <div class="screen">
+              <!-- carousel image -->
+              <img class="img-fluid" src="img/portfolio/carousel/item-1-img.jpg" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-xl-4">
+        <h3 class="text-uppercase m-0">project name</h3>
+        <p class="mb-0">project category</p>
+        <hr class="primary small ml-lg-0 mb-4">
+        <a data-toggle="modal" data-target="#portfolio-modal-1" href="javascript:;" class="btn btn-outline-light">view details
+          <i class="fas fa-long-arrow-alt-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div></script></code></pre>
+                </figure>
+
+                <p>Add the above snippet as a child to the
+                    <code class="language-html">.carousel-portfolio</code>
+                    element on the page. You will also need to make sure to set the
+                    <code class="language-html">data-target</code>
+                    of the View Details button in your portfolio item to a modal window, and you will need to make sure the image path is correct in the preview. The background images for the portfolio items are set in the theme's CSS. If you are adding another item, you will need to set the background of the portfolio item using custom CSS. The markup for a new modal window is:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><!-- portfolio modal -->
+<!--! use custom css to set a background image for the below element -->
+<div class="modal fade portfolio-modal" id="portfolio-modal-*" tabindex="-1" role="dialog" aria-labelledby="examplemodallabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-8 mx-auto">
+              <h3 class="text-uppercase portfolio-modal-heading">project name</h3>
+              <hr class="primary small">
+              <p class="m-0">...</p>
+              <div class="device-wrapper my-5">
+                <div class="device" data-device="macbookpro" data-orientation="portrait" data-color="black">
+                  <div class="screen">
+                    <!-- screen image - make sure to change the image path below to your custom image -->
+                    <img class="img-fluid" src="img/portfolio/carousel/item-*-img.jpg" alt="">
+                  </div>
+                </div>
+              </div>
+              <ul class="list-unstyled mb-5">
+                <li class="list-unstyled-item">
+                  client: <strong><a class="text-white" href="#">...</a></strong>
+                </li>
+                <li class="list-unstyled-item">
+                  service: <strong><a class="text-white" href="#">...</a></strong>
+                </li>
+                <li class="list-unstyled-item">
+                  date: <strong><a class="text-white" href="#">...</a></strong>
+                </li>
+              </ul>
+              <button type="button" class="btn btn-light" data-dismiss="modal">
+                <i class="fas fa-times"></i>
+                close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></script></code></pre>
+                </figure>
+
+                <p>Make sure the ID of your modal window and the
+                    <code class="language-html">data-target</code>
+                    of your portfolio carousel item match - otherwise, nothing will happen when the View Details button is clicked! For example, if you were going to add a fifth portfolio modal, the portfolio modal would have an ID of
+                    <code class="language-markup">#portfolio-modal-5</code>, and the corresponding portfolio item's view details button would have a
+                    <code class="language-markup">data-target="portfolio-modal-5"</code>
+                    set.</p>
+
+                <div class="alert alert-info py-4 mt-5">
+                    <h6>Recommended image sizes for device mockups:</h6>
+                    <p class="m-0">The ideal dimensions for the preview images that are located inside of the device mockups is 1018x636 pixels. If you are using a different device, your images may need to be resized!</p>
+                </div>
+
+                <!-- * * * * * * * * * * * -->
+                <!-- * Portfolio (Grid) * -->
+                <!-- * * * * * * * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsPortfolioGrid">Portfolio (Grid)</h4>
+
+                <p>By default, the portfolio grid option includes six items, each of which have a hover effect, and when clicked, the open a gallery powered by the fancybox plugin.</p>
+
+                <!-- Changing the device type for a carousel item -->
+                <h6 class="pt-5">Adding more items to the portfolio grid</h6>
+
+                <p>Each grid item is contained within a Bootstrap column. To add more items, copy and paste the below snipped into the portfolio grid after the last item, and before the closing of the
+                    <code class="language-html">.row</code>
+                    element.</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><!-- portfolio grid - item * -->
+<div class="col-lg-6 col-xl-4">
+  <a class="portfolio-grid-item" href="path/to/image.jpg" data-fancybox="gallery" data-caption="caption text">
+    <span class="caption">
+      <span class="caption-content">
+        <h2>project title</h2>
+        <p class="mb-0">lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+      </span>
+    </span>
+    <img class="img-fluid" src="path/to/image.jpg" alt="">
+  </a>
+</div></script></code></pre>
+                </figure>
+
+                <p>Make sure to add a new image to the
+                    <code class="language-markup">dist/img/portfolio/grid</code>
+                    directory and set the to image paths in the snippet above to your image's location. If this isn't done, the image will not appear. You can use a smaller image for the preview image, and a larger image for the link target, but for demo purposes, the same image is used twice.</p>
+
+                <!-- * * * * * * * * * -->
+                <!-- * Testimonials * -->
+                <!-- * * * * * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsTestimonials">Testimonials</h4>
+
+                <p>The testimonials carousel is also handled by slick carousel, and functions similarly to the team and carousel sliders. To add another item to the testmonials, simply add another
+                    <code class="language-html">.caroursel-testimonials-item</code>
+                    to the carousel before the close of the
+                    <code class="language-html">.carousel-testimonials</code>
+                    element.</p>
+
+                <p>You can use the below snippet to easily add more items to the testimonials carousel:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><div class="carousel-testimonials-item text-center">
+  <div class="carousel-testimonials-item-content">
+    <div class="h4 text-uppercase quote">"quote"</div>
+    <hr class="primary small">
+    <p class="mb-4">testimonial content</p>
+    <h6 class="text-uppercase name mb-0">name</h6>
+    <div class="small">occupation</div>
+  </div>
+</div></script></code></pre>
+                </figure>
+
+                <!-- * * * * * * -->
+                <!-- * Contact * -->
+                <!-- * * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsContact">Contact</h4>
+
+                <p>The contact form is a working PHP/AJAX form with validation. First and foremost, if you are testing the form it must have a mail server attached and PHP enabled on the server. For example, if you are just testing the form locally, the form will not work - it must be on a live web server, or on a testing server with PHP and a mail server.</p>
+
+                <p>To set up the form, open the
+                    <code class="language-markup">dist/assets/mail/contact.php</code>
+                    file and change the email address on line 18, which is set to
+                    <code class="language-markup">yourname@yourdomain.com</code>
+                    by default. Replace that email address with your own. You can also change the email address on line 21, which is set as
+                    <code class="language-html">noreply@yourdomain.com</code>. Since the form sends from the webserver, you don't need to reply to the webserver - but changing this is optional since the form is set up to auto reply to the email address the sender put in the email field of the form.</p>
+
+                <div class="alert alert-warning py-4 mt-5">
+                    <h6>Contact form not working? Troubleshooting tips:</h6>
+                    <p class="m-0">For advanced troubleshooting, see
+                        <a class="alert-link" href="https://stackoverflow.com/questions/24644436/php-mail-function-doesnt-complete-sending-of-e-mail">this post</a>
+                        on StackOverflow, where a community user has provided comprehensive answers to why a PHP mailer might not be working properly. Special thanks to the user John Conde for providing this answer</p>
+                </div>
+
+                <!-- * * * * * * -->
+                <!-- * Footer * -->
+                <!-- * * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsFooter">Footer</h4>
+
+                <p>The footer contains a few social links, which you may want to change. In order to do so, check out the
+                    <a href="https://fontawesome.com/icons?d=gallery&s=brands&m=free">brand icons availabe on Font Awesome</a>.</p>
+
+                <!-- * * * * * * * -->
+                <!-- * Callouts * -->
+                <!-- * * * * * * * -->
+
+                <h4 class="pt-5 mb-3" id="componentsCallouts">Callouts</h4>
+
+                <p>There are two callouts sections that are included with Vitality: the full callout, and the email subscribe callout (which is set up to work with MailChimp).</p>
+
+                <!-- Callout section - full - background image -->
+                <h6 class="pt-5">Full callout section - changing the background image</h6>
+
+                <p>The best and easiet way to change the background image on the full callout section is by replacing the
+                    <code class="language-markup">dist/assets/img/bg-callout.jpg</code>
+                    file with a new image (with an identical name and format). If your image has a different file format (for example, .gif, .png, etc.) you will need to change the file name in the theme's CSS file.</p>
+
+                <!-- Callout section - signup - MailChimp integration -->
+                <h6 class="pt-5">Signup callout section - MailChimp integration</h6>
+
+                <p>The signup/subscribe callout section is set up to work with MailChimp! In order to make the form subscribe users to your MailChimp mailing list, you will need to change the form action of the signup form. You will see the form section in the HTML laid out as follows:</p>
+
+                <figure class="highlight">
+                    <pre><code class="language-markup"><script type="text/plain"><form role="form" action="//your-mailchimp-action-goes-here" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate="novalidate"></script></code></pre>
+                </figure>
+
+                <p>The above form action will need to be replaced by a form action to use your form. To find this, login to your MailChimp account and do the following:</p>
+
+                <ol>
+                    <li>Login to your MailChimp account</li>
+                    <li>From your dashboard, click on
+                        <strong>'Lists'</strong>
+                        in the top menu</li>
+                    <li>OPTIONAL: If you don't have a list, create one - otherwise proceed to the next step</li>
+                    <li>Expand the button dropdown next to the 'Stats' button, and select
+                        <strong>'Signup forms'</strong>
+                    </li>
+                    <li>Select 'Embedded forms'</li>
+                    <li>Below the preview, you will see a markup window that says 'Copy/paste onto your site'. The only thing you need form here is the form action! Grab the form action, and paste it into the form action on your theme's HTML!</li>
+                </ol>
+
+                <!-- * * * * * * * * * * -->
+                <!-- * Advanced Usage * -->
+                <!-- * * * * * * * * * * -->
+
+                <h2 class="pt-5 mb-3" id="advanced">Advanced Usage</h2>
+
+                <p>Vitality uses <a href="https://nodejs.org/">Node.js</a> and <a href="https://www.npmjs.com/">npm</a> to automate the development environment. To use the dev environment included with this them, you must first install <a href="https://nodejs.org/en/">Node.js</a>. After node is installed, run the following commands in your terminal to make sure Node.js and npm are installed correctly.</p>
+                <pre class="language-markup">node --version
+
+npm -v</pre>
+
+                <p>After you have npm installed, you can install the proejects dependencies. Go to the root folder of the Vitality theme package, and run the following:</p>
+                <pre class="language-markup">npm install</pre>
+
+                <p>This will install the project's dependencies.</p>
+
+                <p>After you dependencies are installed run:</p>
+                <pre class="language-markup">npm start</pre>
+                <p>This will launch the build environment. A browser window will open that shows you a live preview of your project, and editing the files in the <code>src/</code> directory will reload the browser window automatically.</p>
+
+                <p>Developing from the source files requires knowledge of <a href="https://pugjs.org/api/getting-started.html">Pug</a>, which is used to render the HTML, and <a href="https://sass-lang.com/">SASS</a>, which is used to write the CSS.</p>
+
+                <!-- * * * * * * -->
+                <!-- * Credits * -->
+                <!-- * * * * * * -->
+
+                <h2 class="pt-5 mb-3" id="credits">Credits</h2>
+
+                <p>All of the images included with this theme are from
+                    <a href="https://unsplash.com/">https://unsplash.com/</a>.</p>
+                <p>Feel free to use the images included with the theme for your project. For more information about Unsplash's license and terms, visit
+                    <a href="https://unsplash.com/license">https://unsplash.com/license</a>!</p>
+
+                <!-- * * * * * * -->
+                <!-- * Support * -->
+                <!-- * * * * * * -->
+
+                <h2 class="pt-5 mb-3" id="support">Support</h2>
+
+                <p>If you have read through the documentation, and still have questions about working with the Vitality theme, send us an email at
+                    <strong>
+                        <a href="mailto:david@blackrockdigital.io">david@blackrockdigital.io</a>
+                    </strong>
+                    and we will be in touch as soon as possible!</p>
+                <p>Thank you for choosing Vitality!</p>
+
+                <div style="height: calc(100vh - 200px);"></div>
+
+            </div>
+
+            <div class="col-lg-3">
+
+                <div class="nav-sidebar sticky-top pt-5">
+                    <ul class="nav flex-column">
+                        <!-- Introduction -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#intro">Introduction</a>
+                            <ul class="nav flex-column ml-3">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#introIncluded">What's Included</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#introTree">File System</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#introPlugins">Plugins</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#introColors">Color Schemes</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Components -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#components">Components</a>
+                            <ul class="nav flex-column ml-3">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsNavigation">Navigation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsMasthead">Masthead</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsAbout">About</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsTeam">Team</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsProcess">Process</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsPortfolioCarousel">Portfolio (Carousel)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsPortfolioGrid">Portfolio (Grid)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsTestimonials">Testimonials</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsContact">Contact</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsFooter">Footer</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#componentsCallouts">Callouts</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Advanced Usage -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#advanced">Advanced Usage</a>
+                        </li>
+                        <!-- Credits -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#credits">Credits</a>
+                        </li>
+                        <!-- Support -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#support">Support</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="../dist/assets/plugins/jquery/jquery.min.js"></script>
+    <script src="../dist/assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/docs.js"></script>
+
+</body>
+
+</html>

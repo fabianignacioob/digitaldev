@@ -1,0 +1,100 @@
+/* Single Service */
+
+.info.service-info{
+    min-height: 260px;
+    transition: .4s;
+    &:hover{
+        background: $primary-color;
+        color: $white-color;
+        .fill-color{
+            fill: $white-color;
+        } 
+        .description{
+            p,h3{
+                color: $white-color;
+            }
+        }
+    }
+    .icon{
+      min-height: 75px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+}
+.info{
+  color: $white;
+  text-align: center;
+  padding: 35px 10px 0px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  min-height: 250px;
+  transition: .4s;
+  .icon{
+    padding-bottom:18px;
+    .fill-color{
+      fill: $primary-color;
+      transition: .4s;
+    } 
+  }
+  .description{
+    h3{
+      font-family: 'PT Serif', serif;
+      padding-bottom:20px;
+      color: $black;
+      transition: .3s;
+    }
+    p{
+      font-family: 'Open Sans', sans-serif;
+      color: #848484;
+      transition: .4s;
+    }
+    &.color-white{
+      h3{
+        color: $white;
+      }
+      p{
+        color: #848484;
+      }
+    }
+  }
+}
+
+
+/* Service Details */
+
+.details-block{
+  .single-details-margin{
+    margin-bottom: 30px;
+  }
+}
+
+ul.feature-list{
+    position: relative;
+    display: inline-block;
+    &.two-columns{ 
+      li{
+        width: 100%; 
+        @include desktops{
+          float: left;
+          width: 50%;
+        }
+      }
+    }
+    li{
+      margin: 7px 0;
+    }
+    a{
+      position: relative;
+      padding-left: 18px;
+    }
+    i.fa {
+      margin-right: 10px;
+      color: $primary-color;
+      position: absolute;
+      left: 0;
+      top: 4px;
+    }
+}
+

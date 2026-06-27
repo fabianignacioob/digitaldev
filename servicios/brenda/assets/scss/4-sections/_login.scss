@@ -1,0 +1,136 @@
+
+/*=============================================
+=            Login            =
+=============================================*/
+
+
+
+/*-- Login Title --*/
+.login-title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 23px;
+
+    margin-bottom: 30px;
+
+    text-decoration: underline;
+    text-transform: capitalize;
+}
+
+/*-- Login Form --*/
+.login-form {
+    padding: 30px;
+
+    background-color: #FFFFFF;
+    box-shadow: 0 5px 4px 0 rgba(0, 0, 0, 0.1);
+
+    @media #{$tablet-device} {
+        padding: 15px;
+    }
+    & label {
+        font-size: 18px;
+        font-weight: 600;
+
+        display: block;
+
+        margin-bottom: 12px;
+
+        text-transform: capitalize;
+    }
+
+
+    & input {
+        font-size: 18px;
+        line-height: 23px;
+
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 10px 20px;
+
+        border: 1px solid #999999;
+        border-radius: 0;
+        background-color: transparent;
+        &[type="checkbox"] {
+            width: auto;
+        }
+    }
+
+    & .check-box {
+        float: left;
+
+        margin-right: 70px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        & input[type="checkbox"] {
+            display: none;
+
+            & + label {
+                font-size: 18px;
+                font-weight: 600;
+                line-height: 20px;
+
+                position: relative;
+
+                margin: 0;
+                padding-left: 30px;
+
+                color: $theme-color--black;
+                &::before {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+
+                    display: block;
+
+                    width: 20px;
+                    height: 20px;
+
+                    content: "";
+                    transition: all 0.3s ease 0s;
+
+                    border: 2px solid #999999;
+                }
+                &::after {
+                    font-family: Fontawesome;
+                    font-size: 12px;
+                    line-height: 20px;
+
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+
+                    display: block;
+
+                    width: 20px;
+
+                    content: "\f00c";
+                    transition: all 0.3s ease 0s;
+                    text-align: center;
+
+                    opacity: 0;
+                    color: $heading-text-color;
+                }
+            }
+
+            &:checked + label {
+                &::before {
+                    border: 2px solid $heading-text-color;
+                }
+                &::after {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+.forgot_pass {
+    font-size: 18px;
+}
+
+
+/*=====  End of Login  ======*/
+

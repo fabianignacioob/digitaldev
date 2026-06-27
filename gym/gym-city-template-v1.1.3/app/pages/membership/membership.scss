@@ -1,0 +1,116 @@
+.membership-header {
+  background-image: url(img/membership-bg.jpg);
+}
+
+.options-list {
+  margin-bottom: 50px;
+
+  & + h2 {
+    padding-top: 34px;
+  }
+
+  .options-list-col {
+    margin-bottom: 15px;
+
+    @include large-desktop-layout {
+      margin-bottom: 0;
+    }
+  }
+
+  .star-note {
+    font-size: 13px;
+    color: $secondary-text-color;
+    padding-top: 8px;
+  }
+}
+
+.price-option {
+  border-radius: $border-radius;
+  overflow: hidden;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $border-color;
+}
+
+.price-option-name {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  padding: 24px;
+  background: #ffffff;
+  color: $text-color;
+  margin-bottom: 0;
+  border-bottom: 1px solid $action-color;
+  letter-spacing: 1.5px;
+}
+
+.price-option-main {
+  flex: 1 0 auto;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 50px 30px;
+  margin-bottom: 15px;
+
+  @include desktop-layout {
+    margin-bottom: 0;
+  }
+}
+
+.price-value {
+  margin: 0 0 40px;
+  font-size: 70px;
+  padding-left: 12px;
+  font-weight: 300;
+  white-space: nowrap;
+}
+
+.price-currency {
+  font-size: 30px;
+  font-weight: 400;
+  padding-right: 5px;
+}
+
+.pricing-desc {
+  color: $secondary-text-color;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.price-option-features {
+  flex: 1 0 auto;
+  min-height: 150px;
+  margin: 0 0 12px;
+  text-align: left;
+  width: 100%;
+
+  p {
+    padding-bottom: 15px;
+    line-height: 1.4;
+    color: $text-color;
+    margin-bottom: 0;
+    padding-left: 25px;
+    position: relative;
+
+    .fa {
+      color: #55a440;
+      position: absolute;
+      top: 3px;
+      left: 0;
+    }
+  }
+}
+
+.description-text {
+  padding-bottom: 15px;
+  line-height: 1.4;
+  color: $text-color;
+  margin-bottom: 12px;
+  text-align: center;
+  flex: 1 0 auto;
+  width: 100%;
+}

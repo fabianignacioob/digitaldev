@@ -1,0 +1,719 @@
+/* ================================================
+--> Kit Navbar style
+================================================== */
+header {
+	background-color: $black-russian;
+}
+.dropdown-menu li > h6 {
+    margin-top: 20px;
+    font-weight: 500;
+    margin-bottom: 10px;
+	padding: 0 0px;
+	@include tablet {
+		padding: 0 10px;
+		font-size: 14px;
+	}
+	@include desktops {
+		padding: 0 15px;
+		font-size: 16px;
+	}
+}
+/*============= HEADER STYLE ============*/
+.boxed {
+	header {
+		@include mobile {
+			max-width: 520px;
+			margin: 0 auto;
+		}
+		@include tablet {
+			background-color: transparent;
+			max-width: 768px;
+			margin: 0 auto;
+		}
+		@include desktops {
+			background-color: transparent;
+			max-width: 970px;
+			margin: 0 auto;
+		}
+		@include large-desktops {
+			background-color: transparent;
+			max-width: 100%;
+			margin: 0 auto;
+		}
+		&.header-transparent {
+			@include large-desktops {
+				background-color: transparent;
+				max-width: 1260px;
+				margin: 0 auto;
+			}
+		}
+	}
+}
+.main-nav {
+	z-index: 5;
+	position: unset;
+	&.navbar-sticky {
+		@include box-shadow(0px, 3px, 12px, rgba(0, 0, 0, 0.08));
+	}
+	@include tablet {
+		position: relative;
+
+	}
+	.navbar-brand {
+		padding-top: 10px;
+		margin: 0px;
+		margin-left: 15px;
+		padding-bottom: 10px;
+    position: relative;
+    @include tablet {
+      padding-top: 15px;
+    }
+		img {
+			max-width: 100%;
+		}
+		@include tablet {
+			margin-top: 0;
+			position: absolute;
+			z-index: 5;
+			img {
+				width: auto;
+				max-width: 150px;
+			}
+		}
+		@include desktops {
+			width: 230px;
+			overflow: visible;
+			img {
+				width: auto;
+				max-width: 100%;
+			}
+		}
+	}
+	.navbar-toggler {
+		-webkit-align-self: flex-start;
+	    -ms-flex-item-align: start;
+		align-self: flex-start;
+		background-color:$primary-color;
+	    padding: 10px 10px 8px;
+	    border: none;
+	    cursor: pointer;
+	    border-radius: 0px;
+	    position: absolute;
+	    right: 15px;
+	    top: 13px;
+	    transition: all 0.5s ease-in-out;
+	    margin-top: 0px;
+	    z-index: 100;
+		.burger-menu {
+			display: inline-block;
+			font-size: 24px;
+			color: $title-color;
+			background: transparent;
+			text-align: center;
+		}
+		&.active, &:focus {
+			outline: none;
+		}
+	}
+	.navbar-collapse {
+		padding: 0;
+		border-top: none;
+		max-height: 450px;
+		position: absolute;
+		width: calc(100% - 30px);
+		margin: 0 15px;
+		top: 100%;
+		right: 0;
+		@include box-shadow( 2px, 3px, 9px, rgba(44, 40, 86, 0.1));
+		@include tablet {
+			position: relative;
+			margin-top: 0px;
+			box-shadow: none;
+		}
+	}
+	.dropdown-toggle::after {
+		visibility: visible;
+		position: absolute;
+		right: 0px;
+		margin-left: 0px;
+		top: 50%;
+		content: '\f107';
+		font-family: 'FontAwesome';
+		border: none;
+		top: 0;
+		@include transform(translateY(-50%));
+		@include tablet {
+			visibility: hidden;
+			display: none;
+			margin: 0;
+		}
+	}
+	.navbar-collapse.show {
+		right: 0;
+	}
+	.navbar-nav {
+		position: static;
+		z-index: 200;
+		background: #202125;
+		padding: 5px 18px 20px;
+		@include clearfix;
+		@include tablet {
+      background-color: transparent;
+			padding: 0;
+		}
+	}
+	.nav-item {
+		a {
+			text-transform: capitalize;
+			font-style: normal;
+		}
+		a.nav-link {
+			color: $white-color;
+			padding: 0px;
+			font-size: 14px;
+			position: relative;
+			text-transform: uppercase;
+			display: block;
+			margin: 10px 15px;
+			@include transition(all 0.3s ease);
+			@include tablet {
+				padding: 45px 0px;
+				margin: 0px 7px;
+				color: $white-color;
+				font-size: 13px;
+			}
+			@include desktops {
+				margin: 0px 14px;
+				font-size: 15px;
+				text-transform: uppercase;
+			}
+			@include large-desktops {
+				margin: 0px 18px;
+				font-size: 15px;
+			}
+
+			&:hover {
+				color: $primary-color;
+				@include tablet{
+					color: $white;
+				}
+				&:before, &:after {
+					@include tablet {
+						opacity: 1;
+					}
+				}
+			}
+		}
+		&.active {
+			a.nav-link:before {
+				opacity: 1
+			}
+			a.nav-link:after {
+				opacity: 1
+			}
+		}
+
+		&.active {
+			a.nav-link {
+				color: $primary-color;
+				@include tablet{
+					color: $white;
+			}
+			}
+		}
+	}
+	.show {
+		>.dropdown-menu {
+			visibility: visible;
+			@include transform(translateY(0%));
+			opacity: 1;
+			z-index: 1;
+			@include transition(all 0.3s ease-in-out);
+		}
+	}
+	.dropdown-menu {
+		top: 80%;
+		left: 7px;
+		border: 0px;
+		min-width: 230px;
+		margin:0px 15px;
+		width: auto;
+		padding: 0px 20px;
+		border-radius: 0px;
+		box-shadow: none;
+    	background: #202125;
+		&:before {
+		   @include tablet{
+			position: absolute;
+			content: '';
+			top: 0;
+		    left: 0;
+		    right: 0;
+		    height: 3px;
+
+		   }
+		}
+		a {
+			padding: 10px 0 ;
+			font-size: 14px;
+			display: inline-block;
+			color: $white-color;
+			@include transition(color 0.2s, background-color 0.2s ease-in-out);
+			&:hover {
+				color: $white;
+				background-color: transparent;
+			}
+			@include tablet {
+				padding: 10px 5px;
+				margin: 0px 10px ;
+				font-size: 13px;
+				color: $white-color;
+				font-weight: 600;
+				&:hover {
+					color: $primary-color;
+					background-color:  transparent;
+				}
+			}
+			@include desktops {
+				font-size: 14px;
+				padding: 10px 0px;
+			}
+		}
+		@include tablet {
+      border-left:none;
+			@include box-shadow(0px, 0px, 3px, rgba(0,0,0,0.08));
+			@include transform(translateY(30px));
+			background-color: #202125;;
+			margin-top: 0px;
+			padding: 5px;
+			display: block;
+			min-width: 180px;
+			opacity: 0;
+			left: 0px;
+			z-index: -1;
+			visibility: hidden;
+			margin-left:0;
+			margin-right: 0;
+		}
+		@include desktops {
+			margin-top: 0px;
+			min-width: 200px;
+			padding: 5px;
+			left: 0px;
+		}
+		@include large-desktops {
+			left: 7px;
+			min-width: 230px;
+		}
+		li {
+			padding: 0;
+		}
+		li.dropdown {
+			background: #202125;
+			> a:after {
+			    position: absolute;
+			    content: '\f107';
+          font-family: 'FontAwesome';
+          top: 19px;
+			    right: 15px;
+			    font-size: 15px;
+          visibility: visible;
+          display: block;
+			    @include tablet {
+			    	content: '\f105';
+				}
+			}
+			.submenu {
+				margin-top: 0px;
+				margin-left: 0px;
+				border-left: 2px solid $primary-color;
+				background: #202125;
+				transform: translateY(0);
+				display: block;
+				margin: 0;
+				padding-top: 0px;
+				padding-bottom: 0px;
+				@include tablet{
+					@include box-shadow(0px,0px,3px, rgba(0,0,0,0.08));
+				}
+				&:before {
+				    @include tablet{
+						position: absolute;
+						content: '';
+						top: 0;
+						bottom: 0;
+						left: 0;
+						height: 100%;
+						width: 3px;
+
+					}
+				}
+				@include tablet {
+          border-left:none;
+					display: none;
+					top: 0 !important;
+					left: -100% !important;
+					margin-top: 0px;
+					background:  #202125;
+					&:before {
+						left: auto;
+						right: 0;
+					}
+				}
+				@include desktops {
+					top: 0 !important;
+				    left: 100%!important;
+					background-color: #202125;
+					&:before {
+						left: 0;
+						right: auto;
+					}
+				}
+				@include large-desktops {
+					top: 0 !important;
+					left: 100% !important;
+				}
+			}
+			&.show {
+				>.dropdown-menu {
+					display: block;
+				}
+			}
+		}
+	}
+}
+.normal-nav{
+	.navbar-toggler {
+		background-color:#202125;
+	}
+}
+@include tablet {
+	.megaDropMenu {
+		position: static;
+		.dropdown-menu {
+			right: 0;
+			left: 0px;
+			margin: 0px;
+			padding: 0 0px;
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			@include tablet {
+				padding: 15px 20px;
+			}
+			> li {
+				float: left;
+				padding: 0 0px;
+				border-bottom: 0px;
+			}
+			ul {
+				li {
+					&:last-child {
+						border-bottom: none;
+					}
+				}
+			}
+		}
+	}
+}
+.navbar-brand {
+	.logo-color{
+		fill:$white-color;
+	}
+}
+.navbar-sticky {
+	position: fixed;
+	top: 0;
+	z-index: 300;
+	width: 100%;
+}
+.boxed {
+	.navbar-sticky {
+		@include tablet {
+			left: 50%;
+			@include transform(translateX(-50%));
+		}
+	}
+}
+.static .navbar-sticky {
+	display:none;
+}
+// Search button Section
+.main-nav .nav-search {
+  z-index: 200;
+	.search-trigger {
+		top:0;
+		right: 0;
+		display: none;
+    margin-right: 0px!important;
+		@include tablet {
+			display: block;
+			left: 6px;
+			margin: 0px!important;
+		}
+		&:hover{
+			color: #fff;
+		}
+	}
+}
+.search_hook {
+  position: relative;
+  height: auto;
+  border-top: 3px solid $primary-color;
+  @include tablet{
+    display: none;
+    left: 0;
+    margin-top: 15px;
+		position: absolute;
+		top: 100%;
+	}
+	&:before {
+		position: absolute;
+	    content: '';
+	    left: 0px;
+	    width: 2px;
+	    height: 14px;
+	    background: #ccc;
+	    top: 50%;
+	    transform: translateY(-50%);
+	    display: none;
+	}
+	form.search_form {
+		margin-top: 5px;
+		position: relative;
+		right: 0;
+		// background: $sand;
+		top: 80%;
+		z-index: 300;
+		box-shadow: 2px 3px 9px rgba(44, 40, 86, 0.1);
+		display: none;
+		@include tablet {
+			width: 475px;
+			display: block;
+			// background: $white;
+			position: absolute;
+      margin: 0px;
+      @include desktops {
+        width: 610px;
+      }
+      @include large-desktops {
+        width: 660px;
+      }
+
+		}
+		input {
+			display: inline-block;
+			padding: 10px;
+			font-size: 14px;
+			max-width: 100%;
+			width: 100%;
+			background: $ebony;
+			color: $white-color;
+			border: 1px solid #37383b!important;
+			border: 0;
+			@include tablet {
+				background:$ebony;
+				border: none!important;
+
+      }
+      &::placeholder {
+        color: $white-color;
+        letter-spacing: 2px;
+      }
+		}
+		.btn-small {
+			font-size: 12px;
+			float: right;
+		}
+		.btn-search {
+			top: 50%;
+			transform: translateY(-50%);
+			right: 15px;
+			color: $white-color;
+			@include tablet {
+				right: 10px;
+			}
+		}
+	}
+}
+
+.icon-toggle {
+	display: table-cell;
+	transition: all 0.3s ease 0s;
+	vertical-align: middle;
+	&.active {
+		> i {
+			opacity: 0;
+			transform: translateY(-20px);
+		}
+	}
+	&.active::after {
+		opacity: 1;
+		transform: translateY(0px);
+	}
+	> i {
+		display: inline-block;
+		font-style: normal;
+		opacity: 1;
+		position: relative;
+		transform: translateY(0px);
+		transition: transform 0.3s ease 0s, opacity 0.15s ease 0s;
+	}
+}
+.icon-toggle::after {
+	content: "\e082";
+	display: block;
+	font-family: 'simple-line-icons';
+	margin-top: -23px;
+	opacity: 0;
+	transform: translateY(20px) scale(1);
+	transition: transform 0.3s ease 0s, opacity 0.15s ease 0s;
+}
+
+// Header Transparent =================================
+.header-transparent {
+	z-index: 300;
+	padding: 0px;
+	width: 100%;
+	position: relative;
+	@include tablet {
+	position: absolute;
+	background:transparent;
+	left: 50%;
+	@include transform(translateX(-50%));
+	}
+	.navbar-toggler .burger-menu {
+		color: $white-color;
+	}
+	.navbar-brand {
+		@include desktops {
+			img {
+				max-width: 100%;
+			}
+		}
+		.logo-color{
+			fill:$white-color;
+		}
+	}
+	.navbar-nav.mlr-auto {
+		margin: 0 auto;
+	}
+	.nav-item {
+		a.nav-link {
+			color: $white-color;
+			@include tablet {
+				color: $white-color;
+			}
+			&.btn-search {
+				&:hover, &:focus {
+					color: $white;
+				}
+			}
+		}
+	}
+	&.navbar-sticky {
+		position: fixed;
+		background-image: none;
+    background-color: #202125;
+
+    .nav-item {
+			a.nav-link {
+        color: $white;
+        @include tablet {
+          padding: 29px 0px;
+        }
+				&:hover {
+					color: $primary-color;
+				}
+			}
+    }
+
+		// &.main-nav .nav-item.active a.nav-link {
+		// 	color: $primary-color;
+    // }
+
+	}
+}
+
+.bg-dark {
+	a.nav-link {
+		@include tablet {
+			color: $white!important;
+		}
+	}
+}
+
+// element display ========================
+.display-single_element {
+	.bg-dark {
+		.main-nav {
+			.nav-item {
+				a.nav-link {
+					color: $white;
+				}
+			}
+		}
+		.main-nav a.nav-link:before {
+			border-color: $white;
+		}
+	}
+	.main-nav a.nav-link:before {
+		border-color: $title-color;
+	}
+	.main-nav a.nav-link:after {
+		border-color: transparent;
+	}
+	.main-nav {
+		box-shadow: none;
+		.nav-item {
+			a.nav-link {
+				color: $title-color;
+			}
+		}
+		.navbar-collapse {
+			margin-top: 20px;
+		    height: 200px;
+		    @include tablet {
+		    	margin-top: 0px;
+		    	height: auto;
+		    }
+		    .navbar-nav {
+		    	background-color: $white;
+		    	@include tablet {
+		    		background-color: transparent;
+		    	}
+		    }
+		}
+		.dropdown-menu {
+			a {
+				color: $title-color;
+			}
+		}
+		.navbar-toggler, .nav-cart {
+			top: 20px;
+			@include tablet {
+				top: 0;
+			}
+		}
+		.navbar-brand {
+		    margin-left: -15px;
+		    @include tablet {
+		    	 margin-left: unset;
+		    }
+		}
+	}
+}
+
+
+.bg-primary {
+	&.navbar-sticky{
+		.navbar-brand {
+			.logo-color{
+				fill:$white-color;
+			}
+		}
+	}
+}
+
+
+

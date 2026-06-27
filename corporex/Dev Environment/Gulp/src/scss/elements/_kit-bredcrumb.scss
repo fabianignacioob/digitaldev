@@ -1,0 +1,97 @@
+/* ================================================
+--> Elements Bredcrumb style
+================================================== */
+.bredcrumb {
+	opacity: 1;
+	position: relative;
+	z-index: 1;
+}
+.bredcrumb-inner {
+	height: 240px;
+	@include tablet {
+		height: 250px;
+		padding-top: 65px;
+	}
+	@include desktops {
+		height: 400px;
+	}
+	ul {
+		position: relative;
+		li, a {
+			position: relative;
+		    display: inline-block;
+		    font-size: 13px;
+		    color: $white;
+		    padding: 5px 7px;
+		    @include tablet {
+		    	font-size: 15px;
+			}
+			&.active{
+				color: $white-color;
+			}
+		}
+		li a {
+			opacity: 0.7;
+		}
+		li:after {
+		    position: absolute;
+		    content: '\f105';
+		    font-family: FontAwesome;
+		    top: 10px;
+		    right: 0;
+		    opacity: 0.7;
+		}
+		li:last-child:after {
+		    display: none;
+		}
+		li:first-child {
+			padding-left: 0px;
+		    a {
+		    	padding-left: 0px;
+		    }
+		}
+		&.pager {
+			text-align: left;
+			@include tablet {
+				text-align: right;
+			}
+		}
+	}
+	h2 {
+		color: $white;
+		font-size: 28px;
+		line-height: 45px;
+		text-transform: capitalize;
+		@include tablet {
+			font-size: 40px;
+		}
+	}
+	p {
+		color: $white;
+		line-height: 1.5;
+		@include desktops {
+			line-height: 1;
+		}
+	}
+}
+.display-single_element {
+	.bredcrumb {
+		h2 {
+			padding-top: 0px!important;
+		}
+	}
+}
+
+	 .bredcrumb{
+		 &.bg-image {
+			background-image: url(../img/about-us/backgrounds/services-area-bg.jpg)
+	 	}
+	 }
+
+.element-top.bredcrumb {
+	padding: 30px 0 20px;
+	@include tablet{
+		padding: 30px 0;
+	}
+
+}

@@ -1,0 +1,18 @@
+section.page-section.bg-black
+    .container
+        h3.text-uppercase.mb-0.text-center.text-white Subscribe to our newsletter!
+        hr.primary.small.mb-4
+        .row
+            .col-lg-10.col-xl-8.mx-auto
+                //- MailChimp Signup Form
+                #mc_embed_signup
+                    //- Replace the form action in the line below with your MailChimp embed action! Visit the documentation for additional instructions!
+                    form#mc-embedded-subscribe-form(role='form', action='//your-mailchimp-action-goes-here', method='post', name='mc-embedded-subscribe-form', target='_blank', novalidate='novalidate')
+                        .input-group
+                            input#mce-EMAIL.form-control(type='email', name='EMAIL', placeholder='Email address...')
+                            .input-group-append
+                                button#mc-embedded-subscribe.btn.btn-primary(type='submit', name='subscribe') Subscribe!
+                        #mce-responses
+                            #mce-error-response.response(style='display:none')
+                            #mce-success-response.response(style='display:none')
+                //- End MailChimp Signup Form

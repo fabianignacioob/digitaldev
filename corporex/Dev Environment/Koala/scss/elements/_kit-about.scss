@@ -1,0 +1,69 @@
+/* About CSS */ 
+.about-section{
+    .text-block{
+        .small-heading{
+            margin-bottom: 15px;
+            @include desktops{
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
+.img-pattern-style {
+    position: relative;
+        padding-left: 31px;
+        padding-bottom: 31px;
+    @include tablet{
+        padding-left: 25px;
+        padding-bottom: 25px;
+    }
+    @include desktops{
+        padding-left: 31px;
+        padding-bottom: 31px;
+    }
+    @include large-desktops{
+        padding-left: 31px;
+        padding-bottom: 35px;
+    }
+    &:before {
+        background-image: url(../img/patterns/about-sec-pattern.png);
+        position: absolute;
+        content: "";
+        left: 0px;
+        height: 89.5%;
+        width: 95%;
+        z-index: -1;
+        bottom: 0px;
+        @include tablet{
+            left: -3px;
+            bottom: 0px;
+        }
+        @include desktops{
+            left: -3px;
+            bottom: 3px;
+        }
+    }
+    &.flip{
+        padding-left: 0;
+        padding-right: 31px;
+        @include tablet{
+            padding-right: 26px;
+            padding-bottom: 26px;
+        }
+        @include desktops{
+            padding-right: 31px;
+        }
+        &:before{
+            left: auto;
+            right: -8px;
+            @include tablet{
+                bottom: 0px;
+                right: -7px;
+            }
+            @include desktops{
+                bottom: -6px;
+                right: -9px;
+            }
+        }
+    }
+}

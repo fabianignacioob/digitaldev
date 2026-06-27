@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Gym HTML Template</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content='width=device-width, initial-scale=1, width=device-width'>
+  <meta name="description" content="Responsive HTML template for gym or fitness studio">
+  <meta name="keywords" content="gym, fitness, workout, sports, website, template, html">
+
+  <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet">
+
+  
+
+  
+  <link rel="stylesheet" href="styles.min.css">
+  
+
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+  <link rel="shortcut icon" href="img/favicon.ico">
+</head>
+
+<body class="gym-city">
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="loader">Loading...</div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-top">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="index.html">Gym City</a>
+
+    <!-- Navbar toggler. Shown for mobile devices (https://getbootstrap.com/docs/4.0/components/navbar/#toggler) -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#gymCityNav"
+      aria-controls="gymCityNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      >
+      <i class="fa fa-bars" aria-hidden="true"></i>
+    </button>
+
+    <!-- Navbar -->
+    <div class="collapse navbar-collapse" id="gymCityNav">
+      <i class="fa fa-times close-navbar-mobile" aria-hidden="true" data-toggle="collapse"
+         data-target="#gymCityNav"></i>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link" id="navHome">Home</a> <!-- to highlight a selected nav item add "active" class -->
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+             href="#"
+             id="navAbout"
+             data-toggle="dropdown"
+             aria-haspopup="true"
+             aria-expanded="false"
+            >About</a>
+
+          <div class="dropdown-menu" aria-labelledby="navAbout">
+            <a class="dropdown-item" href="facilities.html">Facilities</a>
+            <a class="dropdown-item" href="team.html">The Team</a>
+          </div>
+        </li>
+        <li class="nav-item"><a href="membership.html" class="nav-link">Membership</a></li>
+        <li class="nav-item"><a href="schedule.html" class="nav-link">Schedule</a></li>
+        <li class="nav-item"><a href="gift-cards.html" class="nav-link">Gift Cards</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+             href="#"
+             id="navArticles"
+             data-toggle="dropdown"
+             aria-haspopup="true"
+             aria-expanded="false"
+            >Articles</a>
+
+          <div class="dropdown-menu" aria-labelledby="navArticles">
+            <a class="dropdown-item" href="articles.html">Articles</a>
+            <a class="dropdown-item" href="article.html">Single Article</a>
+          </div>
+        </li>
+        <li class="nav-item"><a href="contacts.html" class="nav-link">Contacts</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="page-header membership-header bg-darken">
+  <h1 data-aos="zoom-in-up" data-aos-duration="500">Membership options</h1>
+</section>
+
+<section class="content-block">
+  <div class="container">
+    <h2>Monthly memberships</h2>
+
+    <p class="top-text">Monthly membership is the most popular way to use GymCity.
+      All of our monthly packages come with <strong>no contract</strong>,
+      giving you greater flexibility. Get ongoing access to the gym at a range of
+      price points to suit everyone.</p>
+
+    <div class="options-list">
+      <div class="row ">
+        <!-- Membership option 1 -->
+        <div class="col-lg-4 options-list-col">
+          <div class="price-option">
+            <h3 class="price-option-name">Off-peak</h3>
+  
+            <div class="price-option-main">
+              <div class="price-value">
+                <span class="price-currency">$</span>20<span class="pricing-desc">/mth</span>
+              </div>
+  
+              <div class="price-option-features">
+                <p><i class="fa fa-check" aria-hidden="true"></i>Access limited to off-peak hours*</p>
+  
+                <p><i class="fa fa-check" aria-hidden="true"></i>Enjoy loads of free classes which take place during
+                  off-peak hours</p>
+  
+                <p><i class="fa fa-check" aria-hidden="true"></i>Bring a buddy with you for just $5 per visit</p>
+  
+                <p><i class="fa fa-check" aria-hidden="true"></i>Access to spa, pool, and sauna for just $5 per visit</p>
+              </div>
+  
+              <a href="#" class="btn btn-full-width btn-default">Join Us</a>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Membership option 2 -->
+        <div class="col-lg-4 options-list-col">
+          <div class="price-option">
+            <h3 class="price-option-name">Standard</h3>
+  
+            <div class="price-option-main">
+              <div class="price-value">
+                <span class="price-currency">$</span>35<span class="pricing-desc">/mth</span>
+              </div>
+  
+              <div class="price-option-features">
+                <p><i class="fa fa-check" aria-hidden="true"></i>Unrestricted 24/7 access</p>
+  
+                <p><i class="fa fa-check" aria-hidden="true"></i>Enjoy loads of free classes anytime</p>
+  
+                <p><i class="fa fa-check" aria-hidden="true"></i>Bring a buddy with you for just $5 per visit</p>
+  
+                <p><i class="fa fa-check" aria-hidden="true"></i>Access to spa, pool, and sauna for just $5 per visit</p>
+              </div>
+  
+              <a href="#" class="btn btn-full-width btn-default">Join Us</a>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Membership option 3 -->
+        <div class="col-lg-4 options-list-col">
+          <div class="price-option">
+            <h3 class="price-option-name">Premium</h3>
+  
+            <div class="price-option-main">
+              <div class="price-value">
+                <span class="price-currency">$</span>50<span class="pricing-desc">/mth</span>
+              </div>
+  
+              <div class="price-option-features">
+                <p><i class="fa fa-check" aria-hidden="true"></i>Unrestricted 24/7 access</p>
+  
+                <p><i class="fa fa-check" aria-hidden="true"></i>Enjoy loads of free classes anytime</p>
+  
+                <p><i class="fa fa-check" aria-hidden="true"></i>Bring a buddy with you up to 4 times a month for free</p>
+  
+                <p><i class="fa fa-check" aria-hidden="true"></i>Free access to spa, pool, and sauna</p>
+              </div>
+  
+              <a href="#" class="btn btn-full-width btn-default">Join Us</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="star-note">* Monday to Friday – 6.30am to 3pm; Saturday & Sunday – 8am to 7pm</p>
+    </div>  
+
+    <h2>Other membership options</h2>
+
+    <p class="top-text">Sed ne mollis discere, verear eruditi postulant vim ad, ne vel essent atomorum scribentur.
+      Decore tempor primis ne mel, ut dicant atomorum ius. Pri an vitae ornatus. Ei duo inermis detraxit.</p>
+
+    <div class="row options-list">
+
+      <!-- Other membership option 1 -->
+      <div class="col-lg-3 options-list-col">
+        <div class="price-option">
+          <h3 class="price-option-name">Student</h3>
+
+          <div class="price-option-main">
+            <div class="price-value">
+              <span class="pricing-desc">up to</span>20<span class="price-currency">%</span><span class="pricing-desc">off</span>
+            </div>
+
+            <p class="description-text">Staying fit and healthy during your studies has become a whole lot easier with
+              up to 20% Off fixed term student memberships.</p>
+
+            <a href="#" class="btn btn-full-width btn-default btn-join">Join Us</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other membership option 2 -->
+      <div class="col-lg-3 options-list-col">
+        <div class="price-option">
+          <h3 class="price-option-name">Day pass</h3>
+
+          <div class="price-option-main">
+            <div class="price-value">
+              <span class="price-currency">$</span>8<span class="pricing-desc">/day</span>
+            </div>
+
+            <p class="description-text">Not ready to commit to a full membership just yet? Just drop in for a single day
+              and discover what to expect at GymCity.</p>
+
+            <a href="#" class="btn btn-full-width btn-default btn-join">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other membership option 3 -->
+      <div class="col-lg-3 options-list-col">
+        <div class="price-option">
+          <h3 class="price-option-name">Fixed term</h3>
+
+          <div class="price-option-main">
+            <div class="price-value">
+              <span class="pricing-desc">up to</span>15<span class="price-currency">%</span><span class="pricing-desc">off</span>
+            </div>
+
+            <p class="description-text">Save money by paying in advance for access to the gym for 6, 9 or 12 months.</p>
+
+            <a href="#" class="btn btn-full-width btn-default btn-join">Join Us</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other membership option 4 -->
+      <div class="col-lg-3 options-list-col">
+        <div class="price-option">
+          <h3 class="price-option-name">Corporate</h3>
+
+          <div class="price-option-main">
+            <div class="price-value">
+              <span class="pricing-desc">up to</span>10<span class="price-currency">%</span><span class="pricing-desc">off</span>
+            </div>
+
+            <p class="description-text">Save up to 10% on memberships when you sign your employees up.</p>
+
+            <a href="#" class="btn btn-full-width btn-default btn-join">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-info">
+    <div class="container">
+      <div class="row footer-info-row">
+        <!-- General Info Column -->
+        <div class="col-md-4 col-sm-6 footer-info-block">
+          <h6>Gym City Template</h6>
+          <p>
+            Easily customizable HTML template for gyms, fitness centers, dance
+            studios, or any other sports related clubs.
+          </p>
+          <a
+            href="https://amaxcode.com/"
+            target="_blank"
+            class="btn btn-default btn-full-width btn-buy"
+            >More Awesome Templates</a
+          >
+          <p>
+            Made with <span class="love">❤</span> by
+            <a target="_blank" href="https://amaxcode.com/">AmaxCode</a>
+          </p>
+        </div>
+
+        <!-- Contacts Column -->
+        <div class="col-md-3 col-sm-6 footer-info-block">
+          <h6>Contacts</h6>
+
+          <p>
+            2121 Broadway, New York, NY 10023<br />
+            1-234-567-890<br />
+            1-987-654-321<br />
+            <a href="#">contact@gymcity.com</a>
+          </p>
+
+          <ul class="footer-social-links">
+            <li><a href="#" class="fa fa-facebook"></a></li>
+            <li><a href="#" class="fa fa-twitter"></a></li>
+            <li><a href="#" class="fa fa-instagram"></a></li>
+            <li><a href="#" class="fa fa-youtube"></a></li>
+          </ul>
+        </div>
+
+        <!-- Links Column -->
+        <div class="col-md-2 col-sm-6 footer-info-block">
+          <h6>Links</h6>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="facilities.html">Facilities</a></li>
+            <li><a href="team.html">The Team</a></li>
+            <li><a href="membership.html">Membership</a></li>
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="gift-cards.html">Gift Cards</a></li>
+            <li><a href="articles.html">Articles</a></li>
+          </ul>
+        </div>
+
+        <!-- Instagram Column -->
+        <div class="col-md-3 col-sm-6 footer-info-block">
+          <h6>Instagram</h6>
+
+          <div class="row instagram-photos">
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-01.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-02.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-03.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-04.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-03.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-05.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-copy">
+    <i class="fa fa-copyright"></i> Copyright - Gym City Ltd.
+  </div>
+</footer>
+
+<!-- "Live Chat" icon in the bottom right-hand corner -->
+<div class="chat">
+  <a href="#"
+     class="chat-link"
+     data-toggle="tooltip"
+     data-html="true"
+     data-placement="left"
+     title="Live Chat.<br> Ask us anything!"
+    ></a>
+</div>
+
+
+
+
+
+<script src="scripts.min.js"></script>
+
+
+</body>
+</html>

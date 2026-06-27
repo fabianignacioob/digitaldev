@@ -1,0 +1,23 @@
+// Themes options. You can safely remove options you don't use in $action-color
+$pink-theme: #fc328a;
+$blue-theme: #4285f4;
+$green-theme: #55a440;
+$orange-theme: #d54404;
+
+$action-color: $pink-theme; // change the value to change the theme
+$action-color-dark: darken($action-color, 25%);
+$text-color: #3d3d3d;
+$secondary-text-color: #7f7f7f;
+$border-color: #d8e3eb;
+$border-color-dark: #cccccc;
+$tooltip-bg: #3d3d3d;
+
+$border-radius: 0;
+$nav-height: 65px;
+$nav-height-expanded: $nav-height + 40px;
+$nav-height-mobile: 60px;
+$footer-height: 68px;
+$loader-size: 90px;
+
+$header-font-family: 'Julius Sans One', sans-serif;
+$font-family: 'Source Sans Pro', sans-serif;

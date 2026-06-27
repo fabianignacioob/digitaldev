@@ -1,0 +1,58 @@
+{
+    "title": "Vitality",
+    "name": "vitality",
+    "version": "3.1.0",
+    "scripts": {
+        "build": "npm run clean && npm run build:pug && npm run build:scss && npm run build:scripts && npm run build:assets",
+        "build:assets": "node scripts/build-assets.js",
+        "build:plugins": "node scripts/build-plugins.js",
+        "build:pug": "node scripts/build-pug.js",
+        "build:scripts": "node scripts/build-scripts.js",
+        "build:scss": "node scripts/build-scss.js",
+        "clean": "node scripts/clean.js",
+        "start": "npm run build && node scripts/start.js",
+        "start:debug": "npm run build && node scripts/start-debug.js"
+    },
+    "description": "A premium one page website theme created by Blackrock Digital.",
+    "keywords": [
+        "css",
+        "sass",
+        "html",
+        "responsive",
+        "theme",
+        "template"
+    ],
+    "homepage": "https://wrapbootstrap.com/theme/vitality-one-page-bootstrap-4-theme-WB02K3KK3",
+    "bugs": {
+        "email": "david@blackrockdigital.io"
+    },
+    "license": "SEE_LICENSE",
+    "author": "Blackrock Digital LLC",
+    "contributors": [
+        "David Miller (https://davidmiller.io/)"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/blackrockdigital/theme-vitality.git"
+    },
+    "dependencies": {
+        "@fancyapps/fancybox": "3.5.7",
+        "bootstrap": "4.6.0",
+        "html5-device-mockups": "^3.2.1",
+        "jquery": "3.6.0",
+        "jquery.easing": "^1.4.1",
+        "slick-carousel": "^1.8.1"
+    },
+    "devDependencies": {
+        "autoprefixer": "10.2.5",
+        "browser-sync": "2.26.14",
+        "chokidar": "3.5.1",
+        "concurrently": "6.0.2",
+        "postcss": "8.2.10",
+        "prettier": "2.2.1",
+        "pug": "3.0.2",
+        "sass": "1.32.11",
+        "shelljs": "0.8.4",
+        "upath": "2.0.1"
+    }
+}

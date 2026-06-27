@@ -1,0 +1,94 @@
+/*=============================================
+=            Newsletter            =
+=============================================*/
+
+.newsletter-area-bg {
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.newsletter-title {
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1;
+
+    @media #{$extra-small-mobile} {
+        font-size: 30px;
+    }
+
+    span {
+        font-size: 35px;
+        font-weight: 400;
+
+        display: block;
+
+        @media #{$extra-small-mobile} {
+            font-size: 25px;
+        }
+    }
+}
+
+.newsletter-form {
+    position: relative;
+    input {
+        font-size: 20px;
+        font-weight: 500;
+
+        width: 100%;
+        padding: 20px;
+        padding-right: 150px;
+
+        color: $theme-color--black;
+        border: 1px solid #9D7A32;
+        background-color: transparent;
+        &::placeholder {
+            font-weight: 500;
+
+            color: $theme-color--black;
+        }
+
+        @media #{$extra-small-mobile} {
+            padding: 15px;
+            padding-right: 125px;
+        }
+    }
+    button {
+        font-size: 20px;
+        font-weight: 700;
+
+        position: absolute;
+        top: 1px;
+        right: 0;
+
+        padding: 20px;
+
+        transition: $transition--default;
+
+        border: none;
+        border-left: 1px solid #9D7A32;
+        background-color: transparent;
+
+        @media #{$extra-small-mobile} {
+            padding: 15px;
+        }
+
+        &:hover {
+            color: $white;
+            background-color: $theme-color--black;
+        }
+    }
+
+    .mailchimp-alerts {
+        a {
+            transition: $transition--default;
+            &:hover {
+                font-weight: 600;
+
+                color: $theme-color--black;
+            }
+        }
+    }
+}
+
+/*=====  End of Newsletter  ======*/
+

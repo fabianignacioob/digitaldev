@@ -1,0 +1,84 @@
+/* ================================================
+--> Elements Alert style
+================================================== */
+.anim_item {
+  position: relative;
+  text-align: center;
+  border: 1px solid #e5e5e5;
+  padding: 60px 20px 30px;
+  margin-top: 50px;
+  margin-bottom: 50px; 
+  .icon {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 24px;
+    border: 1px solid #e5e5e5;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  &:hover{
+    animation-play-state: running;
+    animation-iteration-count: infinite;
+  }
+  h5 {
+    margin-bottom: 10px;
+  }
+}
+
+// Custom animations
+@-webkit-keyframes dropdown-show {
+  from {
+    -webkit-transform: scale(0.85);
+    transform: scale(0.85);
+    opacity: 0
+  }
+  to {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1
+  }
+}
+@keyframes dropdown-show {
+  from {
+    -webkit-transform: scale(0.85);
+    transform: scale(0.85);
+    opacity: 0
+  }
+  to {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 1
+  }
+}
+
+@-webkit-keyframes megamenu-show {
+  from {
+    -webkit-transform: translate3d(0, -9px, 0);
+    transform: translate3d(0, -9px, 0);
+    opacity: 0
+  }
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1
+  }
+}
+
+@keyframes megamenu-show {
+    from {
+      -webkit-transform: translate3d(0, -9px, 0);
+      transform: translate3d(0, -9px, 0);
+      opacity: 0
+    }
+    to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1
+  }
+}

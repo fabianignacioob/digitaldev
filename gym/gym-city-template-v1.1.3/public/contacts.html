@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Gym HTML Template</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content='width=device-width, initial-scale=1, width=device-width'>
+  <meta name="description" content="Responsive HTML template for gym or fitness studio">
+  <meta name="keywords" content="gym, fitness, workout, sports, website, template, html">
+
+  <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet">
+
+  
+
+  
+  <link rel="stylesheet" href="styles.min.css">
+  
+
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+  <link rel="shortcut icon" href="img/favicon.ico">
+</head>
+
+<body class="gym-city">
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="loader">Loading...</div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-top">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="index.html">Gym City</a>
+
+    <!-- Navbar toggler. Shown for mobile devices (https://getbootstrap.com/docs/4.0/components/navbar/#toggler) -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#gymCityNav"
+      aria-controls="gymCityNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      >
+      <i class="fa fa-bars" aria-hidden="true"></i>
+    </button>
+
+    <!-- Navbar -->
+    <div class="collapse navbar-collapse" id="gymCityNav">
+      <i class="fa fa-times close-navbar-mobile" aria-hidden="true" data-toggle="collapse"
+         data-target="#gymCityNav"></i>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a href="index.html" class="nav-link" id="navHome">Home</a> <!-- to highlight a selected nav item add "active" class -->
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+             href="#"
+             id="navAbout"
+             data-toggle="dropdown"
+             aria-haspopup="true"
+             aria-expanded="false"
+            >About</a>
+
+          <div class="dropdown-menu" aria-labelledby="navAbout">
+            <a class="dropdown-item" href="facilities.html">Facilities</a>
+            <a class="dropdown-item" href="team.html">The Team</a>
+          </div>
+        </li>
+        <li class="nav-item"><a href="membership.html" class="nav-link">Membership</a></li>
+        <li class="nav-item"><a href="schedule.html" class="nav-link">Schedule</a></li>
+        <li class="nav-item"><a href="gift-cards.html" class="nav-link">Gift Cards</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle"
+             href="#"
+             id="navArticles"
+             data-toggle="dropdown"
+             aria-haspopup="true"
+             aria-expanded="false"
+            >Articles</a>
+
+          <div class="dropdown-menu" aria-labelledby="navArticles">
+            <a class="dropdown-item" href="articles.html">Articles</a>
+            <a class="dropdown-item" href="article.html">Single Article</a>
+          </div>
+        </li>
+        <li class="nav-item"><a href="contacts.html" class="nav-link">Contacts</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<!-- contacts page content-->
+<section class="page-header contacts-header bg-darken">
+  <h1 data-aos="zoom-in-up" data-aos-duration="500">Get in Touch</h1>
+</section>
+
+<section class="content-block contacts">
+  <div class="container">
+    <div class="row contacts-row">
+      <div class="col-md-9">
+
+        <!-- Contact Form -->
+        <form class="contact-form">
+          <div class="row">
+
+            <!-- Name Input -->
+            <div class="col-md-6 form-group">
+              <input type="text" placeholder="Name" class="form-control" />
+            </div>
+
+            <!-- Email Input -->
+            <div class="col-md-6 form-group">
+              <input type="email" placeholder="Email" class="form-control" />
+            </div>
+          </div>
+
+          <!-- Subject Input -->
+          <div class="form-group">
+            <input type="text" name="subject" placeholder="Subject" class="form-control" />
+          </div>
+
+          <!-- Message Input -->
+          <div class="form-group">
+            <textarea placeholder="Message" rows="7" class="form-control contact-message"></textarea>
+          </div>
+
+          <!-- Send Message Button -->
+          <button type="submit" class="btn btn-full-width btn-primary">Send Message</button>
+        </form>
+      </div>
+      <div class="col-md-3">
+
+        <!-- Phone Numbers -->
+        <div class="contact-item contact-item-phone" data-aos="fade-right">
+          <h6>Call Us</h6>
+          <p>1-234-567-890</p>
+          <p>1-987-654-321</p>
+        </div>
+
+        <!-- Email Address -->
+        <div class="contact-item contact-item-mail" data-aos="fade-right" data-aos-delay="200">
+          <h6>Email Us</h6>
+          <p><a href="#">contact@gymcity.com</a></p>
+        </div>
+
+        <!-- Address -->
+        <div class="contact-item contact-item-address" data-aos="fade-right" data-aos-delay="400">
+          <h6>Visit Us</h6>
+          <p>2121 Broadway, New York, NY 10023 
+            (<a href="https://www.google.com/maps/dir//40.7806428,-73.9819233/@40.780643,-73.981923,16z?hl=en-US" target="_blank">get directions</a>)
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Google Maps container -->
+<div class="map" id="map"></div>
+
+<!-- end of contacts page content-->
+
+<footer class="footer">
+  <div class="footer-info">
+    <div class="container">
+      <div class="row footer-info-row">
+        <!-- General Info Column -->
+        <div class="col-md-4 col-sm-6 footer-info-block">
+          <h6>Gym City Template</h6>
+          <p>
+            Easily customizable HTML template for gyms, fitness centers, dance
+            studios, or any other sports related clubs.
+          </p>
+          <a
+            href="https://amaxcode.com/"
+            target="_blank"
+            class="btn btn-default btn-full-width btn-buy"
+            >More Awesome Templates</a
+          >
+          <p>
+            Made with <span class="love">❤</span> by
+            <a target="_blank" href="https://amaxcode.com/">AmaxCode</a>
+          </p>
+        </div>
+
+        <!-- Contacts Column -->
+        <div class="col-md-3 col-sm-6 footer-info-block">
+          <h6>Contacts</h6>
+
+          <p>
+            2121 Broadway, New York, NY 10023<br />
+            1-234-567-890<br />
+            1-987-654-321<br />
+            <a href="#">contact@gymcity.com</a>
+          </p>
+
+          <ul class="footer-social-links">
+            <li><a href="#" class="fa fa-facebook"></a></li>
+            <li><a href="#" class="fa fa-twitter"></a></li>
+            <li><a href="#" class="fa fa-instagram"></a></li>
+            <li><a href="#" class="fa fa-youtube"></a></li>
+          </ul>
+        </div>
+
+        <!-- Links Column -->
+        <div class="col-md-2 col-sm-6 footer-info-block">
+          <h6>Links</h6>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="facilities.html">Facilities</a></li>
+            <li><a href="team.html">The Team</a></li>
+            <li><a href="membership.html">Membership</a></li>
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="gift-cards.html">Gift Cards</a></li>
+            <li><a href="articles.html">Articles</a></li>
+          </ul>
+        </div>
+
+        <!-- Instagram Column -->
+        <div class="col-md-3 col-sm-6 footer-info-block">
+          <h6>Instagram</h6>
+
+          <div class="row instagram-photos">
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-01.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-02.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-03.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-04.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-03.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+            <div class="col-4">
+              <a href="#" class="blink-on-hover">
+                <img src="img/instagram-05.jpg" alt="" />
+                <span class="hover-overlay"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-copy">
+    <i class="fa fa-copyright"></i> Copyright - Gym City Ltd.
+  </div>
+</footer>
+
+<!-- "Live Chat" icon in the bottom right-hand corner -->
+<div class="chat">
+  <a href="#"
+     class="chat-link"
+     data-toggle="tooltip"
+     data-html="true"
+     data-placement="left"
+     title="Live Chat.<br> Ask us anything!"
+    ></a>
+</div>
+
+
+<!-- change "key=AI..." to your own google map api key: https://developers.google.com/maps/documentation/javascript/get-api-key -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AI..."></script>
+
+
+
+
+<script src="scripts.min.js"></script>
+
+
+</body>
+</html>

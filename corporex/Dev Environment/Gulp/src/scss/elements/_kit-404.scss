@@ -1,0 +1,13 @@
+.error-wrapper{
+  height: 600px;
+  padding-bottom: 30px;
+  h1{
+      color: $primary-color;
+      font: 700 100px 'PT Serif', serif;
+      
+  }
+  h3 {
+      font:30px 'Open Sans', sans-serif;
+      line-height: 1.1;
+  }
+}

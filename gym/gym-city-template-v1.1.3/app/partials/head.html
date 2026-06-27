@@ -1,0 +1,24 @@
+<head>
+  <title>Gym HTML Template</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content='width=device-width, initial-scale=1, width=device-width'>
+  <meta name="description" content="Responsive HTML template for gym or fitness studio">
+  <meta name="keywords" content="gym, fitness, workout, sports, website, template, html">
+
+  <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet">
+
+  @@if (env === 'dev') {
+  <link rel="stylesheet" href="vendor.css">
+  <link rel="stylesheet" href="app.css">
+  }
+
+  @@if (env === 'prod') {
+  <link rel="stylesheet" href="styles.min.css">
+  }
+
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+  <link rel="shortcut icon" href="img/favicon.ico">
+</head>

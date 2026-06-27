@@ -1,0 +1,55 @@
+/* ================================================
+--> Kit Gallery style
+================================================== */
+.gallary-img.card_img{
+  overflow: hidden;
+    &:hover{
+    .description-gallary{
+      opacity: 1;
+    }
+	}
+	img{
+		display: block;
+		width: 100%;
+	}
+	.hover-overlay{
+		height: 30%;
+		@include large-desktops{
+			height: 35%;
+		}
+	}
+	.hoverlay-content {
+		margin-left: 25px;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        height: 100%
+	
+	}
+	
+	.overlay-title {
+		color: $white-color;
+		font-weight: 400;
+    }
+
+    .card-title,.secondery-title{
+        color: $white;
+    }
+    .card-title{
+        margin-bottom: 5px;
+        font-size: 26px;
+    }
+    .secondery-title{
+        font-style: italic;
+    }
+
+}
+.gallary-btn {
+    margin-top: 70px;
+}
+.portfolio-details-list{
+    span.catagory {
+        float: right;
+    }
+}
+  

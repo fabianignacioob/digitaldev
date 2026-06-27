@@ -1,0 +1,27 @@
+
+/*=============================================
+=            Brand Logo            =
+=============================================*/
+
+.single-brand-logo {
+    a {
+        display: block;
+        img {
+            margin: 0 auto;
+
+            transition: $transition--default;
+
+            opacity: 0.25;
+        }
+
+        &:hover {
+            img {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+
+/*=====  End of Brand Logo  ======*/
+

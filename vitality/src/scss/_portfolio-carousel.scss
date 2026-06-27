@@ -1,0 +1,109 @@
+.carousel-portfolio {
+  .carousel-portfolio-item {
+    padding: 6.25rem 0;
+    color: $white;
+    background-size: cover;
+    background-attachment: scroll;
+    background-repeat: no-repeat;
+    h3 {
+      font-size: 2rem;
+    }
+    .device-wrapper {
+      padding: 0 2.5rem 1rem;
+      max-width: none;
+    }
+  }
+  .slick-arrow {
+    &.slick-prev {
+      right: 0;
+    }
+    &.slick-next {
+      left: 0;
+    }
+  }
+  .first-item {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../assets/img/portfolio/carousel/item-1-bg.jpg');
+  }
+  .second-item {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../assets/img/portfolio/carousel/item-2-bg.jpg');
+  }
+  .third-item {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../assets/img/portfolio/carousel/item-3-bg.jpg');
+  }
+  .fourth-item {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../assets/img/portfolio/carousel/item-4-bg.jpg');
+  }
+  @include media-breakpoint-up(md) {
+    .carousel-portfolio-item {
+      height: calc(100vh - 66px);
+      max-height: 100rem;
+      h3 {
+        font-size: 2.5rem;
+      }
+      .device-wrapper {
+        padding: 0 2rem;
+      }
+    }
+  }
+}
+
+// Set Background Images for Portfolio Modals
+#portfolio-modal-1 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../assets/img/portfolio/carousel/item-1-bg.jpg');
+}
+
+#portfolio-modal-2 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../assets/img/portfolio/carousel/item-2-bg.jpg');
+}
+
+#portfolio-modal-3 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../assets/img/portfolio/carousel/item-3-bg.jpg');
+}
+
+#portfolio-modal-4 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../assets/img/portfolio/carousel/item-4-bg.jpg');
+}
+
+.portfolio-modal {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: scroll;
+  padding: 0 !important;
+  .modal-dialog {
+    margin: 0;
+    max-width: none;
+    min-height: 100vh;
+    .modal-content {
+      color: $white;
+      background-color: transparent;
+      border: none;
+      min-height: 100vh;
+      padding-bottom: 5rem;
+      .modal-header {
+        border: none;
+        button.close {
+          margin-top: 1rem;
+          margin-right: 1rem;
+          font-size: 4rem;
+          color: $white;
+          background: transparent;
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+      .portfolio-modal-heading {
+        font-size: 3rem;
+      }
+      .device-wrapper {
+        max-width: none;
+      }
+      .modal-footer {
+        border: 0;
+      }
+    }
+  }
+  @include media-breakpoint-up(lg) {
+    background-attachment: fixed;
+  }
+}

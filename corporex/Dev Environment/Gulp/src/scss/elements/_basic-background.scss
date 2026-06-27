@@ -1,0 +1,117 @@
+/*================================================
+--> Element Background
+==================================================*/
+.bg-gradient-navy {
+	background-image: -moz-linear-gradient( 0deg, rgb(10,35,59) 0%, rgb(26,53,80) 50%, rgb(10,35,59) 100%);
+	background-image: -webkit-linear-gradient( 0deg, rgb(10,35,59) 0%, rgb(26,53,80) 50%, rgb(10,35,59) 100%);
+	background-image: -ms-linear-gradient( 0deg, rgb(10,35,59) 0%, rgb(26,53,80) 50%, rgb(10,35,59) 100%);
+	background-image: linear-gradient( 0deg, rgb(10,35,59) 0%, rgb(26,53,80) 50%, rgb(10,35,59) 100%);
+}
+
+.h300 {
+	position: relative;
+	height: 300px;
+}
+.bg-gray-lineargradient {
+	background-repeat: repeat-x;
+	background-image: linear-gradient(180deg, #fff, #dbdbdb);
+}
+
+.bg-blue-lineargradient {
+	background: -moz-linear-gradient(top, rgba($primary-color,0.8) 0%, rgba($primary-color,0.1) 42%, rgba($primary-color,0.1) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, rgba($primary-color,0.8) 0%,rgba($primary-color,0.1) 42%,rgba($primary-color,0.1) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, rgba($primary-color,0.8) 0%,rgba($primary-color,0.1) 42%,rgba($primary-color,0.1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc3a6ee9', endColorstr='#1a3a6ee9',GradientType=0 ); /* IE6-9 */
+	background-repeat: repeat-x;
+}
+.bg-green-gradient {
+	background-image: linear-gradient(to bottom, rgba(51, 152, 220, 0.5) 0%, rgba(114, 192, 44, 0.8) 100%);
+	background-repeat: repeat-x;
+}
+.bg-black-gradient-opacity {
+	background-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.9) 100%);
+	background-repeat: repeat-x;
+}
+
+// Image Background
+.bg-image-holder,
+.bg-image,
+.bg-image-1 {
+	background-size: cover !important;
+	background-position: 50% 0;
+	@include transition(all 0.3s linear);
+	background: $sand;
+	position: relative;
+}
+
+.bg-image,.default-overlay {
+	position: relative;
+	z-index: 1;
+	&:before {
+	    content: '';
+	    position: absolute;
+	    top: 0;
+	    left: 0;
+	    right: 0;
+	    bottom: 0;
+		background-color: #151618;
+		opacity: .8;
+		z-index: -1;
+	}
+}
+.bg-image-1 {
+	position: relative;
+	z-index: 1;
+	&:before {
+	    content: '';
+	    position: absolute;
+	    top: 0;
+	    left: 0;
+	    right: 0;
+	    bottom: 0;
+		background-color: #151618;
+		opacity: .85;
+		z-index: -1;
+	}
+}
+.img-black-white {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}
+.bg-fixed {
+	background-attachment: fixed;
+}
+.bg-center {
+	background-attachment: center 50%;
+}
+.bg-left {
+	background-attachment: left 50%;
+}
+.bg-right {
+	background-attachment: right 50%;
+}
+.bg-image {
+	.overlay-content {
+		position: relative;
+		z-index: 5;
+	}
+}
+.bg-video {
+	position: relative;
+	height: 400px;
+	overflow: hidden;
+	video {
+	    position: absolute;
+	    top: 50%;
+	    left: 50%;
+	    min-width: 100%;
+	    min-height: 100%;
+	    width: auto;
+	    height: auto;
+	    z-index: -100;
+	    transform: translateX(-50%) translateY(-50%);
+	 	background: url('../demosthenes.info/assets/images/polina.jpg') no-repeat;
+	 	background-size: cover;
+	  	transition: 1s opacity;
+	}
+}

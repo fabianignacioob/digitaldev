@@ -1,0 +1,45 @@
+.carousel-team {
+  position: relative;
+  .carousel-team-item {
+    position: relative;
+    margin: 0 15px;
+    &:focus {
+      outline: none;
+    }
+    .carousel-team-item-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 2;
+      color: fade-out($white, 0.3);
+      hr {
+        max-width: 4rem;
+      }
+      a {
+        font-size: 1.35rem;
+        color: fade-out($white, 0.3);
+        transition: $transition-base;
+        &:hover,
+        &:active {
+          color: $white;
+          text-decoration: none;
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+    // Add the overlay for team member images
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: fade-out($black, 0.5);
+      z-index: 0;
+    }
+  }
+}

@@ -1,0 +1,52 @@
+/*
+      ### HOME CAROUSEL
+*/
+// .corporex-home{
+//     .main-nav{
+//         transition: .4s;
+//         &:hover{
+//             background: #202125;
+//         }
+//         &.navbar-sticky{
+//             &:hover{
+//                 background:#202125;
+//             }
+//         }
+//     }
+// }
+.home-carousel.carousel-style-one{
+    .carousel-item{
+        min-height: 400px;
+        padding: 0;
+        @include tablet{
+            height: 100vh;
+        }
+        .carousel-description {
+            padding-bottom: 10px;
+            @include tablet{
+                padding-top:100px;
+                padding-bottom: 0;
+            }
+        }
+        h1{
+            letter-spacing: 2px;
+            @include tablet{
+                font-size: 60px;
+                line-height: 70px;
+            }
+        }
+        p{
+            br{
+                display: none;
+                @include tablet{
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+
+.home-cta.bg-image {
+    background-position: -100% 50%;
+} 

@@ -1,0 +1,35 @@
+#portfolio-modal-3.modal.fade.portfolio-modal(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+    .modal-dialog(role='document')
+        .modal-content
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    i.fas.fa-times
+            .modal-body.text-center
+                .container
+                    .row
+                        .col-xl-8.mx-auto
+                            h3.text-uppercase.portfolio-modal-heading Project Name
+                            hr.primary.small
+                            p.m-0
+                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi pariatur, debitis, voluptatum adipisci voluptate nulla quibusdam deleniti explicabo quo, maxime voluptatibus totam laboriosam at impedit est. Labore repudiandae saepe quia.
+                            .device-wrapper.my-5
+                                .device(data-device='MacbookPro', data-orientation='portrait', data-color='black')
+                                    .screen
+                                        //- Screen Image
+                                        img.img-fluid(src='assets/img/portfolio/carousel/item-3-img.jpg', alt='')
+                            ul.list-unstyled.mb-5
+                                li.list-unstyled-item
+                                    | Client: 
+                                    strong
+                                        a.text-white(href='#') Blackrock Digital
+                                li.list-unstyled-item
+                                    | Service: 
+                                    strong
+                                        a.text-white(href='#') Web Development
+                                li.list-unstyled-item
+                                    | Date: 
+                                    strong
+                                        a.text-white(href='#') January 2021
+                            button.btn.btn-light(type='button', data-dismiss='modal')
+                                i.fas.fa-times
+                                | Close

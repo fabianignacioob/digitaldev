@@ -1,0 +1,99 @@
+
+/*=============================================
+=            pagination            =
+=============================================*/
+
+.page-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    margin: -5px -10px;
+    & li {
+        font-size: 16px;
+        line-height: 24px;
+
+        margin: 5px 10px;
+
+        text-align: center;
+
+        color: $theme-color--black;
+        & a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 44px;
+            height: 44px;
+            padding: 10px;
+
+            color: $theme-color--black;
+            border-radius: 50px;
+            background-color: #F8F8F8;
+            & i {
+                line-height: 24px;
+            }
+        }
+        // Responsive
+        @media #{$small-mobile} {
+            font-size: 14px;
+            & a {
+                width: 40px;
+                height: 40px;
+                padding: 9px;
+                & i {
+                    line-height: 24px;
+                }
+            }
+        }
+        &:hover {
+            & a {
+                color: $theme-color--default;
+                background-color: $theme-color--black;
+            }
+        }
+        &.active {
+            & a {
+                color: $white;
+                background-color: $theme-color--default;
+            }
+        }
+        &:first-child {
+            & a {
+                width: auto;
+                padding: 10px 20px;
+
+                color: $theme-color--black;
+                & i {
+                    float: left;
+
+                    margin-right: 10px;
+                }
+                &:hover {
+                    color: $theme-color--default;
+                }
+            }
+        }
+        &:last-child {
+            & a {
+                flex-direction: row-reverse;
+
+                width: auto;
+                padding: 10px 20px;
+
+                color: $theme-color--black;
+                & i {
+                    float: right;
+
+                    margin-left: 10px;
+                }
+                &:hover {
+                    color: $theme-color--default;
+                }
+            }
+        }
+    }
+}
+
+/*=====  End of pagination  ======*/
+

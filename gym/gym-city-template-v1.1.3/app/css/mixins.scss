@@ -1,0 +1,34 @@
+@mixin customScroll() {
+  ::-webkit-scrollbar {
+    width: 13px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    border-radius: 7px;
+    background-color: #c1c1c1;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: none;
+  }
+}
+
+@mixin tablet-layout {
+  @media (min-width: 576px) {
+    @content;
+  }
+}
+
+@mixin desktop-layout {
+  @media (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin large-desktop-layout {
+  @media (min-width: 992px) {
+    @content;
+  }
+}

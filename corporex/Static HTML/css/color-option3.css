@@ -1,0 +1,56 @@
+/*=== Text color ===*/
+a:hover, a:focus,
+.primary-color, .testimonial-carousel .owl-nav .owl-next:hover, .testimonial-carousel .owl-nav .owl-prev:hover, .testimonial-carousel span.client-status, footer ul.footer-links li a:hover, [class*="copyright-"] .footer-social a:hover, [class*="copyright-"] p a, .header-transparent.navbar-sticky .nav-item a.nav-link:hover, .main-nav .dropdown-menu a:hover, .card.team-card .card-body a:hover, .single-address .icon i.fa, .error-wrapper h1, .page-comingsoon .count-down .tab-val, .side-menu li a:hover, .side-menu li a:hover i.fa, .single-comment .comment .replay-link, .btn.btn-white:hover, ul.feature-list i.fa, .card.team-card .social-icons a.icon:hover, .page-comingsoon .form_subscribe i, .testimonial-carousel.owl-carousel .owl-nav .owl-next:hover, .testimonial-carousel.owl-carousel .owl-nav .owl-prev:hover, .testimonial-carousel.owl-carousel span.client-status {
+  color: #00c4d0;
+}
+
+.text-primary, a.text-primary:focus, a.text-primary:hover, .btn.btn-primary:hover {
+  color: #00c4d0 !important;
+}
+
+/*=== Background color ===*/
+.btn-primary, .btn-primary:focus, .btn-primary.active, .btn-primary:active, .btn-primary:hover,
+.sep:before, .main-nav .navbar-toggler, .info.service-info:hover, .service-carousel .owl-dots .owl-dot:before, .bg-primary, .btn.btn-primary, .bg-primary, .radio-custom:checked + .radio-custom-label:before, .checkbox-custom:checked + .checkbox-custom-label:before, .btn-transparent:hover, ul.social-icons a:hover, ul.social-icons.gray-color a:hover, .scroll-top {
+  background-color: #00c4d0;
+}
+
+.bg-primary {
+  background-color: #00c4d0 !important;
+}
+
+::-moz-selection {
+  background-color: #00c4d0;
+}
+
+::selection {
+  background-color: #00c4d0;
+}
+
+/*=== Border color ===*/
+input.form-control:focus,
+textarea.form-control:focus,
+input.form-control.active,
+input.form-control:active, hr.hr_narrow, btn.btn-white:hover, .radio-custom:checked + .radio-custom-label:before, .checkbox-custom:checked + .checkbox-custom-label:before, .btn-transparent:hover, .scroll-top:before {
+  border-color: #00c4d0;
+}
+
+.btn.btn-primary:active, .btn.btn-primary:focus, .page-comingsoon .count-down .tab-val {
+  border-color: #00c4d0 !important;
+}
+
+/*=== Gradient Color & RGBA Color ===*/
+.bg-image:after, .default-overlay::after {
+  background: linear-gradient(to bottom, rgba(0, 196, 208, 0.8) 0%, rgba(0, 196, 208, 0.1) 42%, rgba(0, 196, 208, 0.1) 100%);
+}
+
+.hover-overlay.effect-transformY {
+  background: rgba(0, 196, 208, 0.85);
+}
+
+.info .icon .fill-color {
+  fill: #00c4d0;
+}
+
+.changed-color.logo-color {
+  fill: #00c4d0 !important;
+}

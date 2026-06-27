@@ -1,0 +1,26 @@
+.process-list {
+  position: relative;
+  .process-list-icon {
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 4.5rem;
+    width: 4.5rem;
+    border: 0.2rem solid $gray-900;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 4rem;
+    font-size: 1.5rem;
+  }
+  .process-list-content {
+    padding-left: 5.5rem;
+    ul {
+      padding-left: 1.2rem;
+      margin-bottom: 0;
+      li {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+      }
+    }
+  }
+}

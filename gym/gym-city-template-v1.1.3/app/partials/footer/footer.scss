@@ -1,0 +1,164 @@
+.footer {
+  color: $secondary-text-color;
+  font-size: 13px;
+  background: #f4f4f4;
+  margin-top: auto;
+}
+
+.footer-copy {
+  text-align: center;
+  padding: 22px 0;
+}
+
+.footer-info {
+  padding: 20px 0px;
+  border-bottom: 1px solid $border-color;
+
+  @include desktop-layout {
+    padding: 58px 0px 52px;
+  }
+
+  .love {
+    color: $action-color;
+  }
+
+  a {
+    color: $secondary-text-color;
+
+    &:hover {
+      color: $action-color;
+      text-decoration: none;
+    }
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 24px;
+    padding-bottom: 26px;
+    margin-bottom: 0;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
+
+  h6 {
+    text-transform: uppercase;
+    margin: 0 0 15px;
+    padding: 0;
+  }
+}
+
+.footer-info-row {
+  margin-right: -30px;
+  margin-left: -30px;
+}
+
+.footer-info-block {
+  border-top: 1px solid $border-color;
+  padding: 30px;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  @include tablet-layout {
+    &:nth-child(2) {
+      border-top: none;
+    }
+
+    &:nth-child(even) {
+      border-left: 1px solid $border-color;
+    }
+
+    &:nth-child(odd) {
+      border-left: none;
+    }
+  }
+
+  @include desktop-layout {
+    border-top: none;
+    border-left: 1px solid $border-color;
+    padding: 0px 30px;
+
+    &:nth-child(even),
+    &:nth-child(odd) {
+      border-left: 1px solid $border-color;
+    }
+
+    &:first-child {
+      border-left: none;
+    }
+  }
+}
+
+.footer-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    font-size: 14px;
+    line-height: 24px;
+  }
+}
+
+.footer-social-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-top: 16px;
+
+  li {
+    margin-right: 24px;
+
+    a {
+      font-size: 24px;
+      color: #909090;
+
+      &:hover {
+        color: $action-color;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+a.btn-buy {
+  margin-bottom: 26px;
+  background: transparent;
+  text-transform: uppercase;
+
+  &:hover {
+    color: #ffffff;
+    background: $action-color;
+  }
+}
+
+.instagram-photos {
+  margin-right: -4px;
+  margin-left: -4px;
+  padding-top: 5px;
+
+  & > div {
+    padding: 4px;
+  }
+
+  a {
+    display: block;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+
+    &:hover {
+      .hover-overlay {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+}

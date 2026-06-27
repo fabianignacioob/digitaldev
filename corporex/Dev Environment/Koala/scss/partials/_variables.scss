@@ -1,0 +1,77 @@
+/*=== VARIABLES ===*/
+$blue:#3a6ee9;
+$white: #fff;
+$ghost-white:#F5F5F7;
+$black: #222222;
+$ebony :#2F3238;
+$black:#222222;
+$black-russian: #202125;
+$cornflower-blue:#5B8AF8;
+$vulcan:#37383b;
+$tuna :#4E5055;
+$gray:#808080;
+$gray-dark:#848484;
+
+
+
+
+
+$primary-color:$blue;
+$secondary-color:#eaeaea;
+
+
+/*=== VARIABLES ===*/
+// $primary-color:#222222;
+$secondary-color:#eaeaea;
+$white-color: #ffffff;
+$black-color: #000000;
+$sand: #e5e5e5;
+$text-color:#848484;
+$title-color: #222222;
+$border-color: #e5e5e5;
+$navy : #0a233b;
+$dark-navy : #071e33;
+
+
+/*============ TEXT COLOR VARIATION =============*/
+.text-primary {
+	color: $primary-color!important;
+}
+.text-white {
+	color: $white-color!important;
+}
+.text-dark {
+	color: $title-color!important;
+}
+
+/* Background Colors */
+.bg-white {
+	background-color: $white-color;
+}
+.bg-dark {
+	background-color: $dark-navy;
+}
+.bg-water {
+	background-color: transparent;
+}
+.bg-sand {
+	background-color: $sand;
+}
+
+$success: #49c32c;
+$bg-success: #49c32c;
+$info: #439fdb;
+$bg-info: #439fdb;
+$warning: #eabf38;
+$bg-warning: #eabf38;
+$danger: #f55c5d;
+$bg-danger: #f55c5d;
+$inverse: #323f41;
+
+/*============ FUNCTIONS =============*/
+@function tint($primary-color, $percentage) {
+  @return mix($primary-color, transparent, $percentage);
+}
+@function shade($color, $percentage) {
+  @return mix(black, $color, $percentage);
+}

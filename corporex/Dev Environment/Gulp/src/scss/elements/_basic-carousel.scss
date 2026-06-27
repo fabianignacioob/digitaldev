@@ -1,0 +1,319 @@
+/* ================================================
+--> Elements carousel style
+================================================== */
+.home-carousel,.service-carousel,.carousel-style-one{
+    .owl-dots {
+        position: absolute;
+        bottom: 0%;
+        left: 50%;
+        display: inline-flex;
+        transform: translate(-50%);
+        .owl-dot {
+            width: 41px;
+            margin: 0 5px;
+            position: relative;
+            overflow: hidden;
+            height: 4px;
+            padding: 15px 0 !important;
+            &:before{
+                background: #ffffff;
+                content: "";
+                height: 3px;
+                width: 100%;
+                left: 0;
+                transform: translateX(-100%);
+                transition: transform .4s ease-in-out;
+                position: absolute;
+                opacity: 0;
+            }
+            &:after{
+                background: #ffffff40;
+                content: "";
+                height: 3px;
+                width: 100%;
+                left: 0;
+                transition: transform .4s ease-in-out;
+                position: absolute;
+                z-index: -1;
+            }
+            &.active{
+                &:before{
+                    transform: translateY(0%);
+                    opacity: 1;
+                    width: 50%;
+                }
+            }
+            &:focus {
+              outline: none;
+            }
+        }
+    }
+}
+
+.carousel-style-one{
+	.carousel-item {
+		height: 300px;
+		@include tablet {
+			height: 350px;
+			padding: 0 50px;
+		}
+		@include desktops {
+			height: 400px;
+		}
+	}
+	.carousel-description {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+		h1 {
+			font-size: 25px;
+			font-weight: 700;
+			text-transform: uppercase;
+			color: $white-color;
+			line-height: 35px;
+			@include tablet {
+				font-size: 35px;
+				line-height: 55px;
+			}
+			@include desktops {
+				font-size: 40px;
+				line-height: 55px;
+			}
+		}
+		p {
+			font-family: 'Open Sans', sans-serif;
+			font-size: 14px;
+			color: $white-color;
+			padding:  10px 0;
+            line-height: 24px;
+            font-weight: 300;
+			@include tablet {
+				font-size: 16px;
+				line-height: 28px;
+                padding: 30px 0 37px;
+                margin-bottom: 0;
+            }
+        }
+		.slider-btn{
+            .common-btn{
+                padding:0 13px;
+                font-size: 10px;
+                font-weight: bold;
+                height: 30px;
+                line-height: 30px;
+                @include tablet{
+                height: 50px;
+                padding:0 40px;
+                line-height: 50px;
+                font-size: 14px;
+                }
+            }
+        }
+    }
+    .owl-dots {
+        bottom: 5%;
+    }
+}
+// Service Carousel =====================================
+.display-single_element{
+    .service-carousel{
+        .owl-nav {
+            .owl-next,.owl-prev{
+                color: #4e5055;
+            }
+        }
+    }
+}
+.service-carousel{
+    position: relative;
+    padding-bottom: 80px;
+    .owl-nav {
+        position: absolute;
+        bottom: -30%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        .owl-next,.owl-prev{
+            font-size: 20px;
+            font-weight: 700;
+            width: 40px;
+            height: 40px;
+            line-height: 35px;
+            text-align: center;
+            border: 2px solid #4e5055;
+            border-radius: 50%;
+            color: #e1e1e2;
+            cursor: pointer;
+            transition: .4s;
+            margin: 0 5px;
+            &:hover{
+                border-color:$primary-color;
+                color: $primary-color;
+            }
+        }
+    }
+    .owl-dots{
+        .owl-dot {
+            &:before{
+              background: $primary-color;
+            }
+            &:after{
+                background: #636467;
+            }
+        }
+    }
+}
+
+// TESTIMONIAL Carousel =====================================
+.testimonial-carousel.owl-carousel {
+    padding-top: 190px;
+    margin-top: 20px;
+    position: relative;
+    @include tablet{
+        padding-top: 120px;
+    }
+    p{
+        padding-bottom: 13px;
+    }
+    .owl-dots {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        @include tablet{
+            display: flex;
+        }
+        .owl-dot{
+            position: absolute;
+            display: none;
+            visibility: hidden;
+            height: 100px;
+            width: 100px;
+            transform: translateX(-50%);
+            border-radius: 50%;
+            overflow: hidden;
+            transition: .4s;
+            @include tablet{
+                margin: 0 10px;
+                position: relative;
+                transform: translateX(0%);
+                height: 100%;
+                width: 100%;
+                display: block;
+                visibility: visible;
+            }
+            &::before{
+               @include tablet{
+                background: #162632;
+                position: absolute;
+                content: "";
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                opacity: .40;
+                transition:transform .3s;
+               }
+            }
+            &.active {
+                display: block;
+                visibility: visible;
+                @include tablet{
+                    transform: scale(1.2);
+                // overflow: hidden;
+                &::before{
+                    opacity: 0;
+                }
+                }
+            }
+            img{
+                display: block;
+                width: 100%;
+                @include desktops{
+                    width: auto;
+                }
+            }
+        }
+    }
+
+    .owl-nav {
+        position: absolute;
+        top: 33%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        @include tablet{
+            width: 100%;
+            left: 0;
+            top: 50%;
+            transform: translateX(0);
+        }
+
+        .owl-next,.owl-prev{
+          position: relative;
+          left: 0;
+          font-size: 27px;
+          padding: 10px !important;
+          color: #d9d9d9;
+          transition: .4s;
+          @include tablet{
+            left: -30%;
+            position: absolute;
+            font-size: 30px;
+          }
+          @include desktops{
+            left: -15%;
+          }
+          &:hover{
+            color: $primary-color;
+          }
+          &::before{
+            content: '|';
+            right: 0;
+            position: absolute;
+          }
+          &:focus {
+            outline: none;
+          }
+        }
+        .owl-next{
+            @include tablet{
+                left: auto;
+                right:-30%;
+            }
+            @include desktops{
+                left: auto;
+                right: -15%;
+            }
+            &::before{
+                left: 0;
+                right: auto;
+
+            }
+        }
+    }
+	h4.client-name {
+		font-size: 20px;
+		margin-bottom: 10px;
+		font-weight: 600;
+	}
+	span.client-status{
+		color: $primary-color;
+		font-style: italic;
+	}
+}
+
+// Brand Carousel using Owl Carousel ===================================
+.brand-carousel{
+    display: flex;
+    .single-brand{
+        img{
+            width: auto;
+            margin: 0 auto;
+        }
+    }
+}
+
+
+

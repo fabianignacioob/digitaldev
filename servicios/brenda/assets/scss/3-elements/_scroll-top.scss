@@ -1,0 +1,55 @@
+
+/*=============================================
+=            scroll top            =
+=============================================*/
+
+.scroll-top {
+    font-size: 25px;
+    line-height: 60px;
+
+    position: fixed;
+    z-index: 999;
+    right: 30px;
+    bottom: -60px;
+
+    display: block;
+    visibility: hidden;
+
+    width: 60px;
+    height: 60px;
+    padding: 0;
+
+    cursor: pointer;
+    transition: $transition--default;
+    text-align: center;
+
+    opacity: 0;
+    color: $white;
+    border: none;
+    border-radius: 50%;
+    background-color: $theme-color--default;
+    box-shadow: 0 30px 50px rgba(0,0,0,0.03);
+
+    &:hover {
+        background-color: $theme-color--black;
+    }
+
+    @media #{$extra-small-mobile} {
+        font-size: 20px;
+        line-height: 50px;
+
+        width: 50px;
+        height: 50px;
+    }
+
+    &.show {
+        bottom: 60px;
+
+        visibility: visible;
+
+        opacity: 1;
+    }
+}
+
+/*=====  End of scroll top  ======*/
+

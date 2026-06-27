@@ -1,0 +1,28 @@
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: #ffffff;
+  z-index: 9999;
+}
+
+.loader {
+  color: transparent;
+  margin: calc(50vh - #{$loader-size/2}) auto;
+  width: $loader-size;
+  height: $loader-size;
+  border-radius: 50%;
+  border-top: 5px solid $action-color;
+  animation: rotate 1200ms infinite linear;
+}

@@ -1,0 +1,52 @@
+.card.team-card {
+	img {
+		@include transition(all 0.4s ease);
+  }
+  .card-title {
+    padding-top: 30px;
+    padding-bottom: 0;
+    @include tablet{
+      padding-top: 18px; 
+    }
+    @include large-desktops{
+      padding-top: 30px; 
+    }   
+  }
+  .hover-overlay{
+      height: 20%;
+      @include tablet{
+          height: 30%;
+      }
+      @include large-desktops{
+          height: 100%;
+      }
+  }
+  .card-body{
+      padding-top: 0px;
+      padding-bottom: 0rem;
+      
+    a{
+      color: $black;
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+  .secondary-tittle {
+    font-family: 'Open Sans', sans-serif;
+    font-style: italic;
+    padding-top: 5px;
+  }
+  .social-icons{ 
+    a.icon{
+      background: transparent;
+      &:hover{
+          background: #fff;
+          color: $primary-color;
+      }
+    }
+  }
+}
+.card-img-top {
+  border-radius: 0;
+}

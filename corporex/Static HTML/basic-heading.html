@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SITE TITLE -->
+  <title>Project Title</title>
+  <!-- PLUGINS CSS STYLE -->
+  <link href="plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="plugins/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+  <link href="plugins/OwlCarousel2/owl.carousel.min.css" rel="stylesheet" media="screen">
+  <link href="plugins/prismjs/prism.css" rel="stylesheet">
+  <link href="plugins/animate/animate.css" rel="stylesheet">
+
+  <!-- CUSTOM CSS -->
+  <link href="css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/default.css" id="option_color">
+  <!-- FAVICON -->
+  <link href="img/favicon.png" rel="shortcut icon">
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body id="body" class="@@page">
+  <!-- ————————————————————————————————————————————
+  ——— Header
+  —————————————————————————————————————————————— -->
+
+    <header id="pageTop" class="header">
+      <!-- NAVBAR -->
+      <nav class="navbar navbar-expand-md main-nav normal-nav bg-primary">
+        <div class="container">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="burger-menu icon-toggle">
+              <i class="icon-menu icons"></i>
+            </span>
+          </button>
+          <a class="navbar-brand" href="index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid"
+              viewBox="0 0 197 52">
+              <path fill-rule="evenodd" class="logo-color" fill="" d="M157.000,48.000 L157.000,46.000 L195.000,46.000 L195.000,2.000 L2.000,2.000 L2.000,46.000 L39.000,46.000 L39.000,48.000 L0.000,48.000 L0.000,0.000 L197.000,0.000 L197.000,48.000 L157.000,48.000 Z" />
+              <path fill-rule="evenodd" class="logo-color" fill="" d="M116.211,31.469 C114.445,33.292 112.151,34.203 109.328,34.203 C106.526,34.203 104.250,33.292 102.500,31.469 C100.750,29.646 99.875,27.339 99.875,24.547 L99.875,20.453 C99.875,17.672 100.747,15.367 102.492,13.539 C104.237,11.711 106.510,10.797 109.312,10.797 C112.135,10.797 114.432,11.711 116.203,13.539 C117.974,15.367 118.859,17.672 118.859,20.453 L118.859,24.547 C118.859,27.339 117.977,29.646 116.211,31.469 ZM114.297,20.434 C114.297,18.659 113.854,17.204 112.969,16.066 C112.083,14.928 110.864,14.359 109.312,14.359 C107.760,14.359 106.557,14.926 105.703,16.058 C104.849,17.190 104.422,18.649 104.422,20.434 L104.422,24.566 C104.422,26.372 104.854,27.844 105.719,28.981 C106.583,30.119 107.786,30.687 109.328,30.687 C110.891,30.687 112.109,30.119 112.984,28.981 C113.859,27.844 114.297,26.372 114.297,24.566 L114.297,20.434 ZM88.781,25.625 L84.281,25.625 L84.281,33.875 L79.719,33.875 L79.719,11.125 L88.781,11.125 C91.396,11.125 93.453,11.792 94.953,13.125 C96.453,14.458 97.203,16.214 97.203,18.391 C97.203,20.568 96.453,22.318 94.953,23.641 C93.453,24.964 91.396,25.625 88.781,25.625 ZM91.680,15.711 C91.029,14.998 90.062,14.641 88.781,14.641 L84.281,14.641 L84.281,22.109 L88.781,22.109 C90.052,22.109 91.016,21.763 91.672,21.070 C92.328,20.378 92.656,19.495 92.656,18.422 C92.656,17.328 92.331,16.425 91.680,15.711 ZM71.203,32.203 C71.078,31.422 71.016,30.682 71.016,29.984 L71.016,28.375 C71.016,27.240 70.706,26.357 70.086,25.727 C69.466,25.096 68.594,24.781 67.469,24.781 L63.125,24.781 L63.125,33.875 L58.562,33.875 L58.562,11.125 L67.141,11.125 C69.734,11.125 71.763,11.716 73.227,12.898 C74.690,14.081 75.422,15.729 75.422,17.844 C75.422,19.021 75.114,20.031 74.500,20.875 C73.885,21.719 72.984,22.401 71.797,22.922 C73.141,23.318 74.107,23.979 74.695,24.906 C75.284,25.833 75.578,26.979 75.578,28.344 L75.578,30.016 C75.578,30.651 75.664,31.315 75.836,32.008 C76.008,32.701 76.302,33.214 76.719,33.547 L76.719,33.875 L72.016,33.875 C71.599,33.542 71.328,32.984 71.203,32.203 ZM69.930,15.562 C69.299,14.948 68.370,14.641 67.141,14.641 L63.125,14.641 L63.125,21.266 L67.062,21.266 C68.344,21.266 69.299,20.995 69.930,20.453 C70.560,19.912 70.875,19.109 70.875,18.047 C70.875,17.005 70.560,16.177 69.930,15.562 ZM45.469,34.203 C42.667,34.203 40.391,33.292 38.641,31.469 C36.891,29.646 36.016,27.339 36.016,24.547 L36.016,20.453 C36.016,17.672 36.888,15.367 38.633,13.539 C40.377,11.711 42.651,10.797 45.453,10.797 C48.276,10.797 50.573,11.711 52.344,13.539 C54.114,15.367 55.000,17.672 55.000,20.453 L55.000,24.547 C55.000,27.339 54.117,29.646 52.352,31.469 C50.586,33.292 48.292,34.203 45.469,34.203 ZM50.437,20.434 C50.437,18.659 49.995,17.204 49.109,16.066 C48.224,14.928 47.005,14.359 45.453,14.359 C43.901,14.359 42.698,14.926 41.844,16.058 C40.989,17.190 40.562,18.649 40.562,20.434 L40.562,24.566 C40.562,26.372 40.995,27.844 41.859,28.981 C42.724,30.119 43.927,30.687 45.469,30.687 C47.031,30.687 48.250,30.119 49.125,28.981 C50.000,27.844 50.437,26.372 50.437,24.566 L50.437,20.434 ZM29.016,18.953 C29.016,17.453 28.656,16.305 27.937,15.508 C27.219,14.711 26.099,14.312 24.578,14.312 C23.213,14.312 22.130,14.867 21.328,15.975 C20.526,17.083 20.125,18.496 20.125,20.213 L20.125,24.756 C20.125,26.494 20.547,27.917 21.391,29.025 C22.234,30.134 23.375,30.687 24.812,30.687 C26.239,30.687 27.294,30.305 27.977,29.539 C28.659,28.773 29.000,27.635 29.000,26.125 L33.422,26.125 L33.453,26.219 C33.495,28.667 32.747,30.609 31.211,32.047 C29.674,33.484 27.541,34.203 24.812,34.203 C22.073,34.203 19.849,33.323 18.141,31.562 C16.432,29.802 15.578,27.537 15.578,24.766 L15.578,20.250 C15.578,17.490 16.411,15.224 18.078,13.453 C19.745,11.682 21.911,10.797 24.578,10.797 C27.391,10.797 29.588,11.518 31.172,12.961 C32.755,14.404 33.526,16.370 33.484,18.859 L33.453,18.953 L29.016,18.953 Z" />
+              <path fill-rule="evenodd" class="logo-color" fill="" d="M179.937,33.875 L174.422,33.875 L170.031,25.672 L165.641,33.875 L160.312,33.875 L167.234,22.406 L160.484,11.125 L165.766,11.125 L169.969,19.187 L174.234,11.125 L179.547,11.125 L172.797,22.406 L179.937,33.875 ZM143.578,11.125 L159.125,11.125 L159.125,14.641 L148.141,14.641 L148.141,20.359 L157.562,20.359 L157.562,23.875 L148.141,23.875 L148.141,30.359 L159.156,30.359 L159.156,33.875 L143.578,33.875 L143.578,11.125 ZM135.062,32.203 C134.937,31.422 134.875,30.682 134.875,29.984 L134.875,28.375 C134.875,27.240 134.565,26.357 133.945,25.727 C133.325,25.096 132.453,24.781 131.328,24.781 L126.984,24.781 L126.984,33.875 L122.422,33.875 L122.422,11.125 L131.000,11.125 C133.594,11.125 135.622,11.716 137.086,12.898 C138.549,14.081 139.281,15.729 139.281,17.844 C139.281,19.021 138.974,20.031 138.359,20.875 C137.745,21.719 136.844,22.401 135.656,22.922 C137.000,23.318 137.966,23.979 138.555,24.906 C139.143,25.833 139.437,26.979 139.437,28.344 L139.437,30.016 C139.437,30.651 139.523,31.315 139.695,32.008 C139.867,32.701 140.161,33.214 140.578,33.547 L140.578,33.875 L135.875,33.875 C135.458,33.542 135.187,32.984 135.062,32.203 ZM133.789,15.562 C133.159,14.948 132.229,14.641 131.000,14.641 L126.984,14.641 L126.984,21.266 L130.922,21.266 C132.203,21.266 133.159,20.995 133.789,20.453 C134.419,19.912 134.734,19.109 134.734,18.047 C134.734,17.005 134.419,16.177 133.789,15.562 Z" />
+              <path fill-rule="evenodd" class="logo-color" fill="" d="M147.154,50.823 L147.154,51.824 L140.207,51.824 L140.207,42.097 L147.086,42.097 L147.086,43.097 L141.281,43.097 L141.281,46.418 L146.474,46.418 L146.474,47.419 L141.281,47.419 L141.281,50.823 L147.154,50.823 ZM133.644,51.824 L132.557,51.824 L132.557,43.111 L129.362,43.111 L129.362,42.097 L136.839,42.097 L136.839,43.111 L133.644,43.111 L133.644,51.824 ZM125.764,49.253 L120.584,49.253 L119.455,51.824 L118.354,51.824 L122.691,42.028 L123.697,42.028 L128.034,51.824 L126.878,51.824 L125.764,49.253 ZM123.181,43.306 L121.005,48.267 L125.342,48.267 L123.181,43.306 ZM114.539,51.824 L111.779,48.044 L109.060,48.044 L109.060,51.824 L107.986,51.824 L107.986,42.097 L112.078,42.097 C114.171,42.097 115.517,43.250 115.517,45.001 C115.517,46.627 114.430,47.572 112.934,47.850 L115.857,51.824 L114.539,51.824 ZM114.430,45.043 C114.430,43.834 113.533,43.111 111.996,43.111 L109.060,43.111 L109.060,47.058 L111.983,47.058 C113.410,47.058 114.430,46.307 114.430,45.043 ZM99.494,51.990 C96.598,51.990 94.654,49.670 94.654,46.974 C94.654,44.279 96.625,41.930 99.521,41.930 C102.417,41.930 104.361,44.251 104.361,46.946 C104.361,49.642 102.390,51.990 99.494,51.990 ZM99.494,42.945 C97.319,42.945 95.769,44.723 95.769,46.946 C95.769,49.170 97.346,50.976 99.521,50.976 C101.696,50.976 103.246,49.197 103.246,46.974 C103.246,44.751 101.669,42.945 99.494,42.945 ZM88.024,48.392 L85.713,48.392 L85.713,51.824 L84.639,51.824 L84.639,42.097 L88.201,42.097 C90.349,42.097 91.763,43.264 91.763,45.196 C91.763,47.308 90.050,48.392 88.024,48.392 ZM88.119,43.111 L85.713,43.111 L85.713,47.391 L88.065,47.391 C89.642,47.391 90.675,46.530 90.675,45.237 C90.675,43.834 89.655,43.111 88.119,43.111 ZM80.007,51.824 L77.247,48.044 L74.528,48.044 L74.528,51.824 L73.454,51.824 L73.454,42.097 L77.547,42.097 C79.640,42.097 80.986,43.250 80.986,45.001 C80.986,46.627 79.899,47.572 78.403,47.850 L81.326,51.824 L80.007,51.824 ZM79.899,45.043 C79.899,43.834 79.001,43.111 77.465,43.111 L74.528,43.111 L74.528,47.058 L77.451,47.058 C78.879,47.058 79.899,46.307 79.899,45.043 ZM64.963,51.990 C62.067,51.990 60.123,49.670 60.123,46.974 C60.123,44.279 62.094,41.930 64.990,41.930 C67.886,41.930 69.830,44.251 69.830,46.946 C69.830,49.642 67.859,51.990 64.963,51.990 ZM64.963,42.945 C62.788,42.945 61.238,44.723 61.238,46.946 C61.238,49.170 62.815,50.976 64.990,50.976 C67.165,50.976 68.715,49.197 68.715,46.974 C68.715,44.751 67.138,42.945 64.963,42.945 ZM53.806,50.976 C55.111,50.976 55.967,50.462 56.878,49.573 L57.585,50.281 C56.593,51.310 55.505,51.990 53.778,51.990 C51.032,51.990 49.006,49.781 49.006,46.974 C49.006,44.195 51.019,41.930 53.819,41.930 C55.546,41.930 56.579,42.556 57.531,43.473 L56.797,44.279 C55.994,43.500 55.097,42.945 53.806,42.945 C51.698,42.945 50.121,44.682 50.121,46.946 C50.121,49.211 51.712,50.976 53.806,50.976 Z" />
+            </svg>
+          </a>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item ">
+                <a class="nav-link" href="index.html">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item dropdown drop_single ">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+                  href="#">Our Portfolio</a>
+                <ul class="dropdown-menu dd_first">
+                  <li>
+                    <a href="portfolio.html">Portfolio</a>
+                  </li>
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                      aria-expanded="false">Portfolio Details</a>
+                    <ul class="dropdown-menu submenu">
+                      <li>
+                        <a href="portfolio-details-left-sidebar.html">Portfolio Left Sidebar</a>
+                      </li>
+                      <li>
+                        <a href="portfolio-details-right-sidebar.html">Portfolio Right Sidebar</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown drop_single ">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+                  href="#">Services</a>
+                <ul class="dropdown-menu dd_first">
+                  <li>
+                    <a href="service.html">Services</a>
+                  </li>
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                      aria-expanded="false">Service Details</a>
+                    <ul class="dropdown-menu submenu">
+                      <li>
+                        <a href="service-details-left-sidebar.html">Service Left Sidebar</a>
+                      </li>
+                      <li>
+                        <a href="service-details-right-sidebar.html">Service Right Sidebar</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown drop_single ">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+                  href="#">Pages</a>
+                <ul class="dropdown-menu dd_first">
+                  <li>
+                    <a href="about-us.html">About Us</a>
+                  </li>
+                  <li>
+                    <a href="team.html">Team Member</a>
+                  </li>
+                  <li>
+                    <a href="single-member.html">Single Member</a>
+                  </li>
+                  <li>
+                    <a href="contact.html">Contact</a>
+                  </li>
+                  <li>
+                    <a href="page-comingsoon.html">Coming soon</a>
+                  </li>
+                  <li>
+                    <a href="404.html">404 page</a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class="nav-item dropdown drop_single ">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+                  href="#">Blog</a>
+                <ul class="dropdown-menu dd_first">
+                  <li>
+                    <a href="blog-right-sidebar.html">Blog Right Sidebar</a>
+                  </li>
+                  <li>
+                    <a href="blog-left-sidebar.html">Blog Left Sidebar</a>
+                  </li>
+                  <li>
+                    <a href="blog-post-right-sidebar.html">Blog Post Right Sidebar</a>
+                  </li>
+                  <li>
+                    <a href="blog-post-left-sidebar.html">Blog Post Left Sidebar</a>
+                  </li>
+                </ul>
+              </li>
+
+              <li class=" dropdown megaDropMenu nav-item active">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+                  href="#">Shortcodes</a>
+                <ul class="row dropdown-menu justify-content-md-between">
+                  <li class="col-md-3">
+                    <ul class="list-unstyled">
+                      <li>
+                        <a href="basic-alert.html">Alert</a>
+                      </li>
+                      <li>
+                        <a href="basic-animation.html">Animation</a>
+                      </li>
+                      <li>
+                        <a href="basic-background.html">Background</a>
+                      </li>
+                      <li>
+                        <a href="basic-buttons.html">Buttons</a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="col-md-3">
+                    <ul class="list-unstyled">
+                      <li>
+                        <a href="basic-countdown.html">Countdown</a>
+                      </li>
+                      <li>
+                        <a href="basic-carousel.html">Carousel</a>
+                      </li>
+                      <li>
+                        <a href="basic-card.html">Card</a>
+                      </li>
+                      <li>
+                        <a href="basic-forms.html">Forms</a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="col-md-3">
+                    <ul class="list-unstyled">
+                      <li>
+                        <a href="kit-heading.html">Heading</a>
+                      </li>
+                      <li>
+                        <a href="basic-image.html">Images</a>
+                      </li>
+                      <li>
+                        <a href="basic-icon-style.html">Icon Sizes & styles </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="col-md-3">
+                    <ul class="list-unstyled">
+                      <li>
+                        <a href="basic-iconset.html">FontAwesome </a>
+                      </li>
+                      <li>
+                        <a href="basic-map.html">Map</a>
+                      </li>
+                      <!-- <li>
+                            <a href="kit-blogs.html">Blogs</a>
+                          </li> -->
+
+                      <!-- <li>
+                            <a href="kit-services.html">Service Elements</a>
+                          </li> -->
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+
+
+            </ul>
+            <!-- HEADER SEARCH -->
+            <div class="nav-search">
+              <a href="javascript:" class="search-trigger nav-link">
+                <i class="fa fa-search"></i>
+                <i class="fa fa-close"></i>
+              </a>
+              <ul class="row dropdown-menu search_hook">
+                <li class="col-12 m-0">
+                  <form class="search_form">
+                    <input type="text" name="search" placeholder="Enter Keywords...">
+                    <button class="no-bg btn-search" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+            <!-- HEADER SEARCH ENDS-->
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="main-wrapper elements">
+
+   <!-- ————————————————————————————————————————————
+    ——— Elements Banner
+    —————————————————————————————————————————————— -->
+
+    <section class="">
+      <div class="bg-image-holder element-top bredcrumb bg-br mb-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8">
+              <h2>Elements </h2>
+              <hr class="hr_narrow">
+              <p>These modular elements can be readily used and customized across pages and in different blocks.</p>
+            </div>
+          </div>
+        </div>
+        <!-- container ends -->
+      </div>
+    </section>
+
+    <!-- Grid wrapper for ell elements -->
+
+    <div class="grid-wrapper section">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-lg-12 element-content">
+
+
+    <!-- =============================================
+      ## heading
+      =============================================== -->
+    <div id="heading" class="element_single">
+      <!-- heading style 1 -->
+      <div id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="card single-block">
+          <div class="card-header" role="tab" id="headingOne">
+            <h3 class="mb-0">
+              Heading example
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                &lt;&gt; show code
+              </a>
+            </h3>
+          </div>
+    
+          <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="card-block">
+              <div class="code_container">
+                <pre class="language-html">
+      <code>
+        &lt;!-- default left aligned -->
+        &lt;div class="heading heading-v1 mb-3 bg-white bg-gray">
+          &lt;h2 class="heading-v1-title">Lorem ipsum.&lt;/h2>
+        &lt;/div>
+        
+        &lt;!-- Align center -->
+        &lt;div class="heading heading-v1 text-center mb-3 mt-5 bg-white bg-gray">
+          &lt;h2 class="heading-v1-title">Lorem ipsum.&lt;/h2>
+        &lt;/div>
+        
+        &lt;!-- Align right -->
+        &lt;div class="heading heading-v1 text-right mb-3 mt-5 bg-white bg-gray">
+          &lt;h2 class="heading-v1-title">Lorem ipsum.&lt;/h2>
+        &lt;/div>
+    
+      </code>
+                  </pre>
+                <h5>how to use</h5>
+                <ul>
+                  <li>Use the same classnames as shown in the avobe code example. If you want to customize, you can add your own
+                    class and override the properties</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="display-single_element">
+        <p>Example</p>
+        <div class="heading heading-v1 mb-3 bg-white bg-gray">
+          <h2 class="heading-v1-title">Lorem ipsum.</h2>
+        </div>
+        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde officia dolores sint iusto sit temporibus nam, neque quidem
+          aliquam perspiciatis illo ipsum, sequi aperiam! Voluptas magni ipsam officia nesciunt quos?</p>
+        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non, fugiat, eos. Numquam sit molestias, impedit unde consectetur
+          animi, quas neque, vitae necessitatibus nam voluptate aspernatur repellat doloribus a similique. Minus.</p>
+    
+        <div class="heading heading-v1 text-center mb-3 mt-5 bg-white bg-gray">
+          <h2 class="heading-v1-title">Lorem ipsum.</h2>
+        </div>
+    
+        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde officia dolores sint iusto sit temporibus nam, neque quidem
+          aliquam perspiciatis illo ipsum, sequi aperiam! Voluptas magni ipsam officia nesciunt quos?</p>
+        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non, fugiat, eos. Numquam sit molestias, impedit unde consectetur
+          animi, quas neque, vitae necessitatibus nam voluptate aspernatur repellat doloribus a similique. Minus.</p>
+    
+        <div class="heading heading-v1 text-right mb-3 mt-5 bg-white bg-gray">
+          <h2 class="heading-v1-title">Lorem ipsum.</h2>
+        </div>
+    
+        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde officia dolores sint iusto sit temporibus nam, neque quidem
+          aliquam perspiciatis illo ipsum, sequi aperiam! Voluptas magni ipsam officia nesciunt quos?</p>
+        <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non, fugiat, eos. Numquam sit molestias, impedit unde consectetur
+          animi, quas neque, vitae necessitatibus nam voluptate aspernatur repellat doloribus a similique. Minus.</p>
+      </div>
+      <!-- heading style 1 ends-->
+    
+    </div>
+
+        </div>
+        <!-- element-content ends -->
+      </div>
+    </div>
+    <!-- element main container ends -->
+  </div>
+  <!-- Grid wrapper ends -->
+
+    <!-- ————————————————————————————————————————————
+    ——— Elements Footer
+    —————————————————————————————————————————————— -->
+    <footer class="footer element-footer">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-7">
+            <div class="text-center copyright elements-copyright ">
+              <p>&copy; 2019 Copyright Corporex Bootstrap Template by
+                <a class="text-primary" href="http://www.iamabdus.com/" target="_blank">Abdus</a>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+<script src="plugins/jquery/jquery-3.3.1.slim.min.js"></script>
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="plugins/OwlCarousel2/owl.carousel.min.js"></script>
+<script src="plugins/prismjs/prism.js"></script>
+<script src="plugins/smoothscroll/SmoothScroll.min.js"></script>
+<script src="plugins/syotimer/jquery.syotimer.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsQdSlW4vj5RvXp2_pLnv1s1ErfxjM5_o"></script>
+<script src="js/custom.js"></script>
+</body>
+
+</html>
+
