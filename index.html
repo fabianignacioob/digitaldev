@@ -6,9 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Portafolio de Fabián Olivas, desarrollador web especializado en sitios, sistemas, integraciones y automatizaciones con IA."
+      content="CatOps crea páginas web, sistemas internos, integraciones y automatizaciones con IA para negocios que quieren vender más, ordenar procesos y ahorrar tiempo operativo."
     />
-    <title>Fabián Olivas | Digital Dev</title>
+    <title>CatOps | Webs, Sistemas e IA para Negocios</title>
+    <link rel="canonical" href="https://catops.cl/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:url" content="https://catops.cl/" />
+    <meta property="og:title" content="CatOps | Webs, Sistemas e IA para Negocios" />
+    <meta property="og:description" content="Soluciones digitales simples para vender mejor, ordenar procesos y automatizar trabajo operativo." />
+    <meta property="og:image" content="https://catops.cl/img/catops-logo.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CatOps | Webs, Sistemas e IA para Negocios" />
+    <meta name="twitter:description" content="Páginas web, sistemas internos, integraciones y automatizaciones con IA para negocios." />
+    <meta name="twitter:image" content="https://catops.cl/img/catops-logo.png" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link href="css/bootstrap.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,6 +28,23 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "CatOps",
+        "url": "https://catops.cl/",
+        "image": "https://catops.cl/img/catops-logo.png",
+        "description": "Webs, sistemas internos, integraciones y automatizaciones con IA para negocios.",
+        "areaServed": "Chile",
+        "serviceType": [
+          "Desarrollo web profesional",
+          "Sistemas a medida",
+          "Automatizaciones con IA",
+          "Integraciones entre plataformas"
+        ]
+      }
+    </script>
     <style>
       :root {
         --bg: #fbfaf7;
@@ -24,10 +52,10 @@
         --ink: #17202a;
         --muted: #65717c;
         --line: #e7e0d8;
-        --brand-blue: #4fa8c8;
-        --brand-blue-dark: #2478a8;
-        --accent: #4fa8c8;
-        --accent-2: #21a38f;
+        --brand-blue: #0a2a66;
+        --brand-blue-dark: #061b45;
+        --accent: #f36b16;
+        --accent-2: #f36b16;
         --peach: #fff1e7;
         --mint: #eafff7;
         --sky: #edf7ff;
@@ -104,19 +132,19 @@
       }
 
       .brand img {
-        /* width: 86px; */
+        width: 100px;
         height: auto;
-        /* max-height: 34px; */
+        border-radius: 0;
         object-fit: contain;
       }
 
       .brand span {
         display: block;
-        color: var(--accent-2);
+        color: var(--brand-blue-dark);
         font-size: 20px;
-        font-weight: 600;
+        font-weight: 800;
         /* text-transform: uppercase; */
-        letter-spacing: 0.05em;
+        letter-spacing: 0.01em;
       }
 
       .nav-links {
@@ -451,6 +479,22 @@
         line-height: 1.75;
       }
 
+      .about-intro > a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 22px 5px 0;
+        transition: transform 0.2s ease;
+      }
+
+      .about-intro > a:hover {
+        transform: translateY(-2px);
+      }
+
+      .about-intro > a[href*="linkedin.com"] {
+        display: none;
+      }
+
       section {
         padding: 72px 0;
         scroll-margin-top: 96px;
@@ -542,6 +586,125 @@
       .section-head p {
         max-width: 660px;
         margin: 0 auto;
+      }
+
+      .problem-grid,
+      .benefit-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+
+      .problem-card,
+      .benefit-card,
+      .landing-cta {
+        border: 1px solid rgba(231, 224, 216, 0.78);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: var(--shadow);
+      }
+
+      .problem-card,
+      .benefit-card {
+        padding: 24px;
+      }
+
+      .problem-card span,
+      .benefit-card span {
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 14px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--sky), var(--mint));
+        color: var(--brand-blue-dark);
+        font-weight: 800;
+      }
+
+      .problem-card h3,
+      .benefit-card h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        font-weight: 800;
+      }
+
+      .landing-cta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 22px;
+        margin-top: 34px;
+        padding: 26px;
+        background: linear-gradient(135deg, rgba(237, 247, 255, 0.9), rgba(234, 255, 247, 0.9));
+      }
+
+      .landing-cta h3 {
+        margin: 0 0 8px;
+        font-size: clamp(22px, 2.5vw, 30px);
+        font-weight: 800;
+      }
+
+      .landing-cta p {
+        max-width: 650px;
+      }
+
+      .responsive-showcase {
+        display: grid;
+        grid-template-columns: minmax(0, 0.86fr) minmax(360px, 1.2fr);
+        gap: 34px;
+        align-items: center;
+      }
+
+      .responsive-copy h2 {
+        max-width: 640px;
+        margin: 0;
+        font-size: clamp(28px, 3.6vw, 46px);
+        line-height: 1.1;
+        font-weight: 800;
+      }
+
+      .responsive-copy p {
+        max-width: 620px;
+        margin-top: 16px;
+      }
+
+      .responsive-points {
+        display: grid;
+        gap: 10px;
+        margin: 22px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .responsive-points li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      .responsive-points li::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        flex: 0 0 auto;
+        margin-top: 8px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--brand-blue), var(--accent-2));
+      }
+
+      .responsive-media {
+        overflow: hidden;
+        border-radius: 18px;
+      }
+
+      .responsive-media img {
+        display: block;
+        width: 100%;
+        height: auto;
       }
 
       .ai-grid,
@@ -1260,12 +1423,38 @@
           display: none;
         }
 
-        .offer-strip,
-        .ai-grid,
-        .work-grid,
-        .contact-layout {
-          grid-template-columns: 1fr;
-        }
+            .offer-strip,
+            .problem-grid,
+            .benefit-grid,
+            .ai-grid,
+            .work-grid,
+            .contact-layout {
+              grid-template-columns: 1fr;
+            }
+
+            .landing-cta {
+              align-items: stretch;
+              flex-direction: column;
+              text-align: center;
+            }
+
+            .responsive-showcase {
+              grid-template-columns: 1fr;
+              text-align: center;
+            }
+
+            .responsive-copy h2,
+            .responsive-copy p {
+              margin-right: auto;
+              margin-left: auto;
+            }
+
+            .responsive-points {
+              max-width: 520px;
+              margin-right: auto;
+              margin-left: auto;
+              text-align: left;
+            }
 
         .ideas-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1329,7 +1518,7 @@
         }
 
         .brand img {
-          width: 200px;
+          width: 100px;
           height: auto;
         }
 
@@ -1399,8 +1588,7 @@
       <header class="topbar">
         <div class="container nav-wrap">
           <a class="brand" href="#inicio" aria-label="Ir al inicio">
-            <img src="img/fabian_brand.png" alt="Fabián Ignacio" />
-            <!-- <strong><span>Fabián Ignacio</span></strong> -->
+            <img src="img/catops-logo.png" alt="CatOps" />
           </a>
           <button
             class="nav-toggle"
@@ -1429,33 +1617,35 @@
             <div class="hero-showcase reveal" aria-label="Servicios destacados">
               <div class="hero-slide">
                 <div class="hero-content">
-                  <!-- <span class="hero-kicker">Digital Dev / Fabian Olivas</span> -->
-                  <h2 class="hero-title">
-                    Tu idea convertida en una web o sistema listo para trabajar.
-                  </h2>
+                  <span class="hero-kicker">CatOps / web, sistemas e IA para negocios</span>
+                  <h1 class="hero-title">
+                    Soluciones digitales simples para vender, operar y automatizar
+                  </h1>
                   <p class="hero-lead">
-                    Diseño y desarrollo soluciones digitales para captar
-                    clientes, ordenar procesos y conectar herramientas.
+                    Creamos páginas web, plataformas internas e integraciones
+                    con IA para negocios que necesitan ordenar procesos,
+                    captar clientes y ahorrar tiempo operativo.
                   </p>
                   <div class="hero-actions">
-                    <a class="btn-main" href="#servicios">Ver servicios</a>
-                    <a class="btn-ghost" href="#contacto">Conversemos</a>
+                    <a class="btn-main" href="https://wa.me/56932239292?text=Hola%20CatOps%2C%20quiero%20conversar%20sobre%20una%20soluci%C3%B3n%20digital%20para%20mi%20negocio." target="_blank" rel="noopener">Conversemos tu proyecto</a>
+                    <a class="btn-ghost" href="#servicios">Ver servicios</a>
                   </div>
                 </div>
               </div>
               <div class="hero-slide">
                 <div class="hero-content">
-                  <!-- <span class="hero-kicker">IA aplicada a procesos reales</span> -->
+                  <span class="hero-kicker">Automatización práctica para equipos pequeños</span>
                   <h2 class="hero-title">
-                    Automatizaciones inteligentes para ahorrar tiempo operativo.
+                    Menos tareas repetitivas, más procesos claros.
                   </h2>
                   <p class="hero-lead">
-                    Asistentes, flujos e integraciones que responden,
-                    clasifican, reportan y conectan tu negocio.
+                    Diseñamos flujos que conectan formularios, correos, datos,
+                    reportes e IA para que tu operación no dependa de trabajo
+                    manual innecesario.
                   </p>
                   <div class="hero-actions">
                     <a class="btn-main" href="#ia">Ver IA</a>
-                    <a class="btn-ghost" href="#contacto">Conversemos</a>
+                    <a class="btn-ghost" href="#contacto">Hablemos</a>
                   </div>
                 </div>
               </div>
@@ -1463,18 +1653,16 @@
             <div class="hero-progress" aria-hidden="true"></div>
             <div class="offer-strip reveal" aria-label="Presentación personal">
               <div class="about-intro">
-                <strong>Un poco sobre mí</strong>
+                <strong>Una startup para llevar negocios simples al mundo digital</strong>
                 <span
-                  >¡Hola! Soy Fabián, desarrollador de software y soluciones web
-                  con más de 9 años de experiencia. He trabajado creando sitios,
+                  >CatOps nace desde más de 9 años de experiencia creando sitios,
                   sistemas internos, integraciones y automatizaciones para
-                  negocios de distintos rubros y tamaños. Me gusta transformar
-                  ideas en soluciones claras, útiles y fáciles de
-                  mantener.</span
+                  negocios de distintos rubros y tamaños.</span
                 >
                 <span
-                  >Si trabajamos juntos, te acompañaré en cada paso para que tu
-                  idea se convierta en una realidad.</span
+                  >Combinamos mirada técnica, comercial y operativa para ayudar
+                  a pymes, emprendimientos y equipos a convertir ideas en
+                  soluciones claras, útiles y fáciles de mantener.</span
                 >
                 <a
                   href="https://www.linkedin.com/in/fabianignacioob?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
@@ -1495,7 +1683,10 @@
                   </svg>
                 </a>
                 <a
-                  href="https://www.instagram.com/barbitabad?igsh=MXg0czVsMzk1YW9yMg%3D%3D&utm_source=qr"
+                  href="https://www.instagram.com/catops.cl"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Instagram CatOps"
                 >
                   <svg
                     width="34px"
@@ -1594,9 +1785,10 @@
                   </svg>
                 </a>
                 <a
-                  href="https://wa.me/56932239292?text=%C2%A1Hola%21%2C%20tengo%20una%20idea%20para%20mi%20negocio.%20Me%20gustar%C3%ADa%20darle%20forma%20contigo."
+                  href="https://wa.me/56932239292?text=Hola%20CatOps%2C%20quiero%20conversar%20sobre%20una%20soluci%C3%B3n%20digital%20para%20mi%20negocio."
                   target="_blank"
                   rel="noopener"
+                  aria-label="WhatsApp CatOps"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -1624,13 +1816,53 @@
           </div>
         </section>
 
+        <section class="section-soft" id="problema">
+          <div class="container">
+            <div class="section-head reveal">
+              <h2>Tu negocio no necesita más trabajo manual.</h2>
+              <p>
+                Si hoy gestionas clientes, solicitudes, reportes o procesos con
+                planillas, correos sueltos o mensajes dispersos, probablemente
+                estás perdiendo tiempo y oportunidades.
+              </p>
+            </div>
+            <div class="problem-grid">
+              <article class="problem-card reveal">
+                <span>1</span>
+                <h3>Procesos repetitivos</h3>
+                <p>
+                  Tareas que se repiten cada semana y podrían quedar conectadas
+                  a formularios, correos, reportes o avisos automáticos.
+                </p>
+              </article>
+              <article class="problem-card reveal">
+                <span>2</span>
+                <h3>Información desordenada</h3>
+                <p>
+                  Datos repartidos entre planillas, WhatsApp, correos y sistemas
+                  que no conversan entre sí.
+                </p>
+              </article>
+              <article class="problem-card reveal">
+                <span>3</span>
+                <h3>Oportunidades sin seguimiento</h3>
+                <p>
+                  Clientes que llegan por campañas, formularios o redes, pero no
+                  quedan ordenados en un flujo claro de contacto y gestión.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
         <section class="section-soft" id="servicios">
           <div class="container">
             <div class="section-head reveal">
-              <h2>Soluciones digitales simples y firmes.</h2>
+              <h2>Soluciones digitales listas para operar</h2>
               <p>
-                Construyo desde cero o mejoro lo que ya existe, cuidando
-                experiencia, rendimiento, datos y mantenimiento.
+                En CatOps creamos páginas web profesionales, sistemas internos,
+                integraciones y automatizaciones con IA para pymes,
+                emprendedores y empresas.
               </p>
             </div>
             <div class="service-grid">
@@ -1642,12 +1874,13 @@
                   />
                 </div>
                 <div class="service-copy">
-                  <h3>Páginas que generan confianza</h3>
+                  <h3>Desarrollo web profesional</h3>
                   <p>
-                    Sitios modernos, rápidos y claros para explicar qué haces,
-                    mostrar servicios y recibir nuevos contactos.
+                    Sitios rápidos, claros y pensados para convertir visitas en
+                    contactos reales para tu negocio.
                   </p>
                   <div class="tag-list">
+                    <span class="tag">Quiero esto</span>
                     <span class="tag">SEO técnico</span>
                     <span class="tag">Responsive</span>
                     <span class="tag">Analytics</span>
@@ -1662,12 +1895,13 @@
                   />
                 </div>
                 <div class="service-copy">
-                  <h3>Sistemas para trabajar mejor</h3>
+                  <h3>Sistemas internos a medida</h3>
                   <p>
-                    Herramientas internas para gestionar clientes, solicitudes,
-                    inventario, procesos, archivos o reportes.
+                    Plataformas para ordenar clientes, solicitudes, reportes,
+                    usuarios, archivos y procesos internos.
                   </p>
                   <div class="tag-list">
+                    <span class="tag">Quiero esto</span>
                     <span class="tag">CRUD</span>
                     <span class="tag">Roles</span>
                     <span class="tag">Dashboards</span>
@@ -1682,12 +1916,34 @@
                   />
                 </div>
                 <div class="service-copy">
-                  <h3>Conexiones entre plataformas</h3>
+                  <h3>Automatizaciones con IA</h3>
                   <p>
-                    Formularios, correos, APIs, bases de datos y servicios
-                    externos conversando sin trabajo manual repetido.
+                    Flujos inteligentes para ahorrar tiempo en correos,
+                    reportes, formularios, análisis de información y respuestas.
                   </p>
                   <div class="tag-list">
+                    <span class="tag">Quiero esto</span>
+                    <span class="tag">IA aplicada</span>
+                    <span class="tag">Reportes</span>
+                    <span class="tag">Flujos</span>
+                  </div>
+                </div>
+              </article>
+              <article class="service-card reveal">
+                <div class="service-media">
+                  <img
+                    src="img/service-systems.png"
+                    alt="Bocetos de integraciones entre plataformas"
+                  />
+                </div>
+                <div class="service-copy">
+                  <h3>Integraciones entre plataformas</h3>
+                  <p>
+                    Conecto herramientas, bases de datos, APIs y procesos para
+                    que tu operación sea más fluida y confiable.
+                  </p>
+                  <div class="tag-list">
+                    <span class="tag">Quiero esto</span>
                     <span class="tag">APIs</span>
                     <span class="tag">Webhooks</span>
                     <span class="tag">SMTP</span>
@@ -1698,14 +1954,81 @@
           </div>
         </section>
 
+        <section class="section-soft" id="beneficios">
+          <div class="container">
+            <div class="section-head reveal">
+              <h2>Más que código: soluciones que ayudan a vender y operar mejor</h2>
+              <p>
+                La idea no es sumar tecnología por sumar. Es construir algo que
+                reduzca fricción, ordene información y haga más simple el trabajo
+                diario.
+              </p>
+            </div>
+            <div class="benefit-grid">
+              <article class="benefit-card reveal">
+                <span>✓</span>
+                <h3>Menos trabajo manual</h3>
+                <p>Automatiza tareas repetitivas y libera tiempo para vender, atender y decidir.</p>
+              </article>
+              <article class="benefit-card reveal">
+                <span>✓</span>
+                <h3>Más orden operativo</h3>
+                <p>Centraliza solicitudes, clientes, reportes y procesos en herramientas claras.</p>
+              </article>
+              <article class="benefit-card reveal">
+                <span>✓</span>
+                <h3>Mejor experiencia</h3>
+                <p>Entrega una presencia digital más profesional y flujos más simples para tus clientes.</p>
+              </article>
+            </div>
+            <div class="landing-cta reveal">
+              <div>
+                <h3>¿Tienes un proceso que quieres mejorar?</h3>
+                <p>
+                  Cuéntanos qué necesitas construir, ordenar o automatizar. Te
+                  ayudamos a bajarlo a una solución clara y posible.
+                </p>
+              </div>
+              <a class="btn-main" href="https://wa.me/56932239292?text=Hola%20CatOps%2C%20quiero%20conversar%20sobre%20una%20soluci%C3%B3n%20digital%20para%20mi%20negocio." target="_blank" rel="noopener">Hablar con CatOps</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-soft" id="responsive">
+          <div class="container">
+            <div class="responsive-showcase">
+              <div class="responsive-copy reveal">
+                <h2>Diseño responsivo en cada desarrollo</h2>
+                <p>
+                  Cada web, landing o sistema se construye pensando en uso real:
+                  escritorio, notebook, tablet y celular. La experiencia debe
+                  ser clara, rápida y cómoda sin importar desde dónde llegue tu
+                  cliente o tu equipo.
+                </p>
+                <ul class="responsive-points">
+                  <li>Diseño adaptable para desktop, tablet y mobile.</li>
+                  <li>Interfaces claras para captar clientes y facilitar tareas.</li>
+                  <li>Pruebas visuales para evitar textos cortados o secciones incómodas.</li>
+                </ul>
+              </div>
+              <div class="responsive-media reveal">
+                <img
+                  src="img/responsivos.png"
+                  alt="Sitio web responsivo mostrado en notebook, celular y tablet"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section class="section-soft" id="ideas">
           <div class="container">
             <div class="section-head reveal">
-              <h2>Ideas para proyectos</h2>
+              <h2>Ejemplos de landings para nuevas propuestas</h2>
               <p>
-                Landings para proyectos con temas y plantillas propias,
-                disponibles para referencias, base de propuestas o despliegues
-                rápidos.
+                Referencias visuales con temas y plantillas propias para
+                evaluar estilos, secciones y posibles bases de despliegue rápido.
               </p>
             </div>
             <div class="ideas-grid">
@@ -1794,10 +2117,11 @@
         <section class="section-ai" id="ia">
           <div class="container">
             <div class="section-head reveal">
-              <h2>IA para ahorrar horas.</h2>
+              <h2>Automatizaciones con IA para ahorrar horas</h2>
               <p>
-                La IA sirve cuando queda conectada a un proceso: recibir,
-                entender, clasificar, responder, crear registros y avisar.
+                La IA aporta valor cuando queda conectada a un proceso real:
+                recibir información, entenderla, clasificarla, responder,
+                crear registros y avisar al equipo.
               </p>
             </div>
             <div class="ai-grid">
@@ -1841,13 +2165,14 @@
           </div>
         </section>
 
-        <section id="stack" hidden>
+        <!-- Sección de tecnologías pausada temporalmente.
+        <section class="section-soft" id="stack" hidden>
           <div class="container">
             <div class="section-head reveal">
-              <h2>Tecnologías a medida.</h2>
+              <h2>Tecnologías que uso para construir soluciones sólidas</h2>
               <p>
                 Elijo el stack según el proyecto: rapidez para lanzar, facilidad
-                para mantener y espacio para crecer.
+                para mantener, seguridad de datos y espacio para crecer.
               </p>
             </div>
             <div class="tech-grid reveal">
@@ -1948,40 +2273,41 @@
             </div>
           </div>
         </section>
+        -->
 
         <section class="section-work" id="proyectos">
           <div class="container">
             <div class="section-head reveal">
-              <h2>Formas en que puedo ayudarte.</h2>
+              <h2>Ejemplos de soluciones que podemos construir</h2>
               <p>
-                Algunas soluciones habituales para negocios que quieren vender
-                mejor, ordenar procesos o automatizar tareas sin inflar el
-                proyecto.
+                Ideas concretas para negocios que quieren captar clientes,
+                ordenar procesos internos, conectar herramientas o automatizar
+                tareas operativas.
               </p>
             </div>
             <div class="work-grid">
               <article class="work-card work-card-web reveal">
                 <span class="work-meta">Captación</span>
-                <h3>Webs para servicios y marcas</h3>
+                <h3>Landing para captar clientes</h3>
                 <p>
-                  Presentan la oferta, explican beneficios, integran contacto y
-                  dejan lista la base para campañas.
+                  Landing pensada para campañas, servicios profesionales o pymes
+                  que necesitan convertir visitas en mensajes y oportunidades.
                 </p>
               </article>
               <article class="work-card work-card-systems reveal">
                 <span class="work-meta">Operación</span>
-                <h3>Herramientas internas</h3>
+                <h3>Sistema interno de gestión</h3>
                 <p>
-                  Paneles y flujos para centralizar datos, reducir planillas
-                  sueltas y dar visibilidad al equipo.
+                  Panel para ordenar solicitudes, clientes, usuarios, estados,
+                  archivos y reportes sin depender de planillas dispersas.
                 </p>
               </article>
               <article class="work-card work-card-ai reveal">
                 <span class="work-meta">Automatización</span>
-                <h3>Procesos conectados</h3>
+                <h3>Flujos conectados con IA</h3>
                 <p>
-                  Integraciones entre correo, formularios, bases de datos, IA,
-                  anuncios y notificaciones.
+                  Integraciones entre formularios, correos, bases de datos,
+                  análisis con IA, notificaciones y reportes automáticos.
                 </p>
               </article>
             </div>
@@ -2043,17 +2369,17 @@
             <div class="contact-layout">
               <div class="reveal">
                 <div class="section-head">
-                  <h2>Cuéntame qué quieres construir.</h2>
+                  <h2>¿Tienes una idea o proceso que quieres mejorar?</h2>
                   <p>
-                    Puede ser una web simple, un sistema para tu equipo o una
-                    automatización con IA. Partimos por entender el objetivo y
-                    bajarlo a una solución posible.
+                    Cuéntanos qué necesitas construir, ordenar o automatizar.
+                    Partimos por entender el objetivo y bajarlo a una solución
+                    clara, útil y posible.
                   </p>
                 </div>
                 <div class="contact-box">
                   <a
                     class="whatsapp-link"
-                    href="https://wa.me/56932239292?text=%C2%A1Hola%21%2C%20tengo%20una%20idea%20para%20mi%20negocio.%20Me%20gustar%C3%ADa%20darle%20forma%20contigo."
+                    href="https://wa.me/56932239292?text=Hola%20CatOps%2C%20quiero%20conversar%20sobre%20una%20soluci%C3%B3n%20digital%20para%20mi%20negocio."
                     target="_blank"
                     rel="noopener"
                     aria-label="Escribir por WhatsApp"
@@ -2073,19 +2399,19 @@
 
       <footer>
         <div class="container footer-wrap">
-          <!-- <img src="img/marca-dv-color2.png" alt="Digital Dev"> -->
+          <!-- Marca CatOps -->
           <div class="row">
             <div class="col-12 text-center">
               <img
-                src="img/fabian_brand.png"
-                alt="Fabián Ignacio"
+                src="img/catops-logo.png"
+                alt="CatOps"
                 class="img-fluid"
-                style="min-width: 250px"
+                style="width: min(280px, 72vw)"
               />
             </div>
             <div class="col-12 text-center">
               <p>&copy; <span id="currentYear">2026</span></p>
-              <p>Desarrollo web, sistemas e IA aplicada.</p>
+              <p>Webs, sistemas e IA aplicada para negocios.</p>
             </div>
           </div>
         </div>
