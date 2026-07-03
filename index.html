@@ -136,6 +136,14 @@
         height: auto;
         border-radius: 0;
         object-fit: contain;
+        transition:
+          opacity 0.25s ease,
+          filter 0.25s ease;
+      }
+
+      .topbar.is-scrolled .brand img {
+        opacity: 0.82;
+        filter: saturate(0.9);
       }
 
       .brand span {
@@ -1870,7 +1878,7 @@
                     contactos reales para tu negocio.
                   </p>
                   <div class="tag-list">
-                    <span class="tag">Quiero esto</span>
+                    <span class="tag">Quiero una web</span>
                     <span class="tag">SEO técnico</span>
                     <span class="tag">Responsive</span>
                     <span class="tag">Analytics</span>
@@ -1891,7 +1899,7 @@
                     usuarios, archivos y procesos internos.
                   </p>
                   <div class="tag-list">
-                    <span class="tag">Quiero esto</span>
+                    <span class="tag">Quiero un sistema</span>
                     <span class="tag">CRUD</span>
                     <span class="tag">Roles</span>
                     <span class="tag">Dashboards</span>
@@ -1912,7 +1920,7 @@
                     reportes, formularios, análisis de información y respuestas.
                   </p>
                   <div class="tag-list">
-                    <span class="tag">Quiero esto</span>
+                    <span class="tag">Quiero automatizar</span>
                     <span class="tag">IA aplicada</span>
                     <span class="tag">Reportes</span>
                     <span class="tag">Flujos</span>
@@ -1933,7 +1941,7 @@
                     que tu operación sea más fluida y confiable.
                   </p>
                   <div class="tag-list">
-                    <span class="tag">Quiero esto</span>
+                    <span class="tag">Quiero integrar</span>
                     <span class="tag">APIs</span>
                     <span class="tag">Webhooks</span>
                     <span class="tag">SMTP</span>
@@ -2411,6 +2419,14 @@
     <script>
       document.getElementById("currentYear").textContent =
         new Date().getFullYear();
+
+      const topbar = document.querySelector(".topbar");
+      const updateTopbarState = () => {
+        topbar.classList.toggle("is-scrolled", window.scrollY > 12);
+      };
+
+      updateTopbarState();
+      window.addEventListener("scroll", updateTopbarState, { passive: true });
 
       const revealItems = document.querySelectorAll(".reveal");
       const revealObserver = new IntersectionObserver(
