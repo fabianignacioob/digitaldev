@@ -182,14 +182,14 @@
         height: 44px;
         place-items: center;
         padding: 0;
-        border: 1px solid rgba(79, 168, 200, 0.28);
+        border: 1px solid rgba(243, 107, 22, 0.26);
         border-radius: 999px;
         background: linear-gradient(
           135deg,
-          rgba(79, 168, 200, 0.14),
-          rgba(33, 163, 143, 0.12)
+          rgba(243, 107, 22, 0.16),
+          rgba(243, 107, 22, 0.08)
         );
-        color: var(--brand-blue-dark);
+        color: var(--accent);
         cursor: pointer;
         transition:
           transform 0.22s ease,
@@ -199,7 +199,7 @@
 
       .nav-toggle:hover {
         transform: translateY(-1px);
-        box-shadow: 0 12px 28px rgba(79, 168, 200, 0.18);
+        box-shadow: 0 12px 28px rgba(243, 107, 22, 0.2);
       }
 
       .nav-toggle span,
@@ -267,14 +267,9 @@
 
       .btn-main {
         border: 0;
-        background: linear-gradient(
-          135deg,
-          var(--brand-blue),
-          var(--brand-blue-dark) 52%,
-          var(--accent-2)
-        );
+        background: var(--accent);
         color: #fff;
-        box-shadow: 0 14px 28px rgba(79, 168, 200, 0.28);
+        box-shadow: 0 14px 28px rgba(243, 107, 22, 0.28);
       }
 
       .btn-ghost {
@@ -325,7 +320,7 @@
         margin: 16px auto 0;
         overflow: hidden;
         border-radius: 999px;
-        background: rgba(79, 168, 200, 0.16);
+        background: rgba(243, 107, 22, 0.14);
       }
 
       .hero-progress::before {
@@ -334,12 +329,7 @@
         inset: 0;
         width: 100%;
         border-radius: inherit;
-        background: linear-gradient(
-          90deg,
-          var(--brand-blue),
-          var(--brand-blue-dark),
-          var(--accent-2)
-        );
+        background: var(--accent);
         transform: scaleX(0);
         transform-origin: left center;
         animation: heroProgress 5s linear infinite;
@@ -618,8 +608,8 @@
         justify-content: center;
         margin-bottom: 14px;
         border-radius: 999px;
-        background: linear-gradient(135deg, var(--sky), var(--mint));
-        color: var(--brand-blue-dark);
+        background: rgba(243, 107, 22, 0.12);
+        color: var(--accent);
         font-weight: 800;
       }
 
@@ -693,7 +683,7 @@
         flex: 0 0 auto;
         margin-top: 8px;
         border-radius: 999px;
-        background: linear-gradient(135deg, var(--brand-blue), var(--accent-2));
+        background: var(--accent);
       }
 
       .responsive-media {
@@ -1653,16 +1643,16 @@
             <div class="hero-progress" aria-hidden="true"></div>
             <div class="offer-strip reveal" aria-label="Presentación personal">
               <div class="about-intro">
-                <strong>Una startup para llevar negocios simples al mundo digital</strong>
+                <strong>Una startup para llevar tu negocio al mundo digital</strong>
                 <span
-                  >CatOps nace desde más de 9 años de experiencia creando sitios,
-                  sistemas internos, integraciones y automatizaciones para
-                  negocios de distintos rubros y tamaños.</span
+                  >CatOps nace desde más de 9 años de experiencia creando
+                  sitios, sistemas internos, integraciones y automatizaciones
+                  para negocios de distintos rubros y tamaños.</span
                 >
                 <span
-                  >Combinamos mirada técnica, comercial y operativa para ayudar
-                  a pymes, emprendimientos y equipos a convertir ideas en
-                  soluciones claras, útiles y fáciles de mantener.</span
+                  >Convertimos esa experiencia en soluciones simples de usar:
+                  presencia digital, procesos ordenados y herramientas que
+                  acompañan el trabajo diario sin volverlo complejo.</span
                 >
                 <a
                   href="https://www.linkedin.com/in/fabianignacioob?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
