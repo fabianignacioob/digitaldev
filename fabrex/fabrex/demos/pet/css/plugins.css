@@ -1,0 +1,36 @@
+/*-----------------------------------------------------------------------------------
+
+    Theme Name: Fabrex - Pet Adoption, Care and Shop Responsive HTML Template
+    Description: Pet Adoption, Care and Shop Responsive HTML Template
+    Author: Chitrakoot Web
+
+-----------------------------------------------------------------------------------*/
+
+/* ----------------------------------------------------------------
+			[ All CSS Plugins & Default Classes File ]
+-----------------------------------------------------------------*/
+
+/* == bootstrap == */
+@import url("../../../css/plugins/bootstrap.min.css");
+
+/* == fontawesome icon font == */
+@import url("../../../css/plugins/fontawesome-all.min.css");
+
+/* == magnific-popup == */
+@import url("../../../css/plugins/magnific-popup.css");
+
+/* == owl.carousel == */
+@import url("../../../css/plugins/owl.carousel.css");
+@import url("../../../css/plugins/owl.theme.default.css");
+
+/* == lightgallery css == */
+@import url("../../../css/plugins/lightgallery.css");
+
+/* == zoom css == */
+@import url("../../../css/plugins/xzoom.css");
+
+/* == default classes == */
+@import url("../../../css/plugins/default.css");
+
+/* == navigation == */
+@import url("../../../css/plugins/nav-menu.css");

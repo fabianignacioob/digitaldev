@@ -1,0 +1,23 @@
+<?php
+$this->assign('title', 'Estado del sistema');
+$formatBytes = static function (?float $bytes): string {
+    if ($bytes === null) {
+        return 'No disponible';
+    }
+    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    $index = 0;
+    while ($bytes >= 1024 && $index < count($units) - 1) {
+        $bytes /= 1024;
+        $index++;
+    }
+    return number_format($bytes, 1, ',', '.') . ' ' . $units[$index];
+};
+?>
+<div class="mb-4"><h1 class="h2 mb-1">Estado operativo</h1><p class="text-muted mb-0">Información de salud de CatOps sin exponer credenciales ni secretos.</p></div>
+
+<div class="row g-4">
+  <div class="col-lg-6"><section class="card admin-card h-100"><div class="card-body"><h2 class="h5">Aplicación</h2><dl class="row mb-0"><dt class="col-sm-5">Ambiente</dt><dd class="col-sm-7"><?= h($status['application']['environment']) ?></dd><dt class="col-sm-5">Debug</dt><dd class="col-sm-7"><?= $status['application']['debug'] ? 'Activo' : 'Desactivado' ?></dd><dt class="col-sm-5">Versión aplicación</dt><dd class="col-sm-7"><?= h($status['application']['version']) ?></dd><dt class="col-sm-5">PHP</dt><dd class="col-sm-7"><?= h($status['application']['php_version']) ?></dd><dt class="col-sm-5">CakePHP</dt><dd class="col-sm-7"><?= h($status['application']['cakephp_version']) ?></dd><dt class="col-sm-5">Dominio base</dt><dd class="col-sm-7"><?= h($status['application']['scheme'] . '://' . $status['application']['base_domain']) ?></dd><dt class="col-sm-5">Webpay</dt><dd class="col-sm-7"><?= h($status['application']['webpay_environment']) ?></dd></dl></div></section></div>
+  <div class="col-lg-6"><section class="card admin-card h-100"><div class="card-body"><h2 class="h5">Infraestructura</h2><dl class="row mb-0"><dt class="col-sm-6">Base de datos</dt><dd class="col-sm-6 text-<?= $status['database']['connected'] ? 'success' : 'danger' ?>"><?= $status['database']['connected'] ? 'Conectada' : 'No disponible' ?></dd><dt class="col-sm-6">Esquema público</dt><dd class="col-sm-6"><?= h($status['database']['schema']) ?></dd><dt class="col-sm-6">Almacenamiento</dt><dd class="col-sm-6"><?= h($status['storage']['driver']) ?> · <?= h($status['storage']['path']) ?></dd><dt class="col-sm-6">Espacio libre aprox.</dt><dd class="col-sm-6"><?= h($formatBytes($status['storage']['free_bytes'])) ?></dd><dt class="col-sm-6">Uploads escribible</dt><dd class="col-sm-6"><?= $status['storage']['uploads_writable'] ? 'Sí' : 'No' ?></dd><dt class="col-sm-6">Logs escribible</dt><dd class="col-sm-6"><?= $status['storage']['logs_writable'] ? 'Sí' : 'No' ?></dd><dt class="col-sm-6">Temporal escribible</dt><dd class="col-sm-6"><?= $status['storage']['tmp_writable'] ? 'Sí' : 'No' ?></dd></dl></div></section></div>
+  <div class="col-12"><section class="card admin-card"><div class="card-body"><h2 class="h5">Últimos procesos programados</h2><div class="table-wrap"><table class="table table-sm align-middle mb-0"><thead><tr><th>Proceso</th><th>Inicio</th><th>Fin</th><th>Estado</th><th>Procesados</th><th>Omitidos</th><th>Errores</th><th>Resumen</th></tr></thead><tbody><?php foreach ($status['processes'] as $name => $run): ?><tr><td><?= h($name) ?></td><?php if ($run): ?><td><?= h($run->started_at) ?></td><td><?= h($run->finished_at ?: 'En curso') ?></td><td><?= h($run->status) ?></td><td><?= (int)$run->processed_count ?></td><td><?= (int)$run->skipped_count ?></td><td><?= (int)$run->error_count ?></td><td><?= h($run->message ?: '—') ?></td><?php else: ?><td colspan="7" class="text-muted">Sin ejecuciones registradas.</td><?php endif; ?></tr><?php endforeach; ?></tbody></table></div></div></section></div>
+  <div class="col-12"><section class="card admin-card"><div class="card-body"><h2 class="h5">Métricas operativas</h2><div class="row g-3"><div class="col-6 col-md-3"><div class="border rounded p-3"><small class="text-muted d-block">Pagos pendientes</small><strong class="h4 mb-0"><?= (int)$status['metrics']['payments_pending'] ?></strong></div></div><div class="col-6 col-md-3"><div class="border rounded p-3"><small class="text-muted d-block">Conciliación fallida</small><strong class="h4 mb-0"><?= (int)$status['metrics']['payments_reconcile_failed'] ?></strong></div></div><div class="col-6 col-md-3"><div class="border rounded p-3"><small class="text-muted d-block">Licencias sin procesar</small><strong class="h4 mb-0"><?= (int)$status['metrics']['subscriptions_unprocessed'] ?></strong></div></div><div class="col-6 col-md-3"><div class="border rounded p-3"><small class="text-muted d-block">Sitios pausados por vencimiento</small><strong class="h4 mb-0"><?= (int)$status['metrics']['sites_paused_expired'] ?></strong></div></div></div></div></section></div>
+</div>

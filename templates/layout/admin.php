@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><?= h($this->fetch('title') ?: 'Administración | CatOps') ?></title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <style>
+    :root { --catops-orange: #f36b16; --catops-blue: #0a2a66; }
+    body { background: #f6f8fb; color: #1e293b; }
+    .admin-nav { background: #10295b; }
+    .admin-nav .navbar-brand, .admin-nav .nav-link { color: #fff; }
+    .admin-nav .nav-link:hover, .admin-nav .nav-link:focus { color: #ffd7bd; }
+    .admin-nav .nav-link.active { color: #fff; font-weight: 700; }
+    .admin-brand-mark { color: #ff8a43; font-weight: 800; }
+    .admin-page { max-width: 1440px; }
+    .stat-card { border: 0; border-left: 4px solid var(--catops-orange); box-shadow: 0 .25rem 1rem rgba(15, 23, 42, .06); }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-wrap table { min-width: 760px; margin-bottom: 0; }
+    .admin-card { border: 0; box-shadow: 0 .25rem 1rem rgba(15, 23, 42, .06); }
+    .badge-status { font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; }
+    .payload { max-height: 300px; overflow: auto; white-space: pre-wrap; word-break: break-word; font-size: .78rem; }
+    .action-form { display: inline; }
+    @media (max-width: 575.98px) {
+      .admin-page { padding-left: 12px; padding-right: 12px; }
+      .page-heading { align-items: start !important; flex-direction: column; }
+      .action-form, .action-form .btn { width: 100%; }
+      .action-form { margin-bottom: .5rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark admin-nav sticky-top shadow-sm">
+    <div class="container-fluid admin-page">
+      <a class="navbar-brand" href="/admin"><span class="admin-brand-mark">CatOps</span> Admin</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminMenu" aria-controls="adminMenu" aria-expanded="false" aria-label="Abrir menú">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="adminMenu">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <?php foreach ([
+              '/admin/users' => 'Usuarios', '/admin/sites' => 'Sitios', '/admin/subscriptions' => 'Suscripciones',
+              '/admin/payments' => 'Pagos', '/admin/domains' => 'Dominios', '/admin/plans' => 'Planes',
+              '/admin/audit-logs' => 'Auditoría', '/admin/system-status' => 'Sistema',
+          ] as $url => $label): ?>
+            <li class="nav-item"><a class="nav-link<?= str_starts_with((string)$this->getRequest()->getUri()->getPath(), $url) ? ' active' : '' ?>" href="<?= h($url) ?>"><?= h($label) ?></a></li>
+          <?php endforeach; ?>
+        </ul>
+        <div class="d-flex align-items-lg-center gap-2">
+          <span class="small text-white-50"><?= h($currentUser['name'] ?? '') ?></span>
+          <a class="btn btn-sm btn-outline-light" href="/panel">Panel cliente</a>
+          <a class="btn btn-sm btn-warning" href="/logout">Salir</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <main class="container-fluid admin-page py-4 py-lg-5">
+    <?= $this->Flash->render() ?>
+    <?= $this->fetch('content') ?>
+  </main>
+  <script src="/js/jquery-3.6.0.min.js"></script>
+  <script src="/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('submit', function (event) {
+      var form = event.target.closest('form[data-admin-confirm]');
+      if (form && !window.confirm(form.dataset.adminConfirm)) {
+        event.preventDefault();
+      }
+    });
+  </script>
+</body>
+</html>

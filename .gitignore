@@ -1,2 +1,19 @@
 .DS_Store
 access/mmd/entel_combi/video_entel_mmd.mp4
+
+# CakePHP local/generated files
+/config/app_local.php
+/config/.env
+/logs/*
+/tmp/*
+/vendor/*
+
+# Tool/editor files
+.phpunit.cache
+tests.sqlite
+*~
+*.swp
+*.swo
+.idea/*
+.vscode
+/node_modules/*

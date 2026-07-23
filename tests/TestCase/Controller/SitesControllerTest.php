@@ -1,0 +1,464 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Test\TestCase\Controller;
+
+use Cake\Core\Configure;
+use Cake\Datasource\FactoryLocator;
+use Cake\I18n\DateTime;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
+
+class SitesControllerTest extends TestCase
+{
+    use IntegrationTestTrait;
+
+    private ?string $previousBaseDomain = null;
+    private ?string $previousPublicScheme = null;
+    private int $userId;
+    private int $templateId;
+    private int $themeId;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->previousBaseDomain = getenv('APP_BASE_DOMAIN') !== false ? (string)getenv('APP_BASE_DOMAIN') : null;
+        $this->previousPublicScheme = getenv('APP_PUBLIC_SCHEME') !== false ? (string)getenv('APP_PUBLIC_SCHEME') : null;
+        putenv('APP_BASE_DOMAIN=catops.local');
+        putenv('APP_PUBLIC_SCHEME=http');
+
+        $this->ensurePlan();
+        $this->templateId = $this->ensureTemplate();
+        $this->themeId = $this->ensureTheme();
+        $this->userId = $this->createUser('cliente-' . uniqid() . '@example.test');
+        $this->createActiveSubscription($this->userId);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->previousBaseDomain === null ? putenv('APP_BASE_DOMAIN') : putenv('APP_BASE_DOMAIN=' . $this->previousBaseDomain);
+        $this->previousPublicScheme === null ? putenv('APP_PUBLIC_SCHEME') : putenv('APP_PUBLIC_SCHEME=' . $this->previousPublicScheme);
+
+        parent::tearDown();
+    }
+
+    public function testCreateSite(): void
+    {
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/nuevo', [
+            'name' => 'Café Alpha',
+            'subdomain' => 'cafe-alpha',
+            'template_id' => $this->templateId,
+            'theme_id' => $this->themeId,
+            'whatsapp_country_code' => '56',
+            'whatsapp_number' => '912345678',
+            'seo_title' => 'Café Alpha',
+            'seo_description' => 'Carta simple para Café Alpha.',
+        ]);
+
+        $this->assertRedirectContains('/sitios/editar/');
+
+        $site = $this->table('Sites')->find()
+            ->where(['subdomain' => 'cafe-alpha'])
+            ->first();
+        $this->assertNotEmpty($site);
+        $this->assertSame('draft', $site->status);
+        $domain = $this->table('Domains')->find()->where(['site_id' => $site->id, 'type' => 'subdomain'])->first();
+        $this->assertNotEmpty($domain);
+        $this->assertSame('cafe-alpha.catops.local', $domain->domain);
+    }
+
+    public function testDuplicateSubdomainIsRejected(): void
+    {
+        $otherUserId = $this->createUser('dueno-' . uniqid() . '@example.test');
+        $this->createActiveSubscription($otherUserId);
+        $this->createSite($otherUserId, 'duplicado');
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/nuevo', [
+            'name' => 'Duplicado',
+            'subdomain' => 'duplicado',
+            'template_id' => $this->templateId,
+            'theme_id' => $this->themeId,
+            'whatsapp_country_code' => '56',
+            'whatsapp_number' => '912345678',
+        ]);
+
+        $this->assertResponseOk();
+        $this->assertSame(1, $this->table('Sites')->find()->where(['subdomain' => 'duplicado'])->count());
+    }
+
+    public function testReservedSubdomainIsRejected(): void
+    {
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/nuevo', [
+            'name' => 'Admin',
+            'subdomain' => 'admin',
+            'template_id' => $this->templateId,
+            'theme_id' => $this->themeId,
+            'whatsapp_country_code' => '56',
+            'whatsapp_number' => '912345678',
+        ]);
+
+        $this->assertResponseOk();
+        $this->assertSame(0, $this->table('Sites')->find()->where(['subdomain' => 'admin'])->count());
+    }
+
+    public function testPublishRequiresPost(): void
+    {
+        $siteId = $this->createSite($this->userId, 'sitio-get');
+        $this->loginAs($this->userId);
+
+        $this->get('/sitios/publicar/' . $siteId);
+
+        $this->assertResponseCode(405);
+    }
+
+    public function testPublishSiteWithPost(): void
+    {
+        $siteId = $this->createSite($this->userId, 'sitio-post');
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/publicar/' . $siteId);
+
+        $this->assertRedirect('/sitios/editar/' . $siteId);
+        $site = $this->table('Sites')->get($siteId);
+        $this->assertSame('published', $site->status);
+        $this->assertNotEmpty($site->published_at);
+    }
+
+    public function testCannotPublishAnotherUsersSite(): void
+    {
+        $otherUserId = $this->createUser('otro-publicar-' . uniqid() . '@example.test');
+        $this->createActiveSubscription($otherUserId);
+        $siteId = $this->createSite($otherUserId, 'publicar-ajeno');
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/publicar/' . $siteId);
+
+        $this->assertResponseCode(404);
+        $this->assertSame('draft', $this->table('Sites')->get($siteId)->status);
+    }
+
+    public function testPublicationLimitByPlan(): void
+    {
+        $firstSiteId = $this->createSite($this->userId, 'limite-uno');
+        $secondSiteId = $this->createSite($this->userId, 'limite-dos');
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/publicar/' . $firstSiteId);
+        $this->post('/sitios/publicar/' . $secondSiteId);
+
+        $this->assertSame('draft', $this->table('Sites')->get($firstSiteId)->status);
+        $this->assertSame('draft', $this->table('Sites')->get($secondSiteId)->status);
+    }
+
+    public function testUnknownHostIsRejected(): void
+    {
+        $this->configRequest(['headers' => ['Host' => 'intruso.test']]);
+
+        $this->get('/');
+
+        $this->assertResponseCode(404);
+    }
+
+    public function testBaseHostDisplaysTheProductHomeAndActivePlans(): void
+    {
+        $plan = $this->table('Plans')->find()
+            ->where(['active' => true])
+            ->orderByAsc('sort_order')
+            ->firstOrFail();
+
+        $this->configRequest(['headers' => ['Host' => 'catops.local']]);
+        $this->get('/');
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('Tu catálogo, carta o servicios en un solo enlace');
+        $this->assertResponseContains($plan->name);
+        $this->assertResponseContains(number_format((int)$plan->monthly_price, 0, ',', '.'));
+    }
+
+    public function testPublishedSiteIsAccessibleByHostAndLegacyPath(): void
+    {
+        $siteId = $this->createSite($this->userId, 'pizzeria', 'Pizzería Demo');
+        $this->publishSiteDirectly($siteId);
+
+        $this->configRequest(['headers' => ['Host' => 'pizzeria.catops.local']]);
+        $this->get('/');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Pizzería Demo');
+
+        $this->configRequest(['headers' => ['Host' => 'catops.local']]);
+        $this->get('/s/pizzeria');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Pizzería Demo');
+    }
+
+    public function testLegacyPublicPathWorksWithProductionHostValidation(): void
+    {
+        $siteId = $this->createSite($this->userId, 'prueba', 'Sitio de prueba');
+        $this->publishSiteDirectly($siteId);
+        $previousDebug = Configure::read('debug');
+        $previousFullBaseUrl = Configure::read('App.fullBaseUrl');
+        $previousBaseDomain = getenv('APP_BASE_DOMAIN') !== false ? (string)getenv('APP_BASE_DOMAIN') : null;
+        Configure::write('debug', false);
+        Configure::write('App.fullBaseUrl', 'https://staging.catops.cl');
+        putenv('APP_BASE_DOMAIN=staging.catops.cl');
+
+        try {
+            $this->configRequest(['headers' => ['Host' => 'staging.catops.cl']]);
+            $this->get('/s/prueba');
+            $this->assertResponseOk();
+            $this->assertResponseContains('Sitio de prueba');
+        } finally {
+            Configure::write('debug', $previousDebug);
+            Configure::write('App.fullBaseUrl', $previousFullBaseUrl);
+            $previousBaseDomain === null ? putenv('APP_BASE_DOMAIN') : putenv('APP_BASE_DOMAIN=' . $previousBaseDomain);
+        }
+    }
+
+    public function testDraftSiteIsNotPublic(): void
+    {
+        $this->createSite($this->userId, 'borrador', 'Sitio Borrador');
+        $this->configRequest(['headers' => ['Host' => 'borrador.catops.local']]);
+
+        $this->get('/');
+
+        $this->assertResponseCode(404);
+        $this->assertResponseNotContains('Sitio Borrador');
+    }
+
+    public function testPausedSiteReturnsControlledMessage(): void
+    {
+        $siteId = $this->createSite($this->userId, 'pausado', 'Sitio Pausado');
+        $site = $this->table('Sites')->get($siteId);
+        $site->status = 'paused';
+        $this->table('Sites')->saveOrFail($site);
+        $this->configRequest(['headers' => ['Host' => 'pausado.catops.local']]);
+
+        $this->get('/');
+
+        $this->assertResponseCode(503);
+        $this->assertResponseContains('pausado temporalmente');
+    }
+
+    public function testExpiredSubscriptionPublicAccessHasNoSideEffects(): void
+    {
+        $siteId = $this->createSite($this->userId, 'vencido', 'Sitio Vencido');
+        $this->publishSiteDirectly($siteId);
+        $subscription = $this->table('Subscriptions')->find()->where(['user_id' => $this->userId])->firstOrFail();
+        $subscription->ends_at = DateTime::now()->subDays(1);
+        $this->table('Subscriptions')->saveOrFail($subscription);
+        $this->table('Payments')->updateAll([
+            'period_end' => DateTime::now()->subDays(1),
+        ], ['subscription_id' => $subscription->id]);
+        $this->configRequest(['headers' => ['Host' => 'vencido.catops.local']]);
+
+        $this->get('/');
+
+        $this->assertResponseCode(503);
+        $this->assertResponseContains('suscripción venció');
+        $this->assertSame('published', $this->table('Sites')->get($siteId)->status);
+    }
+
+    public function testTenantIsolationByHost(): void
+    {
+        $otherUserId = $this->createUser('tenant-' . uniqid() . '@example.test');
+        $this->createActiveSubscription($otherUserId);
+        $siteOneId = $this->createSite($this->userId, 'tenant-uno', 'Negocio Uno');
+        $siteTwoId = $this->createSite($otherUserId, 'tenant-dos', 'Negocio Dos');
+        $this->publishSiteDirectly($siteOneId);
+        $this->publishSiteDirectly($siteTwoId);
+        $this->configRequest(['headers' => ['Host' => 'tenant-uno.catops.local']]);
+
+        $this->get('/');
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('Negocio Uno');
+        $this->assertResponseNotContains('Negocio Dos');
+    }
+
+    public function testCannotEditAnotherUsersSite(): void
+    {
+        $otherUserId = $this->createUser('otro-' . uniqid() . '@example.test');
+        $this->createActiveSubscription($otherUserId);
+        $siteId = $this->createSite($otherUserId, 'sitio-ajeno');
+        $this->loginAs($this->userId);
+
+        $this->get('/sitios/editar/' . $siteId);
+
+        $this->assertResponseCode(404);
+    }
+
+    private function createUser(string $email): int
+    {
+        $users = $this->table('Users');
+        $user = $users->newEntity([
+            'name' => 'Cliente Test',
+            'email' => $email,
+            'password' => 'secret123',
+            'role' => 'customer',
+            'active' => true,
+            'email_verified' => true,
+        ]);
+        $users->saveOrFail($user);
+
+        return (int)$user->id;
+    }
+
+    private function ensurePlan(): void
+    {
+        $plans = $this->table('Plans');
+        if ($plans->find()->where(['slug' => 'basica'])->count() > 0) {
+            return;
+        }
+
+        $plans->saveOrFail($plans->newEntity([
+            'name' => 'Básico',
+            'slug' => 'basica',
+            'monthly_price' => 6990,
+            'max_sites' => 1,
+            'max_published' => 1,
+            'sort_order' => 1,
+            'active' => true,
+            'capabilities' => json_encode([
+                'sites_configured_limit' => 1,
+                'sites_published_limit' => 1,
+                'items_limit' => 40,
+                'categories_enabled' => false,
+                'enabled_templates' => ['carta-simple', 'catalogo-simple'],
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        ]));
+    }
+
+    private function ensureTemplate(): int
+    {
+        $templates = $this->table('Templates');
+        $template = $templates->find()->where(['slug' => 'carta-simple'])->first();
+        if ($template) {
+            $template->active = true;
+            $templates->saveOrFail($template);
+
+            return (int)$template->id;
+        }
+
+        $template = $templates->newEntity([
+            'name' => 'Carta simple',
+            'slug' => 'carta-simple',
+            'description' => 'Carta de prueba',
+            'active' => true,
+        ]);
+        $templates->saveOrFail($template);
+
+        return (int)$template->id;
+    }
+
+    private function ensureTheme(): int
+    {
+        $themes = $this->table('Themes');
+        $theme = $themes->find()->where(['slug' => 'catops-naranja'])->first();
+        if ($theme) {
+            $theme->active = true;
+            $themes->saveOrFail($theme);
+
+            return (int)$theme->id;
+        }
+
+        $theme = $themes->newEntity([
+            'name' => 'CatOps naranja',
+            'slug' => 'catops-naranja',
+            'primary_color' => '#f36b16',
+            'secondary_color' => '#0a2a66',
+            'background_color' => '#fbfaf7',
+            'font_family' => 'Inter, Arial, sans-serif',
+            'active' => true,
+        ]);
+        $themes->saveOrFail($theme);
+
+        return (int)$theme->id;
+    }
+
+    private function createActiveSubscription(int $userId): void
+    {
+        $now = DateTime::now();
+        $end = DateTime::now()->addDays(30);
+        $subscriptions = $this->table('Subscriptions');
+        $subscription = $subscriptions->newEntity([
+            'user_id' => $userId,
+            'plan_slug' => 'basica',
+            'status' => 'active',
+            'starts_at' => $now,
+            'ends_at' => $end,
+            'notes' => 'Test subscription',
+        ]);
+        $subscriptions->saveOrFail($subscription);
+
+        $payments = $this->table('Payments');
+        $payments->saveOrFail($payments->newEntity([
+            'user_id' => $userId,
+            'subscription_id' => $subscription->id,
+            'plan_slug' => 'basica',
+            'status' => 'paid',
+            'amount' => 6990,
+            'currency' => 'CLP',
+            'provider' => 'manual',
+            'provider_reference' => 'test-' . $userId,
+            'paid_at' => $now,
+            'period_start' => $now,
+            'period_end' => $end,
+        ]));
+    }
+
+    private function createSite(int $userId, string $subdomain, string $name = 'Sitio Test'): int
+    {
+        $sites = $this->table('Sites');
+        $site = $sites->newEntity([
+            'user_id' => $userId,
+            'template_id' => $this->templateId,
+            'theme_id' => $this->themeId,
+            'name' => $name,
+            'slug' => $subdomain,
+            'subdomain' => $subdomain,
+            'status' => 'draft',
+            'whatsapp_country_code' => '56',
+            'whatsapp_number' => '912345678',
+        ]);
+        $sites->saveOrFail($site);
+
+        return (int)$site->id;
+    }
+
+    private function publishSiteDirectly(int $siteId): void
+    {
+        $site = $this->table('Sites')->get($siteId);
+        $site->status = 'published';
+        $site->published_at = DateTime::now();
+        $this->table('Sites')->saveOrFail($site);
+    }
+
+    private function loginAs(int $userId): void
+    {
+        $this->session([
+            'Auth.User' => [
+                'id' => $userId,
+                'name' => 'Cliente Test',
+                'email' => 'cliente@example.test',
+                'role' => 'customer',
+            ],
+        ]);
+    }
+
+    private function table(string $name): object
+    {
+        return FactoryLocator::get('Table')->get($name);
+    }
+}

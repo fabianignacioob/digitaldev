@@ -1,0 +1,89 @@
+--------------------------------------------------------------------------
+Version v3.4 - 26th March, 2022
+--------------------------------------------------------------------------
+
+	- NEW: Demo - Cargo - Transport & Logistics (Multipage)
+	- NEW: Demo - Car Repair & Auto Services (Multipage)
+	- NEW: Demo - Health and Yoga (Multipage)
+	- NEW: Demo - Packers and Movers (Multipage)
+	- NEW: Demo - Packers and Movers (Multipage)
+	- NEW: Demo - Law Firm and Lawyer (Multipage)
+	- NEW: Demo - Building Construction (Multipage)
+	- NEW: Demo - Agency (Onepage)
+	- NEW: Demo - Creative Agency (Onepage)
+	- NEW: Demo - Event & Conference (Onepage)
+	- NEW: Demo - Fitness and GYM (Onepage)
+	- NEW: Demo - Product Landing (Multipage)
+	- NEW: Demo - App and SaaS Landing (Multipage)
+	- NEW: Demo - Spa & Beauty (Multipage)
+	- NEW: Demo - Wedding & Wedding Planner (Multipage)
+	- NEW: Features Added
+	- NEW: Added New Footer Styles
+	- NEW: Added New Header Styles
+	- UPDATED - Portfolio Gallery
+	- UPDATED - Container Width
+	- UPDATED - Overall Templtae Checking Fixed Minor Bugs
+	- UPDATED - One Page Demos Default Class Update
+	- UPDATED - CSS Updated
+	- UPDATED: Elements Updated (New Added - Buttons, Modal and Media Object, Form elements and Font icons)
+	- UPDATED: Latest jQuery
+	- UPDATED: Latest Bootstrap Version
+	- UPDATED: Contact Forms and Newsletter
+	- UPDATED: Inner Pages Header
+	- UPDATED: Portfolio Page Gallery
+	- UPDATED: Default CSS
+	- UPDATED: Classes, Maximum Use of Bootstrap Classes
+	- UPDATED: General Design Update
+	- UPDATED: Latest Fontawesome
+	- UPDATED: Font Typography
+	- UPDATED: Loader Update
+	- UPDATED: Navigation
+	- DELETED: Map JS
+	- DELETED: Tab JS
+	- DELETED: Switcher CSS and JS
+	
+--------------------------------------------------------------------------
+Version v3.3 - 27th June, 2019
+--------------------------------------------------------------------------
+
+	- NEW: Pet - Adoption, Care and Shop (Multipage Demo)
+	- NEW: Charity Non-Profit (Multipage Demo)
+	- NEW: Kids - School Education and Shop (Multipage Demo)
+	- UPDATED: Elements
+	- UPDATED: Admin Template Footer Copyright Text Alignment
+	- UPDATED: Portfolio Masonry Hover Style Effect
+	
+--------------------------------------------------------------------------
+Version v3.2 - 10th May, 2019
+--------------------------------------------------------------------------
+
+	- NEW: University (Multipage Demo)
+	- NEW: Charity Non-Profit (Multipage Demo)
+	- NEW: One Page Portfolio Layout
+	- UPDATED: Navigation Menu
+	- UPDATED: Bootstrap v4.3.1
+	
+--------------------------------------------------------------------------
+Version v3.1 - 08th April, 2019
+--------------------------------------------------------------------------
+
+	- NEW: Admin Dashboard and Pages
+	
+--------------------------------------------------------------------------
+Version v3.0 - 23rd February, 2019
+--------------------------------------------------------------------------
+
+	- FIXED: Navigation Active Link
+	- ENHANCED: Short-code
+	- NEW: Corporate Layout
+	- NEW: Agency Layout
+	- NEW: One Page Portfolio Layout
+	- NEW: App Landing
+	- NEW: Restaurant Landing
+	- NEW: Startup Agency (Multi Page Demo)
+ 
+--------------------------------------------------------------------------
+Version v2.0
+--------------------------------------------------------------------------
+
+ - Initial release
