@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Service;
@@ -443,7 +444,7 @@ class PlanService
             ['label' => 'Carta y catálogo', 'value' => $categories ? 'Simples y por categorías' : 'Formato simple', 'status' => 'available'],
             ['label' => 'Categorías', 'value' => $categories ? 'Incluidas' : 'No incluidas', 'status' => 'available'],
             ['label' => 'Productos destacados', 'value' => $capabilities['featured_items_enabled'] ? 'Incluidos' : 'No incluidos', 'status' => 'available'],
-            ['label' => 'Personalización', 'value' => $this->levelLabel($customization), 'status' => $customization === 'basic' ? 'available' : 'coming_soon'],
+            // ['label' => 'Personalización', 'value' => $this->levelLabel($customization), 'status' => $customization === 'basic' ? 'available' : 'coming_soon'],
             ['label' => 'Estadísticas', 'value' => $analytics === 'none' ? 'No incluidas' : $this->levelLabel($analytics), 'status' => $analytics === 'none' ? 'available' : 'coming_soon'],
             ['label' => 'SEO', 'value' => $this->levelLabel($seo), 'status' => $seo === 'basic' ? 'available' : 'coming_soon'],
             ['label' => 'Código QR', 'value' => $capabilities['qr_enabled'] ? 'Incluido' : 'No incluido', 'status' => $capabilities['qr_enabled'] ? 'coming_soon' : 'available'],

@@ -272,7 +272,8 @@ $planIntro = [
       }
       @media (max-width: 980px) {
         .nav-toggle { display: inline-grid; place-items: center; }
-        .nav-wrap { flex-wrap: wrap; }
+        .nav-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
+        .nav-wrap > nav { grid-column: 1 / -1; min-width: 0; }
         .nav-links { display: none; flex: 0 0 100%; width: 100%; align-items: stretch; padding: 8px 0 16px; }
         .nav-wrap.is-open .nav-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .nav-links a { justify-content: center; border-radius: 7px; }
