@@ -110,6 +110,40 @@ class SubscriptionServiceTest extends TestCase
         $this->assertNull($site->paused_reason);
     }
 
+    public function testTrialStartsOnlyOnFirstPublicationAndCanBeUsedOnce(): void
+    {
+        $this->ensureTrialPlan();
+        $userId = $this->createUser();
+
+        $trial = $this->service->createTrialForUser($userId);
+        $this->assertSame(SubscriptionService::STATUS_TRIAL_PENDING, $trial->status);
+        $this->assertNull($trial->ends_at);
+        $this->assertNotEmpty($trial->trial_registration_expires_at);
+        $this->assertTrue($this->service->isActive($trial));
+
+        $trial = $this->service->startTrialOnFirstPublication($trial);
+        $this->assertSame(SubscriptionService::STATUS_ACTIVE, $trial->status);
+        $this->assertNotEmpty($trial->trial_started_at);
+        $this->assertEquals(DateTime::now()->addDays(7)->format('Y-m-d'), $trial->ends_at->format('Y-m-d'));
+
+        $this->expectException(\RuntimeException::class);
+        $this->service->createTrialForUser($userId);
+    }
+
+    public function testUnpublishedTrialExpiresWithoutGraceAndPreservesData(): void
+    {
+        $this->ensureTrialPlan();
+        $userId = $this->createUser();
+        $trial = $this->service->createTrialForUser($userId);
+        $trial->trial_registration_expires_at = DateTime::now()->subMinutes(1);
+        $this->table('Subscriptions')->saveOrFail($trial);
+
+        $expired = $this->service->processExpiration($trial);
+        $this->assertSame(SubscriptionService::STATUS_EXPIRED, $expired->status);
+        $this->assertFalse($this->service->isActive($expired));
+        $this->assertSame(0, $this->table('Sites')->find()->where(['user_id' => $userId])->count());
+    }
+
     private function createUser(): int
     {
         $user = $this->table('Users')->newEntity([
@@ -158,6 +192,32 @@ class SubscriptionServiceTest extends TestCase
         $this->table('Payments')->saveOrFail($payment);
 
         return $payment;
+    }
+
+    private function ensureTrialPlan(): void
+    {
+        $plans = $this->table('Plans');
+        $plan = $plans->find()->where(['slug' => 'trial'])->first() ?: $plans->newEntity([
+            'name' => 'Prueba gratuita',
+            'slug' => 'trial',
+            'monthly_price' => 0,
+            'max_sites' => 1,
+            'max_published' => 1,
+            'sort_order' => 0,
+            'active' => true,
+        ]);
+        $plan->active = true;
+        $plan->capabilities = json_encode([
+            'trial_enabled' => true,
+            'trial_duration_days' => 7,
+            'trial_expire_after_registration_days' => 14,
+            'sites_configured_limit' => 1,
+            'sites_published_limit' => 1,
+            'items_limit' => 20,
+            'categories_limit' => 3,
+            'enabled_templates' => ['carta-simple'],
+        ]);
+        $plans->saveOrFail($plan);
     }
 
     private function createSite(int $userId, string $status, ?string $pausedReason = null): int

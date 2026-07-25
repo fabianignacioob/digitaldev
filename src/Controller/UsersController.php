@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\SubscriptionService;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\I18n\DateTime;
@@ -61,7 +62,7 @@ class UsersController extends AppController
                 if (!$user->email_verified) {
                     $this->request->getSession()->write('PendingVerification', [
                         'user_id' => $user->id,
-                        'plan' => 'basica',
+                        'plan' => $this->defaultRegistrationPlan(),
                     ]);
                     $this->Flash->warning('Antes de entrar debes verificar tu correo.');
 
@@ -125,6 +126,17 @@ class UsersController extends AppController
             $user->verification_sent_at = null;
             $this->fetchTable('Users')->saveOrFail($user);
 
+            $selectedPlan = (string)($pending['plan'] ?? '');
+            $trialCreated = false;
+            if ($selectedPlan !== '' && ($plan = $this->planService()->getPlanBySlug($selectedPlan)) && $this->planService()->isTrialPlan($plan)) {
+                try {
+                    (new SubscriptionService())->createTrialForUser((int)$user->id);
+                    $trialCreated = true;
+                } catch (\RuntimeException $exception) {
+                    $this->Flash->warning($exception->getMessage());
+                }
+            }
+
             $session->delete('PendingVerification');
             $session->write('Auth.User', [
                 'id' => $user->id,
@@ -133,9 +145,11 @@ class UsersController extends AppController
                 'role' => $user->role,
             ]);
 
-            $this->Flash->success('Correo verificado. Elige un plan para activar tu primer sitio.');
+            $this->Flash->success($trialCreated
+                ? 'Correo verificado. Puedes crear tu sitio; la prueba de 7 días comienza al publicarlo.'
+                : 'Correo verificado. Elige un plan para activar tu primer sitio.');
 
-            return $this->redirect('/planes');
+            return $this->redirect($trialCreated ? '/panel' : '/planes');
         }
 
         $this->set(compact('email'));
@@ -165,8 +179,23 @@ class UsersController extends AppController
 
     public function activatePlan(string $plan): Response
     {
+        $this->request->allowMethod(['post']);
         if ($redirect = $this->requireLogin()) {
             return $redirect;
+        }
+
+        $selectedPlan = $this->planService()->getPlanBySlug($plan);
+        if ($selectedPlan && $this->planService()->isTrialPlan($selectedPlan)) {
+            try {
+                (new SubscriptionService())->createTrialForUser((int)$this->currentUserId());
+                $this->Flash->success('Prueba gratuita activada. Crea y publica tu primer sitio para iniciar los 7 días.');
+
+                return $this->redirect('/panel');
+            } catch (\RuntimeException $exception) {
+                $this->Flash->warning($exception->getMessage());
+
+                return $this->redirect('/planes');
+            }
         }
 
         $this->Flash->warning('La activación se completa después de confirmar el pago.');
@@ -193,7 +222,12 @@ class UsersController extends AppController
             $plan = 'full';
         }
 
-        return $this->planService()->getPlanBySlug($plan) ? $plan : 'basica';
+        return $this->planService()->getPlanBySlug($plan) ? $plan : $this->defaultRegistrationPlan();
+    }
+
+    private function defaultRegistrationPlan(): string
+    {
+        return (string)($this->planService()->trialPlan()?->slug ?? 'basica');
     }
 
     private function setVerificationCode(object $user): string

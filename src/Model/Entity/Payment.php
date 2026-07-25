@@ -11,6 +11,7 @@ class Payment extends Entity
         'user_id' => true,
         'subscription_id' => true,
         'plan_slug' => true,
+        'billing_cycle' => true,
         'status' => true,
         'amount' => true,
         'expected_amount' => true,

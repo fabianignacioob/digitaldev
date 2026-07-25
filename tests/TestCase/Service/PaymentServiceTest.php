@@ -115,6 +115,37 @@ class PaymentServiceTest extends TestCase
         $this->assertSame(16990, (int)$payment->expected_amount);
     }
 
+    public function testAnnualOrderUsesAnnualPriceAndRenewsForAnnualDuration(): void
+    {
+        $plan = $this->table('Plans')->find()->where(['slug' => 'basica'])->firstOrFail();
+        $plan->annual_price = 76900;
+        $plan->capabilities = json_encode([
+            'annual_available' => true,
+            'annual_price' => 76900,
+            'sites_configured_limit' => 1,
+            'sites_published_limit' => 1,
+            'items_limit' => 80,
+            'enabled_templates' => ['carta-simple'],
+        ]);
+        $this->table('Plans')->saveOrFail($plan);
+        $userId = $this->createUser();
+
+        $payment = $this->service->createPendingOrder($userId, 'basica', 'annual');
+        $this->assertSame('annual', $payment->billing_cycle);
+        $this->assertSame(76900, (int)$payment->expected_amount);
+
+        $payment = $this->service->confirm($payment, [
+            'amount' => 76900,
+            'currency' => 'CLP',
+            'buy_order' => $payment->buy_order,
+            'session_id' => $payment->session_id,
+            'provider_reference' => 'tx-annual-' . uniqid(),
+        ]);
+        $subscription = $this->table('Subscriptions')->get($payment->subscription_id);
+        $this->assertSame('annual', $subscription->billing_cycle);
+        $this->assertGreaterThanOrEqual(DateTime::now()->addDays(364)->getTimestamp(), $subscription->ends_at->getTimestamp());
+    }
+
     public function testConfirmRejectsWrongAmountAndCurrency(): void
     {
         $userId = $this->createUser();

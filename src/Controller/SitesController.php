@@ -5,6 +5,8 @@ namespace App\Controller;
 
 use App\Service\LocalImageStorageService;
 use App\Service\PublicUrlService;
+use App\Service\SubscriptionService;
+use Cake\Datasource\ConnectionManager;
 use Cake\Http\Response;
 use Cake\I18n\DateTime;
 use InvalidArgumentException;
@@ -125,9 +127,26 @@ class SitesController extends AppController
             }
             $oldLogoPath = $site->logo_path;
 
+            $previousStatus = (string)$site->status;
             $site = $sites->patchEntity($site, $data);
+            if ($site->status === 'published' && !$site->published_at) {
+                $site->published_at = DateTime::now();
+            }
 
-            if ($sites->save($site)) {
+            try {
+                ConnectionManager::get('default')->transactional(function () use ($site, $sites, $previousStatus): void {
+                    if ($site->status === 'published' && $previousStatus !== 'published') {
+                        $this->subscriptionService()->startTrialOnFirstPublication($this->currentSubscription());
+                    }
+                    $sites->saveOrFail($site);
+                });
+            } catch (\Throwable $exception) {
+                $this->Flash->error($exception->getMessage() ?: 'No pudimos guardar los cambios.');
+
+                return $this->redirect(['action' => 'edit', $site->id]);
+            }
+
+            if ($site->id) {
                 if ($logoPath && $oldLogoPath) {
                     $this->imageStorage()->delete((string)$oldLogoPath);
                 }
@@ -210,7 +229,16 @@ class SitesController extends AppController
         if (!$site->published_at) {
             $site->set('published_at', DateTime::now());
         }
-        $sites->saveOrFail($site);
+        try {
+            ConnectionManager::get('default')->transactional(function () use ($site, $sites): void {
+                $this->subscriptionService()->startTrialOnFirstPublication($this->currentSubscription());
+                $sites->saveOrFail($site);
+            });
+        } catch (\Throwable $exception) {
+            $this->Flash->error($exception->getMessage() ?: 'No pudimos publicar el sitio.');
+
+            return $this->redirect(['action' => 'edit', $site->id]);
+        }
         $this->Flash->success('Sitio publicado.');
 
         return $this->redirect(['action' => 'edit', $site->id]);
@@ -375,5 +403,10 @@ class SitesController extends AppController
     private function publicUrlService(): PublicUrlService
     {
         return new PublicUrlService();
+    }
+
+    private function subscriptionService(): SubscriptionService
+    {
+        return new SubscriptionService();
     }
 }

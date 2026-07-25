@@ -26,9 +26,13 @@ class PlansTable extends Table
             ->scalar('name')->maxLength('name', 80)->requirePresence('name', 'create')->notEmptyString('name')
             ->scalar('slug')->maxLength('slug', 40)->requirePresence('slug', 'create')->notEmptyString('slug')
             ->integer('monthly_price')->notEmptyString('monthly_price')
+            ->integer('annual_price')->allowEmptyString('annual_price')
             ->integer('max_sites')->notEmptyString('max_sites')
             ->integer('max_published')->notEmptyString('max_published')
             ->allowEmptyArray('capabilities')
+            ->allowEmptyArray('annual_benefits')
+            ->scalar('commercial_description')->maxLength('commercial_description', 255)->allowEmptyString('commercial_description')
+            ->scalar('commercial_badge')->maxLength('commercial_badge', 60)->allowEmptyString('commercial_badge')
             ->integer('sort_order')
             ->boolean('active');
     }

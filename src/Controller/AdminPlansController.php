@@ -11,12 +11,16 @@ class AdminPlansController extends AdminController
 {
     private const BOOLEAN_CAPABILITIES = [
         'categories_enabled',
+        'whatsapp_enabled',
         'featured_items_enabled',
         'qr_enabled',
         'custom_domain_enabled',
         'premium_themes_enabled',
-        'catops_branding_removable',
         'priority_support',
+        'trial_enabled',
+        'domain_credit',
+        'annual_available',
+        'branding_removable',
     ];
 
     public function index(): void
@@ -38,8 +42,13 @@ class AdminPlansController extends AdminController
             $reason = $this->adminReason();
             $data = $this->request->getData();
             $capabilities = $this->capabilitiesFromRequest($data);
-            $data['capabilities'] = json_encode($capabilities, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             $data['monthly_price'] = max(0, (int)($data['monthly_price'] ?? 0));
+            $data['annual_price'] = max(0, (int)($data['annual_price'] ?? 0)) ?: null;
+            $capabilities['annual_price'] = (int)($data['annual_price'] ?? 0);
+            $data['capabilities'] = json_encode($capabilities, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $data['annual_benefits'] = json_encode($this->annualBenefitsFromRequest($data), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $data['commercial_description'] = trim((string)($data['commercial_description'] ?? '')) ?: null;
+            $data['commercial_badge'] = trim((string)($data['commercial_badge'] ?? '')) ?: null;
             $data['max_sites'] = (int)$capabilities['sites_configured_limit'];
             $data['max_published'] = (int)$capabilities['sites_published_limit'];
             $data['sort_order'] = max(0, (int)($data['sort_order'] ?? 0));
@@ -72,7 +81,7 @@ class AdminPlansController extends AdminController
         foreach (self::BOOLEAN_CAPABILITIES as $key) {
             $capabilities[$key] = $submitted[$key] ?? false;
         }
-        foreach (['sites_configured_limit', 'sites_published_limit', 'items_limit', 'categories_limit', 'image_storage_limit_mb'] as $key) {
+        foreach (['sites_configured_limit', 'sites_published_limit', 'items_limit', 'categories_limit', 'image_storage_limit_mb', 'trial_duration_days', 'trial_expire_after_registration_days', 'custom_domains_limit', 'annual_price'] as $key) {
             $capabilities[$key] = $submitted[$key] ?? 0;
         }
         $capabilities['enabled_templates'] = array_values(array_filter(
@@ -85,6 +94,15 @@ class AdminPlansController extends AdminController
 
         try {
             return $this->planService()->validateCapabilityInput($capabilities);
+        } catch (\InvalidArgumentException $exception) {
+            throw new BadRequestException($exception->getMessage());
+        }
+    }
+
+    private function annualBenefitsFromRequest(array $data): array
+    {
+        try {
+            return $this->planService()->validateAnnualBenefits((array)($data['annual_benefits'] ?? []));
         } catch (\InvalidArgumentException $exception) {
             throw new BadRequestException($exception->getMessage());
         }

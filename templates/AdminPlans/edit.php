@@ -19,6 +19,10 @@
             <label class="form-label" for="plan-price">Precio mensual CLP</label>
             <input class="form-control" id="plan-price" type="number" min="0" name="monthly_price" value="<?= (int)$plan->monthly_price ?>" required>
           </div>
+          <div class="col-md-5">
+            <label class="form-label" for="plan-annual-price">Precio anual CLP</label>
+            <input class="form-control" id="plan-annual-price" type="number" min="0" name="annual_price" value="<?= (int)($plan->annual_price ?? 0) ?>">
+          </div>
           <div class="col-md-6">
             <label class="form-label" for="plan-order">Orden comercial</label>
             <input class="form-control" id="plan-order" type="number" min="0" name="sort_order" value="<?= (int)$plan->sort_order ?>">
@@ -28,6 +32,14 @@
               <input class="form-check-input" type="checkbox" name="active" value="1" id="active" <?= $plan->active ? 'checked' : '' ?>>
               <label class="form-check-label" for="active">Plan activo</label>
             </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="plan-description">Descripción comercial</label>
+            <input class="form-control" id="plan-description" name="commercial_description" maxlength="255" value="<?= h((string)($plan->commercial_description ?? '')) ?>">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="plan-badge">Distintivo comercial</label>
+            <input class="form-control" id="plan-badge" name="commercial_badge" maxlength="60" value="<?= h((string)($plan->commercial_badge ?? '')) ?>" placeholder="Ej.: Recomendado">
           </div>
         </div>
         <p class="small text-muted mb-0 mt-3">Los límites se guardan desde Capacidades para mantener una única fuente de verdad.</p>
@@ -45,6 +57,10 @@
             'items_limit' => 'Ítems por sitio',
             'categories_limit' => 'Categorías por sitio',
             'image_storage_limit_mb' => 'Almacenamiento de imágenes (MB)',
+            'trial_duration_days' => 'Duración de prueba desde publicación (días)',
+            'trial_expire_after_registration_days' => 'Vencimiento de prueba sin publicar (días)',
+            'custom_domains_limit' => 'Dominios propios preparados',
+            'annual_price' => 'Precio anual de capacidad (referencia)',
         ] as $key => $label): ?>
           <label class="form-label small" for="capability-<?= h($key) ?>"><?= h($label) ?></label>
           <input class="form-control form-control-sm mb-2" id="capability-<?= h($key) ?>" type="number" min="0" name="capabilities[<?= h($key) ?>]" value="<?= (int)($capabilities[$key] ?? 0) ?>">
@@ -70,18 +86,30 @@
         <hr>
         <?php foreach ([
             'categories_enabled' => 'Categorías',
+            'whatsapp_enabled' => 'WhatsApp',
             'featured_items_enabled' => 'Productos destacados',
             'qr_enabled' => 'Código QR',
             'custom_domain_enabled' => 'Dominio propio',
             'premium_themes_enabled' => 'Temas premium',
-            'catops_branding_removable' => 'Quitar marca CatOps',
             'priority_support' => 'Soporte prioritario',
+            'trial_enabled' => 'Prueba gratuita',
+            'domain_credit' => 'Crédito de dominio anual',
+            'annual_available' => 'Modalidad anual disponible',
+            'branding_removable' => 'Quitar marca CatOps',
         ] as $key => $label): ?>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" name="capabilities[<?= h($key) ?>]" value="1" id="<?= h($key) ?>" <?= !empty($capabilities[$key]) ? 'checked' : '' ?>>
             <label class="form-check-label" for="<?= h($key) ?>"><?= h($label) ?></label>
           </div>
         <?php endforeach; ?>
+
+        <hr>
+        <h3 class="h6">Beneficios anuales</h3>
+        <?php $annualBenefits = $planService ?? new \App\Service\PlanService(); $annual = $annualBenefits->annualBenefits($plan); ?>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="annual_benefits[domain_credit]" value="1" id="annual-domain-credit" <?= !empty($annual['domain_credit']) ? 'checked' : '' ?>>
+          <label class="form-check-label" for="annual-domain-credit">Crédito de dominio (preparado, aún no se entrega automáticamente)</label>
+        </div>
 
         <hr>
         <h3 class="h6">Plantillas habilitadas</h3>

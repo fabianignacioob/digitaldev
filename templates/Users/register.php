@@ -1,10 +1,15 @@
-<?php $this->assign('title', 'Crear cuenta | CatOps'); ?>
+<?php
+use App\Service\PlanService;
+
+$this->assign('title', 'Crear cuenta | CatOps');
+$selectedPlanName = $selectedPlan ? (new PlanService())->getPlanBySlug((string)$selectedPlan)?->name : null;
+?>
 
 <h1>Crear cuenta</h1>
-<p>Regístrate para crear una landing simple, elegir plantilla y editar los textos principales de tu negocio.</p>
+<p>Regístrate para crear una carta o catálogo editable para tu negocio. La prueba gratuita comienza cuando publiques tu primer sitio.</p>
 
-<?php if (!empty($selectedPlan)): ?>
-  <p class="message">Plan seleccionado: <strong><?= h(ucfirst((string)$selectedPlan)) ?></strong>. El pago mensual se coordinará cuando esté integrada la etapa comercial.</p>
+<?php if ($selectedPlanName): ?>
+  <p class="message">Opción seleccionada: <strong><?= h((string)$selectedPlanName) ?></strong>. Si eliges la prueba, tendrás 7 días desde la primera publicación y no necesitas tarjeta.</p>
 <?php endif; ?>
 
 <?= $this->Form->create($user) ?>

@@ -27,10 +27,13 @@ class SubscriptionsTable extends Table
             ->integer('user_id')->notEmptyString('user_id')
             ->scalar('plan_slug')->maxLength('plan_slug', 40)->notEmptyString('plan_slug')
             ->scalar('status')->maxLength('status', 30)->notEmptyString('status')
-            ->inList('status', ['active', 'expiring', 'grace_period', 'expired', 'suspended', 'cancelled'])
+            ->inList('status', ['trial_pending', 'active', 'expiring', 'grace_period', 'expired', 'suspended', 'cancelled'])
+            ->scalar('billing_cycle')->maxLength('billing_cycle', 20)->inList('billing_cycle', ['trial', 'monthly', 'annual'])
             ->dateTime('starts_at')->notEmptyDateTime('starts_at')
             ->dateTime('ends_at')->allowEmptyDateTime('ends_at')
             ->dateTime('grace_ends_at')->allowEmptyDateTime('grace_ends_at')
+            ->dateTime('trial_started_at')->allowEmptyDateTime('trial_started_at')
+            ->dateTime('trial_registration_expires_at')->allowEmptyDateTime('trial_registration_expires_at')
             ->dateTime('last_processed_at')->allowEmptyDateTime('last_processed_at')
             ->allowEmptyString('notes');
     }

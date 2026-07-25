@@ -49,7 +49,7 @@ class PaymentService
         $this->auditLogService ??= new AuditLogService();
     }
 
-    public function createPendingOrder(int|array|object $user, string|object $plan): object
+    public function createPendingOrder(int|array|object $user, string|object $plan, string $billingCycle = 'monthly'): object
     {
         $userId = $this->userId($user);
         $plan = is_object($plan) ? $plan : $this->planBySlug((string)$plan);
@@ -59,11 +59,26 @@ class PaymentService
         if (!$plan || !(bool)$plan->active) {
             throw new RuntimeException('Plan inválido o inactivo.');
         }
+        $billingCycle = strtolower(trim($billingCycle));
+        if (!in_array($billingCycle, ['monthly', 'annual'], true)) {
+            throw new RuntimeException('La modalidad de pago no es válida.');
+        }
+        $planService = new PlanService();
+        if ($planService->isTrialPlan($plan)) {
+            throw new RuntimeException('La prueba gratuita no requiere pago.');
+        }
+        $capabilities = $planService->capabilities($plan);
+        if ($billingCycle === 'annual' && !$capabilities['annual_available']) {
+            throw new RuntimeException('Este plan no está disponible en modalidad anual.');
+        }
 
         $currentSubscription = $this->latestSubscription($userId);
         $this->assertUpgradePolicy($currentSubscription, $plan);
 
-        $amount = (int)$plan->monthly_price;
+        $amount = $billingCycle === 'annual' ? $planService->annualPrice($plan) : (int)$plan->monthly_price;
+        if (!$amount || $amount < 1) {
+            throw new RuntimeException('No hay un precio válido para esta modalidad.');
+        }
         $internalReference = $this->uniqueReference('pay');
         $buyOrder = $this->uniqueBuyOrder();
         $sessionId = $this->uniqueReference('sess');
@@ -72,6 +87,7 @@ class PaymentService
             'plan_slug' => (string)$plan->slug,
             'amount' => $amount,
             'currency' => self::CURRENCY,
+            'billing_cycle' => $billingCycle,
             'buy_order' => $buyOrder,
             'session_id' => $sessionId,
         ]);
@@ -80,6 +96,7 @@ class PaymentService
             'user_id' => $userId,
             'subscription_id' => $currentSubscription?->id,
             'plan_slug' => (string)$plan->slug,
+            'billing_cycle' => $billingCycle,
             'status' => self::STATUS_PENDING,
             'amount' => $amount,
             'expected_amount' => $amount,
@@ -98,6 +115,7 @@ class PaymentService
             'plan_slug' => (string)$plan->slug,
             'amount' => $amount,
             'currency' => self::CURRENCY,
+            'billing_cycle' => $billingCycle,
             'internal_reference' => $internalReference,
         ]);
 
@@ -199,6 +217,7 @@ class PaymentService
 
             $subscription = $this->subscriptionForPayment($payment);
             $subscription->plan_slug = (string)$payment->plan_slug;
+            $subscription->billing_cycle = (string)$payment->billing_cycle ?: 'monthly';
             $this->subscriptions()->saveOrFail($subscription);
 
             $payment->status = self::STATUS_PAID;
@@ -206,7 +225,10 @@ class PaymentService
             $payment->confirmed_at = $now;
             $this->payments()->saveOrFail($payment);
 
-            $this->subscriptionService->renew($subscription, $payment, $this->subscriptionService->renewalDays());
+            $durationDays = (string)$payment->billing_cycle === 'annual'
+                ? $this->subscriptionService->annualRenewalDays()
+                : $this->subscriptionService->renewalDays();
+            $this->subscriptionService->renew($subscription, $payment, $durationDays);
             $payment = $this->payments()->get($payment->id);
             $this->auditLogService->log((int)$payment->user_id, 'payment.paid', 'payments', (int)$payment->id);
             $this->auditLogService->log((int)$payment->user_id, 'payment.subscription_renewed', 'payments', (int)$payment->id, [
@@ -471,6 +493,7 @@ class PaymentService
         $subscription = $this->subscriptions()->newEntity([
             'user_id' => (int)$payment->user_id,
             'plan_slug' => (string)$payment->plan_slug,
+            'billing_cycle' => (string)$payment->billing_cycle,
             'status' => SubscriptionService::STATUS_EXPIRED,
             'starts_at' => $now,
             'ends_at' => $now,

@@ -230,6 +230,9 @@ class AdminPanelControllerTest extends TestCase
         $this->post('/admin/plans/' . $this->planId, [
             'name' => 'Básico revisado',
             'monthly_price' => 7990,
+            'annual_price' => 79900,
+            'commercial_description' => 'Descripción comercial revisada.',
+            'commercial_badge' => 'Recomendado',
             'max_sites' => 1,
             'max_published' => 1,
             'sort_order' => 1,
@@ -238,13 +241,22 @@ class AdminPanelControllerTest extends TestCase
                 'sites_configured_limit' => 1,
                 'sites_published_limit' => 1,
                 'items_limit' => 40,
+                'trial_duration_days' => 7,
+                'trial_expire_after_registration_days' => 14,
+                'custom_domains_limit' => 0,
+                'annual_price' => 79900,
+                'annual_available' => '1',
                 'enabled_templates' => [],
             ],
+            'annual_benefits' => ['domain_credit' => '1'],
             'reason' => 'Ajuste de prueba',
         ]);
 
         $this->assertRedirect('/admin/plans/' . $this->planId);
-        $this->assertSame(7990, (int)$this->table('Plans')->get($this->planId)->monthly_price);
+        $plan = $this->table('Plans')->get($this->planId);
+        $this->assertSame(7990, (int)$plan->monthly_price);
+        $this->assertSame(79900, (int)$plan->annual_price);
+        $this->assertSame('Descripción comercial revisada.', $plan->commercial_description);
         $this->assertSame(1, $this->table('AuditLogs')->find()->where([
             'user_id' => $this->superadminId,
             'action' => 'admin.plan.updated',

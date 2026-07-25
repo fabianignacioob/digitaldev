@@ -28,6 +28,7 @@ class PaymentsTable extends Table
             ->integer('user_id')->notEmptyString('user_id')
             ->integer('subscription_id')->allowEmptyString('subscription_id')
             ->scalar('plan_slug')->maxLength('plan_slug', 40)->notEmptyString('plan_slug')
+            ->scalar('billing_cycle')->maxLength('billing_cycle', 20)->inList('billing_cycle', ['monthly', 'annual'])
             ->scalar('status')->maxLength('status', 30)->notEmptyString('status')
             ->inList('status', ['pending', 'authorized', 'paid', 'rejected', 'canceled', 'expired', 'refunded', 'reversed', 'failed'])
             ->decimal('amount')->notEmptyString('amount')

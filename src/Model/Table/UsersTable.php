@@ -37,7 +37,8 @@ class UsersTable extends Table
             ->boolean('email_verified')
             ->scalar('verification_code_hash')->maxLength('verification_code_hash', 255)->allowEmptyString('verification_code_hash')
             ->dateTime('verification_expires')->allowEmptyDateTime('verification_expires')
-            ->dateTime('verification_sent_at')->allowEmptyDateTime('verification_sent_at');
+            ->dateTime('verification_sent_at')->allowEmptyDateTime('verification_sent_at')
+            ->dateTime('trial_used_at')->allowEmptyDateTime('trial_used_at');
     }
 
     public function buildRules(RulesChecker $rules): RulesChecker

@@ -28,6 +28,8 @@ class DashboardController extends AppController
         $upgradePlans = [];
         $planCapabilities = [];
         $planServiceCapabilities = [];
+        $trialPending = false;
+        $trialActive = false;
         $siteUsage = $this->planService()->siteUsage((int)$this->currentUserId());
         $publicUrlService = new PublicUrlService();
         $baseDomain = $publicUrlService->baseDomain();
@@ -35,6 +37,8 @@ class DashboardController extends AppController
         if ($subscription) {
             $plan = $this->planService()->getPlanBySlug((string)$subscription->plan_slug);
             $planCapabilities = $plan ? $this->planService()->capabilities($plan) : [];
+            $trialPending = $plan && $this->planService()->isTrialPlan($plan) && $subscription->status === \App\Service\SubscriptionService::STATUS_TRIAL_PENDING;
+            $trialActive = $plan && $this->planService()->isTrialPlan($plan) && !$trialPending;
             $plans = $this->fetchTable('Plans')->find()
                 ->where(['active' => true])
                 ->orderByAsc('sort_order')
@@ -70,6 +74,8 @@ class DashboardController extends AppController
             'planServiceCapabilities',
             'publicUrlService',
             'baseDomain',
+            'trialPending',
+            'trialActive',
         ));
 
         return null;

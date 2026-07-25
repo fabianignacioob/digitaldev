@@ -17,6 +17,7 @@ class User extends Entity
         'verification_code_hash' => true,
         'verification_expires' => true,
         'verification_sent_at' => true,
+        'trial_used_at' => true,
         'created' => true,
         'modified' => true,
         'sites' => true,

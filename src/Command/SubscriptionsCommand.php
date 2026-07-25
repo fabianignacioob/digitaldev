@@ -85,6 +85,7 @@ class SubscriptionsCommand extends Command
                     SubscriptionService::STATUS_ACTIVE,
                     SubscriptionService::STATUS_EXPIRING,
                     SubscriptionService::STATUS_GRACE,
+                    SubscriptionService::STATUS_TRIAL_PENDING,
                 ],
             ])
             ->orderByAsc('ends_at');
@@ -94,6 +95,22 @@ class SubscriptionsCommand extends Command
                 $status = (string)$subscription->status;
                 $endsAt = $subscription->ends_at ? $this->asDateTime($subscription->ends_at) : null;
                 $graceEndsAt = $subscription->grace_ends_at ? $this->asDateTime($subscription->grace_ends_at) : null;
+
+                if ($status === SubscriptionService::STATUS_TRIAL_PENDING) {
+                    $registrationEndsAt = $subscription->trial_registration_expires_at
+                        ? $this->asDateTime($subscription->trial_registration_expires_at)
+                        : null;
+                    if ($registrationEndsAt && $registrationEndsAt < $now) {
+                        $io->out(sprintf('Expirar prueba pendiente #%d', (int)$subscription->id));
+                        if (!$dryRun) {
+                            $subscriptionService->processExpiration($subscription);
+                        }
+                        $processed++;
+                        continue;
+                    }
+                    $skipped++;
+                    continue;
+                }
 
                 if ($status === SubscriptionService::STATUS_GRACE && $graceEndsAt && $graceEndsAt < $now) {
                     $io->out(sprintf('Expirar suscripción #%d', (int)$subscription->id));
@@ -105,13 +122,9 @@ class SubscriptionsCommand extends Command
                 }
 
                 if (in_array($status, [SubscriptionService::STATUS_ACTIVE, SubscriptionService::STATUS_EXPIRING], true) && $endsAt && $endsAt < $now) {
-                    $io->out(sprintf('Mover a gracia suscripción #%d', (int)$subscription->id));
+                    $io->out(sprintf('Procesar vencimiento de suscripción #%d', (int)$subscription->id));
                     if (!$dryRun) {
-                        $subscription = $subscriptionService->enterGracePeriod($subscription);
-                        $graceEndsAt = $subscription->grace_ends_at ? $this->asDateTime($subscription->grace_ends_at) : null;
-                        if ($graceEndsAt && $graceEndsAt < $now) {
-                            $subscriptionService->expire($subscription);
-                        }
+                        $subscriptionService->processExpiration($subscription);
                     }
                     $processed++;
                     continue;

@@ -10,9 +10,12 @@ $usagePercent = static function (int $used, int $limit): int {
 };
 $configuredPercent = $usagePercent((int)$siteUsage['configured'], $configuredLimit);
 $publishedPercent = $usagePercent((int)$siteUsage['published'], $publishedLimit);
+$planDurationPercent = $trialPending || $daysRemaining === null
+    ? 0
+    : min(100, max(0, (int)round(((int)$daysRemaining / 30) * 100)));
 $overLimit = !empty($siteUsage['over_limit']);
 $subscriptionIsActive = $hasActivePlan && $subscription && $plan;
-$subscriptionStatusLabel = $subscriptionIsActive ? 'Suscripción activa' : 'Suscripción sin vigencia';
+$subscriptionStatusLabel = $trialPending ? 'Prueba lista para publicar' : ($subscriptionIsActive ? 'Suscripción activa' : 'Suscripción sin vigencia');
 $subscriptionStatusClass = $subscriptionIsActive ? 'status-active' : 'status-expired';
 $daysLabel = $daysRemaining === null ? 'Sin vigencia' : ((int)$daysRemaining . ' día' . ((int)$daysRemaining === 1 ? '' : 's'));
 $statusMeta = [
@@ -61,14 +64,28 @@ $statusMeta = [
         <h2>Plan <?= h($plan->name) ?></h2>
         <span class="status <?= $subscriptionStatusClass ?>"><?= h($subscriptionStatusLabel) ?></span>
       </div>
-      <div class="plan-price">$<?= number_format((int)$plan->monthly_price, 0, ',', '.') ?> <small>/ mes</small></div>
-      <div class="usage-row"><span>Vigencia del plan</span><span><?= h($daysLabel) ?> restante<?= $daysRemaining === 1 ? '' : 's' ?></span></div>
-      <div class="usage-track" aria-label="Días restantes del plan"><span class="usage-bar navy" style="width: <?= $daysRemaining === null ? 0 : min(100, max(0, (int)round(((int)$daysRemaining / 30) * 100))) ?>%"></span></div>
+      <div class="plan-price"><?= $trialPending || $trialActive ? 'Gratis' : '$' . number_format((int)$plan->monthly_price, 0, ',', '.') ?> <small><?= $trialPending ? 'hasta publicar' : ($trialActive ? 'prueba activa' : '/ mes') ?></small></div>
+      <div class="usage-row"><span><?= $trialPending ? 'Inicio de la prueba' : 'Vigencia del plan' ?></span><span><?= $trialPending ? 'Publica tu primer sitio para iniciar 7 días' : h($daysLabel) . ' restante' . ($daysRemaining === 1 ? '' : 's') ?></span></div>
+      <div class="usage-track" aria-label="Días restantes del plan"><span class="usage-bar navy" style="width: <?= $planDurationPercent ?>%"></span></div>
       <div class="subscription-actions">
-        <?= $this->Form->create(null, ['url' => '/payments/create']) ?>
-        <?= $this->Form->hidden('plan', ['value' => $plan->slug]) ?>
-        <?= $this->Form->button('Extender 30 días', ['class' => 'button']) ?>
-        <?= $this->Form->end() ?>
+        <?php if ($trialPending): ?>
+          <a class="button" href="/sitios/nuevo">Crear mi primer sitio</a>
+        <?php elseif ($trialActive): ?>
+          <a class="button" href="/planes">Elegir un plan</a>
+        <?php else: ?>
+          <?= $this->Form->create(null, ['url' => '/payments/create']) ?>
+          <?= $this->Form->hidden('plan', ['value' => $plan->slug]) ?>
+          <?= $this->Form->hidden('billing_cycle', ['value' => 'monthly']) ?>
+          <?= $this->Form->button('Extender 30 días', ['class' => 'button']) ?>
+          <?= $this->Form->end() ?>
+          <?php if (!empty($plan->annual_price)): ?>
+            <?= $this->Form->create(null, ['url' => '/payments/create']) ?>
+            <?= $this->Form->hidden('plan', ['value' => $plan->slug]) ?>
+            <?= $this->Form->hidden('billing_cycle', ['value' => 'annual']) ?>
+            <?= $this->Form->button('Pagar anual', ['class' => 'button secondary']) ?>
+            <?= $this->Form->end() ?>
+          <?php endif; ?>
+        <?php endif; ?>
         <a class="subtle-link" href="/planes">Ver detalles del plan</a>
       </div>
     </div>

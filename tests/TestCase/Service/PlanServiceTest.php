@@ -149,6 +149,33 @@ class PlanServiceTest extends TestCase
         $this->assertSame('available', $byLabel['Categorías']['status']);
     }
 
+    public function testTrialAndAnnualCapabilitiesAreValidatedWithSafeDefaults(): void
+    {
+        $plan = (object)[
+            'annual_price' => 119900,
+            'annual_benefits' => ['domain_credit' => true],
+            'capabilities' => [
+                'trial_enabled' => true,
+                'trial_duration_days' => 7,
+                'trial_expire_after_registration_days' => 14,
+                'custom_domains_limit' => 1,
+                'domain_credit' => true,
+                'annual_available' => true,
+                'annual_price' => 119900,
+                'branding_removable' => false,
+            ],
+        ];
+
+        $capabilities = $this->service->capabilities($plan);
+        $this->assertTrue($capabilities['trial_enabled']);
+        $this->assertSame(7, $capabilities['trial_duration_days']);
+        $this->assertSame(14, $capabilities['trial_expire_after_registration_days']);
+        $this->assertSame(1, $capabilities['custom_domains_limit']);
+        $this->assertSame(119900, $this->service->annualPrice($plan));
+        $this->assertTrue($this->service->annualBenefits($plan)['domain_credit']);
+        $this->assertTrue($this->service->isTrialPlan($plan));
+    }
+
     private function savePlan(string $slug, int $configuredLimit, int $publishedLimit): void
     {
         $plan = $this->table('Plans')->newEntity([

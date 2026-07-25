@@ -44,7 +44,12 @@ class PlanService
         'items_limit' => 0,
         'categories_limit' => 0,
         'image_storage_limit_mb' => 0,
+        'trial_duration_days' => 0,
+        'trial_expire_after_registration_days' => 0,
+        'custom_domains_limit' => 0,
+        'annual_price' => 0,
         'categories_enabled' => false,
+        'whatsapp_enabled' => false,
         'featured_items_enabled' => false,
         'customization_level' => 'none',
         'analytics_level' => 'none',
@@ -54,6 +59,10 @@ class PlanService
         'premium_themes_enabled' => false,
         'catops_branding_removable' => false,
         'priority_support' => false,
+        'trial_enabled' => false,
+        'domain_credit' => false,
+        'annual_available' => false,
+        'branding_removable' => false,
         // Legacy keys remain false by default. They are mapped only when a legacy
         // plan explicitly stored a truthy value for the capability.
         'custom_domain' => false,
@@ -68,12 +77,17 @@ class PlanService
 
     private const BOOLEAN_CAPABILITIES = [
         'categories_enabled',
+        'whatsapp_enabled',
         'featured_items_enabled',
         'qr_enabled',
         'custom_domain_enabled',
         'premium_themes_enabled',
         'catops_branding_removable',
         'priority_support',
+        'trial_enabled',
+        'domain_credit',
+        'annual_available',
+        'branding_removable',
         'custom_domain',
         'premium_themes',
         'advanced_customization',
@@ -89,6 +103,10 @@ class PlanService
         'items_limit',
         'categories_limit',
         'image_storage_limit_mb',
+        'trial_duration_days',
+        'trial_expire_after_registration_days',
+        'custom_domains_limit',
+        'annual_price',
     ];
 
     private const ENUM_CAPABILITIES = [
@@ -135,6 +153,59 @@ class PlanService
             ->first();
 
         return $plan ?: null;
+    }
+
+    public function trialPlan(): ?object
+    {
+        foreach ($this->table('Plans')->find()->where(['active' => true])->orderByAsc('sort_order') as $plan) {
+            if ($this->isTrialPlan($plan)) {
+                return $plan;
+            }
+        }
+
+        return null;
+    }
+
+    public function isTrialPlan(object $plan): bool
+    {
+        return (bool)$this->capabilities($plan)['trial_enabled'];
+    }
+
+    public function annualPrice(object $plan): ?int
+    {
+        $price = $plan->annual_price ?? $this->capabilities($plan)['annual_price'];
+
+        return is_numeric($price) && (int)$price > 0 ? (int)$price : null;
+    }
+
+    /** @return array<string, bool> */
+    public function annualBenefits(object $plan): array
+    {
+        $benefits = $plan->annual_benefits ?? [];
+        if (is_string($benefits)) {
+            $benefits = json_decode($benefits, true);
+        }
+
+        try {
+            return $this->validateAnnualBenefits(is_array($benefits) ? $benefits : []);
+        } catch (\InvalidArgumentException) {
+            return ['domain_credit' => false];
+        }
+    }
+
+    /** @param array<string, mixed> $benefits @return array<string, bool> */
+    public function validateAnnualBenefits(array $benefits): array
+    {
+        $normalized = ['domain_credit' => false];
+        foreach ($normalized as $key => $default) {
+            $value = $benefits[$key] ?? $default;
+            if (!in_array($value, [true, false, 1, 0, '1', '0', null], true)) {
+                throw new \InvalidArgumentException('El beneficio anual ' . $key . ' debe ser booleano.');
+            }
+            $normalized[$key] = $value === true || $value === 1 || $value === '1';
+        }
+
+        return $normalized;
     }
 
     public function getCapabilitiesForUser(int $userId): array
@@ -373,6 +444,8 @@ class PlanService
         $normalized['analytics_level'] = $normalized['analytics_level'] === 'none' && $normalized['analytics']
             ? 'advanced'
             : $normalized['analytics_level'];
+        $normalized['branding_removable'] = $normalized['branding_removable'] || $normalized['catops_branding_removable'];
+        $normalized['catops_branding_removable'] = $normalized['branding_removable'];
 
         return $normalized;
     }
@@ -438,20 +511,33 @@ class PlanService
         $customization = (string)$capabilities['customization_level'];
         $analytics = (string)$capabilities['analytics_level'];
         $seo = (string)$capabilities['seo_level'];
+        $trial = (bool)$capabilities['trial_enabled'];
+        $annual = $this->annualBenefits($plan);
 
-        return [
+        $rows = [
             ['label' => 'Sitios', 'value' => $configured . ' configurado' . ($configured === 1 ? '' : 's') . ' · ' . $published . ' publicado' . ($published === 1 ? '' : 's'), 'status' => 'available'],
             ['label' => 'Carta y catálogo', 'value' => $categories ? 'Simples y por categorías' : 'Formato simple', 'status' => 'available'],
+            ['label' => 'WhatsApp', 'value' => $capabilities['whatsapp_enabled'] ? 'Incluido' : 'No incluido', 'status' => 'available'],
+            ['label' => 'Logo y colores', 'value' => 'Configuración básica', 'status' => 'available'],
+            ['label' => 'Diseño responsive', 'value' => 'Incluido', 'status' => 'available'],
             ['label' => 'Categorías', 'value' => $categories ? 'Incluidas' : 'No incluidas', 'status' => 'available'],
             ['label' => 'Productos destacados', 'value' => $capabilities['featured_items_enabled'] ? 'Incluidos' : 'No incluidos', 'status' => 'available'],
-            // ['label' => 'Personalización', 'value' => $this->levelLabel($customization), 'status' => $customization === 'basic' ? 'available' : 'coming_soon'],
+            ['label' => 'Personalización', 'value' => $this->levelLabel($customization), 'status' => $customization === 'basic' ? 'available' : 'coming_soon'],
             ['label' => 'Estadísticas', 'value' => $analytics === 'none' ? 'No incluidas' : $this->levelLabel($analytics), 'status' => $analytics === 'none' ? 'available' : 'coming_soon'],
             ['label' => 'SEO', 'value' => $this->levelLabel($seo), 'status' => $seo === 'basic' ? 'available' : 'coming_soon'],
             ['label' => 'Código QR', 'value' => $capabilities['qr_enabled'] ? 'Incluido' : 'No incluido', 'status' => $capabilities['qr_enabled'] ? 'coming_soon' : 'available'],
             ['label' => 'Temas premium', 'value' => $capabilities['premium_themes_enabled'] ? 'Incluidos' : 'No incluidos', 'status' => $capabilities['premium_themes_enabled'] ? 'coming_soon' : 'available'],
-            ['label' => 'Marca CatOps', 'value' => $capabilities['catops_branding_removable'] ? 'Removible' : 'Incluida', 'status' => $capabilities['catops_branding_removable'] ? 'coming_soon' : 'available'],
+            ['label' => 'Marca CatOps', 'value' => $capabilities['branding_removable'] ? 'Removible' : 'Incluida', 'status' => $capabilities['branding_removable'] ? 'coming_soon' : 'available'],
             ['label' => 'Soporte', 'value' => $capabilities['priority_support'] ? 'Prioritario' : 'Estándar', 'status' => $capabilities['priority_support'] ? 'coming_soon' : 'available'],
         ];
+        if ($trial) {
+            $rows[] = ['label' => 'Duración', 'value' => (int)$capabilities['trial_duration_days'] . ' días desde tu primera publicación', 'status' => 'available'];
+        }
+        if ($annual['domain_credit']) {
+            $rows[] = ['label' => 'Plan anual', 'value' => 'Crédito de dominio', 'status' => 'coming_soon'];
+        }
+
+        return $rows;
     }
 
     private function levelLabel(string $level): string

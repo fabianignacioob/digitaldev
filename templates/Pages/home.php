@@ -5,11 +5,15 @@ use App\Service\PlanService;
 
 $plans = $plans ?? [];
 $planService = new PlanService();
-$planIntro = [
-    'basica' => 'Para comenzar a mostrar tu negocio de forma simple y profesional.',
-    'basica-avanzada' => 'Para negocios que necesitan más contenido, categorías y personalización.',
-    'full' => 'Para administrar varias marcas, propuestas o negocios con herramientas avanzadas.',
-];
+$trialPlan = null;
+$commercialPlans = [];
+foreach ($plans as $plan) {
+  if ($planService->isTrialPlan($plan)) {
+    $trialPlan = $plan;
+    continue;
+  }
+  $commercialPlans[] = $plan;
+}
 ?>
 <!doctype html>
 <html lang="es">
@@ -232,16 +236,19 @@ $planIntro = [
 
       .plans-grid { display: grid; gap: 16px; }
       .plan-card { position: relative; display: flex; flex-direction: column; }
-      .plan-card.is-recommended { border-color: rgba(243, 107, 22, 0.55); box-shadow: 0 16px 32px rgba(243, 107, 22, 0.12); }
-      .plan-badge { position: absolute; top: -12px; left: 18px; padding: 5px 10px; border-radius: 999px; background: var(--catops-orange); color: #fff; font-size: 12px; font-weight: 800; }
+      .plan-card.is-recommended { border: 2px solid #f36b16; box-shadow: 0 16px 32px rgba(243, 107, 22, 0.12); }
+      .plan-badge { position: absolute; top: -2px; right: 18px; padding: 5px 10px; border-radius: 0 0 7px 7px; background: var(--catops-orange); color: #fff; font-size: 12px; font-weight: 800; }
       .plan-card h3 { margin-bottom: 8px; }
       .plan-price { margin: 14px 0 6px; color: var(--catops-blue); font-size: 34px; font-weight: 900; }
       .plan-price small { font-size: 15px; }
       .plan-list { display: grid; gap: 8px; margin: 18px 0; padding: 0; list-style: none; color: var(--muted); line-height: 1.45; }
       .plan-list li::before { content: "•"; margin-right: 8px; color: var(--catops-orange); }
       .plan-list .coming-soon { color: #826b58; }
-      .plan-list .coming-soon::after { content: "Próximamente"; display: inline-block; margin-left: 7px; padding: 2px 6px; border-radius: 999px; background: var(--soft-orange); color: #9b4b17; font-size: 11px; font-weight: 800; }
+      .plan-list .coming-soon::after { content: "Beta"; display: inline-block; margin-left: 7px; padding: 2px 6px; border-radius: 999px; background: var(--soft-orange); color: #9b4b17; font-size: 11px; font-weight: 800; }
       .plan-card .button { margin-top: auto; align-self: flex-start; }
+      .trial-callout { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 auto 28px; padding: 22px 26px; border: 1px solid rgba(243, 107, 22, .34); border-radius: 8px; background: #fff8f2; }
+      .trial-callout h3 { margin: 0 0 5px; font-size: 20px; }
+      .trial-callout p { margin: 0; font-size: 14px; }
       .plan-notice { margin: 22px auto 0; max-width: 700px; text-align: center; color: #46545f; font-size: 14px; font-weight: 700; }
 
       .trust-grid { display: grid; gap: 14px; }
@@ -266,7 +273,8 @@ $planIntro = [
 
       @media (min-width: 700px) {
         .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(380px, 0.95fr); }
-        .grid.three, .plans-grid, .trust-grid { grid-template-columns: repeat(3, 1fr); }
+        .grid.three, .trust-grid { grid-template-columns: repeat(3, 1fr); }
+        .plans-grid { grid-template-columns: repeat(3, 1fr); }
         .demo-layout { grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr); }
         .footer-layout { grid-template-columns: 150px 1fr auto; }
       }
@@ -278,6 +286,9 @@ $planIntro = [
         .nav-wrap.is-open .nav-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .nav-links a { justify-content: center; border-radius: 7px; }
         .nav-links .nav-cta { margin: 0; }
+      }
+      @media (max-width: 640px) {
+        .trial-callout { align-items: flex-start; flex-direction: column; }
       }
       @media (max-width: 520px) {
         section { padding: 56px 0; }
@@ -397,25 +408,33 @@ $planIntro = [
 
       <section class="section-tint" id="planes">
         <div class="container">
-          <div class="section-head"><h2>Planes simples para empezar</h2><p>Elige el nivel que necesitas hoy. Puedes revisar los límites reales de cada plan antes de crear tu sitio.</p></div>
+          <div class="section-head"><h2>Parte gratis y escala cuando tu negocio lo necesite</h2><p>La prueba comienza cuando publicas. Revisa con claridad qué incluye cada plan hoy y qué herramientas están en modalidad Beta.</p></div>
+          <?php if ($trialPlan): ?>
+            <div class="trial-callout">
+              <div><h3>Solicita tu prueba gratuita del plan Básico por 7 días</h3><p>Sin tarjeta. El período comienza cuando publiques tu primer sitio.</p></div>
+              <a class="button" href="/registro?plan=<?= rawurlencode((string)$trialPlan->slug) ?>">Solicitar prueba</a>
+            </div>
+          <?php endif; ?>
           <div class="plans-grid">
-            <?php foreach ($plans as $plan): ?>
-              <?php $benefits = $planService->commercialBenefitRows($plan); ?>
-              <article class="card plan-card<?= $plan->slug === 'basica-avanzada' ? ' is-recommended' : '' ?>">
-                <?php if ($plan->slug === 'basica-avanzada'): ?><span class="plan-badge">Recomendado</span><?php endif; ?>
+            <?php foreach ($commercialPlans as $plan): ?>
+              <?php
+                $benefits = $planService->commercialBenefitRows($plan);
+                $todayBenefits = array_filter($benefits, static fn(array $row): bool => $row['status'] === 'available');
+                $futureBenefits = array_filter($benefits, static fn(array $row): bool => $row['status'] === 'coming_soon');
+                $badge = trim((string)($plan->commercial_badge ?? ''));
+              ?>
+              <article class="card plan-card<?= $badge !== '' ? ' is-recommended' : '' ?>">
+                <?php if ($badge !== ''): ?><span class="plan-badge"><?= h($badge) ?></span><?php endif; ?>
                 <h3><?= h($plan->name) ?></h3>
-                <p><?= h($planIntro[$plan->slug] ?? 'Para publicar y mantener tu información actualizada.') ?></p>
+                <p><?= h((string)($plan->commercial_description ?: 'Para publicar y mantener tu información actualizada.')) ?></p>
                 <div class="plan-price">$<?= number_format((int)$plan->monthly_price, 0, ',', '.') ?><small>/mes</small></div>
-                <ul class="plan-list">
-                  <?php foreach ($benefits as $benefit): ?>
-                    <li class="<?= $benefit['status'] === 'coming_soon' ? 'coming-soon' : '' ?>"><strong><?= h($benefit['label']) ?>:</strong> <?= h($benefit['value']) ?></li>
-                  <?php endforeach; ?>
-                </ul>
+                <p class="small fw-bold mb-1">Incluye hoy</p><ul class="plan-list"><?php foreach ($todayBenefits as $benefit): ?><li><strong><?= h($benefit['label']) ?>:</strong> <?= h($benefit['value']) ?></li><?php endforeach; ?></ul>
+                <?php if ($futureBenefits): ?><ul class="plan-list"><?php foreach ($futureBenefits as $benefit): ?><li class="coming-soon"><strong><?= h($benefit['label']) ?>:</strong> <?= h($benefit['value']) ?></li><?php endforeach; ?></ul><?php endif; ?>
                 <a class="button" href="/registro?plan=<?= rawurlencode((string)$plan->slug) ?>">Elegir <?= h($plan->name) ?></a>
               </article>
             <?php endforeach; ?>
           </div>
-          <p class="plan-notice">Renovación mensual mediante pago seguro. Sin cobros automáticos.</p>
+          <p class="plan-notice">Renovación mensual o anual mediante pago seguro. Sin cobros automáticos.</p>
         </div>
       </section>
 
@@ -424,7 +443,7 @@ $planIntro = [
           <div class="section-head"><h2>Una herramienta simple para mostrar lo que haces</h2><p>CatOps se enfoca en darte una página clara para que tus clientes entiendan tu oferta y puedan contactarte.</p></div>
           <div class="trust-grid">
             <div class="trust-item">Tu contenido se administra desde un panel privado.</div>
-            <div class="trust-item">Tu enlace se puede compartir por WhatsApp o Instagram. El código QR llegará próximamente.</div>
+            <div class="trust-item">Tu enlace se puede compartir por WhatsApp o Instagram. El código QR estará disponible en Beta.</div>
             <div class="trust-item">Puedes comenzar con un subdominio de CatOps.</div>
           </div>
         </div>

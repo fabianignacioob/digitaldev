@@ -11,6 +11,7 @@ use function Cake\Core\env;
 
 class SubscriptionService
 {
+    public const STATUS_TRIAL_PENDING = 'trial_pending';
     public const STATUS_ACTIVE = 'active';
     public const STATUS_EXPIRING = 'expiring';
     public const STATUS_GRACE = 'grace_period';
@@ -21,6 +22,7 @@ class SubscriptionService
     public const SITE_PAUSED_SUBSCRIPTION_EXPIRED = 'subscription_expired';
 
     private const ACTIVE_STATUSES = [
+        self::STATUS_TRIAL_PENDING,
         self::STATUS_ACTIVE,
         self::STATUS_EXPIRING,
         self::STATUS_GRACE,
@@ -43,6 +45,10 @@ class SubscriptionService
         }
 
         $now = DateTime::now();
+        if ($status === self::STATUS_TRIAL_PENDING) {
+            return $subscription->trial_registration_expires_at
+                && $this->asDateTime($subscription->trial_registration_expires_at) >= $now;
+        }
         if ($status === self::STATUS_GRACE) {
             return $subscription->grace_ends_at && $this->asDateTime($subscription->grace_ends_at) >= $now;
         }
@@ -86,6 +92,7 @@ class SubscriptionService
         $subscription->starts_at = $subscription->starts_at ?: $now;
         $subscription->ends_at = $periodEnd;
         $subscription->grace_ends_at = null;
+        $subscription->trial_registration_expires_at = null;
         $subscription->notes = 'Renovación registrada por orden ' . (string)$payment->internal_reference;
         $this->subscriptions()->saveOrFail($subscription);
 
@@ -123,6 +130,78 @@ class SubscriptionService
         $this->subscriptions()->saveOrFail($subscription);
         $this->pausePublishedSitesForExpiration((int)$subscription->user_id);
         $this->auditLogService->log((int)$subscription->user_id, 'subscription.expired', 'subscriptions', (int)$subscription->id);
+
+        return $subscription;
+    }
+
+    /**
+     * Creates the single verified-email trial. The plan is identified by its
+     * capability, never by a commercial slug.
+     */
+    public function createTrialForUser(int $userId): object
+    {
+        $user = $this->users()->get($userId);
+        if (!(bool)$user->email_verified) {
+            throw new RuntimeException('Debes verificar tu correo antes de iniciar la prueba gratuita.');
+        }
+        if ($user->trial_used_at) {
+            throw new RuntimeException('Ya utilizaste la prueba gratuita con esta cuenta.');
+        }
+
+        $plan = (new PlanService())->trialPlan();
+        if (!$plan) {
+            throw new RuntimeException('La prueba gratuita no está disponible en este momento.');
+        }
+        $capabilities = (new PlanService())->capabilities($plan);
+        $now = DateTime::now();
+        $subscription = $this->subscriptions()->newEntity([
+            'user_id' => $userId,
+            'plan_slug' => (string)$plan->slug,
+            'billing_cycle' => 'trial',
+            'status' => self::STATUS_TRIAL_PENDING,
+            'starts_at' => $now,
+            'ends_at' => null,
+            'trial_registration_expires_at' => (clone $now)->modify('+' . (int)$capabilities['trial_expire_after_registration_days'] . ' days'),
+            'notes' => 'Prueba gratuita pendiente de la primera publicación.',
+        ]);
+        $this->subscriptions()->saveOrFail($subscription);
+
+        $user->trial_used_at = $now;
+        $this->users()->saveOrFail($user);
+        $this->auditLogService->log($userId, 'subscription.trial_created', 'subscriptions', (int)$subscription->id, [
+            'registration_expires_at' => $subscription->trial_registration_expires_at->i18nFormat('yyyy-MM-dd HH:mm:ss'),
+        ]);
+
+        return $subscription;
+    }
+
+    /** Starts the trial only when its first site becomes public. */
+    public function startTrialOnFirstPublication(?object $subscription): ?object
+    {
+        if (!$subscription || (string)$subscription->status !== self::STATUS_TRIAL_PENDING) {
+            return $subscription;
+        }
+        if (!$this->isActive($subscription)) {
+            $this->expire($subscription);
+            throw new RuntimeException('La prueba gratuita venció antes de publicar. Elige un plan para continuar.');
+        }
+
+        $plan = (new PlanService())->getPlanBySlug((string)$subscription->plan_slug);
+        if (!$plan || !(new PlanService())->isTrialPlan($plan)) {
+            return $subscription;
+        }
+        $duration = (int)(new PlanService())->capabilities($plan)['trial_duration_days'];
+        $now = DateTime::now();
+        $subscription->status = self::STATUS_ACTIVE;
+        $subscription->billing_cycle = 'trial';
+        $subscription->starts_at = $now;
+        $subscription->trial_started_at = $now;
+        $subscription->ends_at = (clone $now)->modify('+' . $duration . ' days');
+        $subscription->trial_registration_expires_at = null;
+        $this->subscriptions()->saveOrFail($subscription);
+        $this->auditLogService->log((int)$subscription->user_id, 'subscription.trial_started', 'subscriptions', (int)$subscription->id, [
+            'duration_days' => $duration,
+        ]);
 
         return $subscription;
     }
@@ -212,6 +291,19 @@ class SubscriptionService
         $status = (string)$subscription->status;
         $endsAt = $subscription->ends_at ? $this->asDateTime($subscription->ends_at) : null;
         $graceEndsAt = $subscription->grace_ends_at ? $this->asDateTime($subscription->grace_ends_at) : null;
+        $plan = (new PlanService())->getPlanBySlug((string)$subscription->plan_slug);
+        $trial = $plan && (new PlanService())->isTrialPlan($plan);
+
+        if ($status === self::STATUS_TRIAL_PENDING) {
+            $registrationEndsAt = $subscription->trial_registration_expires_at
+                ? $this->asDateTime($subscription->trial_registration_expires_at)
+                : null;
+
+            return $registrationEndsAt && $registrationEndsAt < $now ? $this->expire($subscription) : $subscription;
+        }
+        if ($trial && $status === self::STATUS_ACTIVE && $endsAt && $endsAt < $now) {
+            return $this->expire($subscription);
+        }
 
         if ($status === self::STATUS_GRACE && $graceEndsAt && $graceEndsAt < $now) {
             return $this->expire($subscription);
@@ -314,6 +406,11 @@ class SubscriptionService
         return max(1, (int)env('SUBSCRIPTION_DURATION_DAYS', 30));
     }
 
+    public function annualRenewalDays(): int
+    {
+        return max(1, (int)env('SUBSCRIPTION_ANNUAL_DURATION_DAYS', 365));
+    }
+
     public function graceDays(): int
     {
         return max(0, (int)env('SUBSCRIPTION_GRACE_DAYS', 3));
@@ -342,5 +439,10 @@ class SubscriptionService
     private function sites(): Table
     {
         return FactoryLocator::get('Table')->get('Sites');
+    }
+
+    private function users(): Table
+    {
+        return FactoryLocator::get('Table')->get('Users');
     }
 }

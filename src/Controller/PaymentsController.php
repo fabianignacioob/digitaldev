@@ -22,9 +22,10 @@ class PaymentsController extends AppController
         }
 
         $plan = (string)$this->request->getData('plan');
+        $billingCycle = (string)$this->request->getData('billing_cycle', 'monthly');
         $payment = null;
         try {
-            $payment = $this->paymentService()->createPendingOrder((int)$this->currentUserId(), $plan);
+            $payment = $this->paymentService()->createPendingOrder((int)$this->currentUserId(), $plan, $billingCycle);
             $transaction = $this->webpayGateway()->createTransaction(
                 (string)$payment->buy_order,
                 (string)$payment->session_id,
