@@ -61,58 +61,86 @@ $backgroundPresetLabels = [
             applyFont();
         });
 
-        const list = document.getElementById('catalog-products-sortable');
-        const status = document.querySelector('[data-product-sort-status]');
         const csrfToken = document.querySelector('input[name="_csrfToken"]')?.value;
-        if (!list || !window.Sortable || !csrfToken) {
+        if (!window.Sortable || !csrfToken) {
             return;
         }
 
-        new window.Sortable(list, {
-            animation: 160,
-            handle: '.product-drag-handle',
-            draggable: '.product-editor-card',
-            ghostClass: 'product-sort-ghost',
-            chosenClass: 'product-sort-chosen',
-            onEnd: async () => {
-                const productIds = Array.from(list.querySelectorAll('[data-product-id]'))
-                    .map((element) => element.dataset.productId)
-                    .filter(Boolean);
-                if (!productIds.length) {
-                    return;
-                }
+        const initSortable = ({ list, status, itemSelector, idAttribute, requestKey, handle, savingText, savedText, errorText }) => {
+            if (!list) {
+                return;
+            }
 
-                if (status) {
-                    status.textContent = 'Guardando orden...';
-                }
-                const data = new URLSearchParams({
-                    _csrfToken: csrfToken
-                });
-                productIds.forEach((id) => data.append('product_ids[]', id));
+            new window.Sortable(list, {
+                animation: 160,
+                handle,
+                draggable: itemSelector,
+                ghostClass: 'product-sort-ghost',
+                chosenClass: 'product-sort-chosen',
+                onEnd: async () => {
+                    const itemIds = Array.from(list.querySelectorAll(itemSelector))
+                        .map((element) => element.dataset[idAttribute])
+                        .filter(Boolean);
+                    if (!itemIds.length) {
+                        return;
+                    }
 
-                try {
-                    const response = await fetch(list.dataset.reorderUrl, {
-                        method: 'POST',
-                        credentials: 'same-origin',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-                            'X-Requested-With': 'XMLHttpRequest',
-                        },
-                        body: data.toString(),
+                    if (status) {
+                        status.textContent = savingText;
+                    }
+                    const data = new URLSearchParams({
+                        _csrfToken: csrfToken
                     });
-                    if (!response.ok) {
-                        throw new Error('No fue posible guardar el orden.');
+                    itemIds.forEach((id) => data.append(requestKey, id));
+
+                    try {
+                        const response = await fetch(list.dataset.reorderUrl, {
+                            method: 'POST',
+                            credentials: 'same-origin',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                            body: data.toString(),
+                        });
+                        if (!response.ok) {
+                            throw new Error('No fue posible guardar el orden.');
+                        }
+                        if (status) {
+                            status.textContent = savedText;
+                        }
+                    } catch (error) {
+                        if (status) {
+                            status.textContent = errorText;
+                        }
+                        window.setTimeout(() => window.location.reload(), 900);
                     }
-                    if (status) {
-                        status.textContent = 'Orden guardado.';
-                    }
-                } catch (error) {
-                    if (status) {
-                        status.textContent = 'No se pudo guardar el orden. Recargando...';
-                    }
-                    window.setTimeout(() => window.location.reload(), 900);
-                }
-            },
+                },
+            });
+        };
+
+        initSortable({
+            list: document.getElementById('catalog-categories-sortable'),
+            status: document.querySelector('[data-category-sort-status]'),
+            itemSelector: '.category-editor-card',
+            idAttribute: 'categoryId',
+            requestKey: 'category_ids[]',
+            handle: '.category-drag-handle',
+            savingText: 'Guardando orden...',
+            savedText: 'Orden de categorías guardado.',
+            errorText: 'No se pudo guardar el orden de categorías. Recargando...',
+        });
+
+        initSortable({
+            list: document.getElementById('catalog-products-sortable'),
+            status: document.querySelector('[data-product-sort-status]'),
+            itemSelector: '.product-editor-card',
+            idAttribute: 'productId',
+            requestKey: 'product_ids[]',
+            handle: '.product-drag-handle',
+            savingText: 'Guardando orden...',
+            savedText: 'Orden guardado.',
+            errorText: 'No se pudo guardar el orden. Recargando...',
         });
     });
 </script>
@@ -216,32 +244,35 @@ $backgroundPresetLabels = [
             <p>Crea grupos simples para ordenar <?= h($elementLabel) ?>.</p>
             <?= $this->Form->create(null, [
                 'url' => ['controller' => 'Catalogs', 'action' => 'addCategory', $site->id],
-                'class' => 'category-create-form form-inline',
+                'class' => 'category-create-form',
             ]) ?>
             <?= $this->Form->control('name', ['id' => 'category-create-name', 'label' => 'Nombre de categoría', 'placeholder' => 'Ej: Platos principales']) ?>
             <!-- <?= $this->Form->control('sort_order', ['id' => 'category-create-order', 'label' => 'Orden', 'type' => 'number', 'value' => 0]) ?> -->
-            <?= $this->Form->button('Crear categoría', ['class' => '']) ?>
+            <?= $this->Form->button('Crear categoría', ['class' => 'mt-2']) ?>
             <?= $this->Form->end() ?>
 
-            <div class="list">
+            <p class="product-sort-help">Arrastra las categorías para cambiar su orden.</p>
+            <div class="product-sort-status" data-category-sort-status aria-live="polite"></div>
+            <div class="list" id="catalog-categories-sortable" data-reorder-url="/sitios/<?= (int)$site->id ?>/carta/categorias/orden">
                 <?php foreach ($catalogCategories as $category): ?>
-                    <div class="list-item no-thumb">
+                    <div class="list-item no-thumb category-editor-card" data-category-id="<?= (int)$category->id ?>">
                         <?= $this->Form->create($category, [
                             'url' => ['controller' => 'Catalogs', 'action' => 'updateCategory', $category->id],
                             'class' => 'inline-edit-form',
                         ]) ?>
                         <div>
                             <?= $this->Form->control('name', ['id' => 'category-' . (int)$category->id . '-name', 'label' => 'Categoría', 'value' => $category->name]) ?>
-                            <?= $this->Form->control('sort_order', ['id' => 'category-' . (int)$category->id . '-order', 'label' => 'Orden', 'type' => 'number', 'value' => $category->sort_order]) ?>
+                            <!-- <?= $this->Form->control('sort_order', ['id' => 'category-' . (int)$category->id . '-order', 'label' => 'Orden', 'type' => 'number', 'value' => $category->sort_order]) ?> -->
                         </div>
                         <div class="row-actions">
+                            <button class="product-drag-handle category-drag-handle" type="button" aria-label="Mover <?= h($category->name) ?>" title="Arrastra para reordenar">↕</button>
                             <?= $this->Form->button('Guardar', ['class' => 'button secondary']) ?>
+                            <?= $this->Form->postLink('Eliminar', ['controller' => 'Catalogs', 'action' => 'deleteCategory', $category->id], [
+                                'class' => 'button danger',
+                                'confirm' => '¿Eliminar esta categoría?',
+                            ]) ?>
                         </div>
                         <?= $this->Form->end() ?>
-                        <?= $this->Form->postLink('Eliminar', ['controller' => 'Catalogs', 'action' => 'deleteCategory', $category->id], [
-                            'class' => 'button danger',
-                            'confirm' => '¿Eliminar esta categoría?',
-                        ]) ?>
                     </div>
                 <?php endforeach; ?>
                 <?php if ($catalogCategories->isEmpty()): ?>

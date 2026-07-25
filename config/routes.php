@@ -165,6 +165,9 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/sitios/{siteId}/carta/categorias', ['controller' => 'Catalogs', 'action' => 'addCategory'])
             ->setPass(['siteId'])
             ->setPatterns(['siteId' => '\d+']);
+        $builder->connect('/sitios/{siteId}/carta/categorias/orden', ['controller' => 'Catalogs', 'action' => 'reorderCategories'])
+            ->setPass(['siteId'])
+            ->setPatterns(['siteId' => '\d+']);
         $builder->connect('/sitios/{siteId}/carta/productos', ['controller' => 'Catalogs', 'action' => 'addProduct'])
             ->setPass(['siteId'])
             ->setPatterns(['siteId' => '\d+']);

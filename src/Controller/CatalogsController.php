@@ -166,7 +166,7 @@ class CatalogsController extends AppController
         $category = $categories->newEntity([
             'site_id' => $siteId,
             'name' => $this->request->getData('name'),
-            'sort_order' => (int)$this->request->getData('sort_order', 0),
+            'sort_order' => $this->nextCategorySortOrder($siteId),
         ]);
 
         if ($categories->save($category)) {
@@ -215,10 +215,14 @@ class CatalogsController extends AppController
             return $this->redirect(['action' => 'edit', $siteId]);
         }
 
-        $category = $this->fetchTable('CatalogCategories')->patchEntity($category, [
+        $categoryData = [
             'name' => $this->request->getData('name'),
-            'sort_order' => (int)$this->request->getData('sort_order', 0),
-        ]);
+        ];
+        if ($this->request->getData('sort_order') !== null) {
+            $categoryData['sort_order'] = (int)$this->request->getData('sort_order');
+        }
+
+        $category = $this->fetchTable('CatalogCategories')->patchEntity($category, $categoryData);
 
         if ($this->fetchTable('CatalogCategories')->save($category)) {
             $this->Flash->success('Categoría actualizada.');
@@ -227,6 +231,54 @@ class CatalogsController extends AppController
         }
 
         return $this->redirect(['action' => 'edit', $siteId]);
+    }
+
+    public function reorderCategories(int $siteId): Response
+    {
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $this->request->allowMethod(['post']);
+        $site = $this->getOwnedSite($siteId);
+        if (!$this->planService()->canUseCategories((int)$this->currentUserId(), $site)) {
+            throw new BadRequestException('Esta plantilla no usa categorías.');
+        }
+
+        $categoryIds = array_values(array_filter(
+            array_map('intval', (array)$this->request->getData('category_ids', [])),
+            static fn (int $id): bool => $id > 0,
+        ));
+        if ($categoryIds === [] || count($categoryIds) !== count(array_unique($categoryIds))) {
+            throw new BadRequestException('El orden de categorías no es válido.');
+        }
+
+        $categories = $this->fetchTable('CatalogCategories');
+        $ownedCategories = $categories->find()
+            ->where(['site_id' => $siteId])
+            ->all()
+            ->toList();
+        $ownedIds = array_map(static fn (object $category): int => (int)$category->id, $ownedCategories);
+        sort($ownedIds);
+        $submittedIds = $categoryIds;
+        sort($submittedIds);
+        if ($ownedIds !== $submittedIds) {
+            throw new BadRequestException('El orden debe incluir solo las categorías de este sitio.');
+        }
+
+        $categoriesById = [];
+        foreach ($ownedCategories as $category) {
+            $categoriesById[(int)$category->id] = $category;
+        }
+        $categories->getConnection()->transactional(function () use ($categories, $categoriesById, $categoryIds): void {
+            foreach ($categoryIds as $position => $categoryId) {
+                $category = $categoriesById[$categoryId];
+                $category->sort_order = $position + 1;
+                $categories->saveOrFail($category);
+            }
+        });
+
+        return $this->response->withStatus(204);
     }
 
     public function addProduct(int $siteId): Response
@@ -485,6 +537,17 @@ class CatalogsController extends AppController
         unset($data['sort_order']);
 
         return $data;
+    }
+
+    private function nextCategorySortOrder(int $siteId): int
+    {
+        $lastCategory = $this->fetchTable('CatalogCategories')->find()
+            ->select(['sort_order'])
+            ->where(['site_id' => $siteId])
+            ->orderByDesc('sort_order')
+            ->first();
+
+        return ((int)($lastCategory->sort_order ?? 0)) + 1;
     }
 
     private function nextProductSortOrder(int $siteId): int
