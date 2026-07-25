@@ -127,7 +127,7 @@ $backgroundPresetLabels = [
         ]) ?>
         <?= $this->Form->control('background_type', [
             'id' => 'background-type',
-            'label' => 'Tipo de fondo',
+            'label' => 'Tipo de Banner',
             'options' => ['color' => 'Color', 'image' => 'Imagen'],
         ]) ?>
         <div data-background-color-fields>
@@ -204,10 +204,10 @@ $backgroundPresetLabels = [
             'label' => 'Texto adicional',
             'type' => 'textarea',
         ]) ?>
-        <?= $this->Form->end() ?>
         <div class="form-actions form-actions-stacked">
             <?= $this->Form->button('Guardar diseño') ?>
         </div>
+        <?= $this->Form->end() ?>
     </article>
 
     <?php if ($supportsCategories): ?>
@@ -216,10 +216,11 @@ $backgroundPresetLabels = [
             <p>Crea grupos simples para ordenar <?= h($elementLabel) ?>.</p>
             <?= $this->Form->create(null, [
                 'url' => ['controller' => 'Catalogs', 'action' => 'addCategory', $site->id],
+                'class' => 'category-create-form form-inline',
             ]) ?>
             <?= $this->Form->control('name', ['id' => 'category-create-name', 'label' => 'Nombre de categoría', 'placeholder' => 'Ej: Platos principales']) ?>
-            <?= $this->Form->control('sort_order', ['id' => 'category-create-order', 'label' => 'Orden', 'type' => 'number', 'value' => 0]) ?>
-            <?= $this->Form->button('Crear categoría') ?>
+            <!-- <?= $this->Form->control('sort_order', ['id' => 'category-create-order', 'label' => 'Orden', 'type' => 'number', 'value' => 0]) ?> -->
+            <?= $this->Form->button('Crear categoría', ['class' => '']) ?>
             <?= $this->Form->end() ?>
 
             <div class="list">

@@ -54,6 +54,14 @@ class SitesTable extends Table
             $data['instagram_username'] = $instagram;
             $data['instagram'] = $instagram ? 'https://instagram.com/' . $instagram : null;
         }
+        foreach (['business_address', 'business_hours', 'public_phone', 'public_email'] as $field) {
+            if ($data->offsetExists($field)) {
+                $data[$field] = trim((string)$data[$field]) ?: null;
+            }
+        }
+        if (!empty($data['public_email'])) {
+            $data['public_email'] = strtolower((string)$data['public_email']);
+        }
     }
 
     public function validationDefault(Validator $validator): Validator
@@ -82,6 +90,10 @@ class SitesTable extends Table
             ->scalar('whatsapp')->maxLength('whatsapp', 40)->allowEmptyString('whatsapp')
             ->scalar('instagram_username')->maxLength('instagram_username', 80)->allowEmptyString('instagram_username')
             ->scalar('instagram')->maxLength('instagram', 180)->allowEmptyString('instagram')
+            ->scalar('business_address')->maxLength('business_address', 220)->allowEmptyString('business_address')
+            ->scalar('business_hours')->maxLength('business_hours', 220)->allowEmptyString('business_hours')
+            ->scalar('public_phone')->maxLength('public_phone', 60)->allowEmptyString('public_phone')
+            ->email('public_email')->maxLength('public_email', 180)->allowEmptyString('public_email')
             ->scalar('seo_title')->maxLength('seo_title', 180)->allowEmptyString('seo_title')
             ->allowEmptyString('seo_description')
             ->dateTime('published_at')->allowEmptyDateTime('published_at');

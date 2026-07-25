@@ -14,6 +14,16 @@ $hero = $sections['hero'] ?? null;
 $services = $sections['services'] ?? null;
 $benefits = $sections['benefits'] ?? null;
 $contact = $sections['contact'] ?? null;
+$businessAddress = trim((string)($site->business_address ?? ''));
+$businessHours = trim((string)($site->business_hours ?? ''));
+$publicPhone = trim((string)($site->public_phone ?? ''));
+$publicEmail = trim((string)($site->public_email ?? ''));
+$businessDetails = array_filter([
+    'Dirección' => $businessAddress,
+    'Horario' => $businessHours,
+    'Teléfono' => $publicPhone,
+    'Correo' => $publicEmail,
+]);
 ?>
 <!doctype html>
 <html lang="es">
@@ -122,6 +132,29 @@ $contact = $sections['contact'] ?? null;
         background: rgba(255, 255, 255, .74);
         box-shadow: 0 18px 44px rgba(42, 54, 71, .08);
       }
+      .business-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+        margin-top: 20px;
+      }
+      .business-details div {
+        padding: 16px;
+        border: 1px solid rgba(20, 30, 45, .08);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, .68);
+      }
+      .business-details b,
+      .business-details span,
+      .business-details a {
+        display: block;
+      }
+      .business-details span,
+      .business-details a {
+        margin-top: 4px;
+        color: #65717c;
+        text-decoration: none;
+      }
       footer {
         padding: 36px 0;
         color: #65717c;
@@ -203,6 +236,24 @@ $contact = $sections['contact'] ?? null;
           <?php if ($site->whatsapp): ?>
             <a class="button" href="https://wa.me/<?= h($site->whatsapp) ?>" target="_blank" rel="noopener">Escribir ahora</a>
           <?php endif; ?>
+        </section>
+      <?php endif; ?>
+
+      <?php if ($businessDetails): ?>
+        <section class="site-wrap">
+          <h2>Datos del negocio</h2>
+          <div class="business-details">
+            <?php foreach ($businessDetails as $label => $value): ?>
+              <div>
+                <b><?= h($label) ?></b>
+                <?php if ($label === 'Correo'): ?>
+                  <a href="mailto:<?= h($value) ?>"><?= h($value) ?></a>
+                <?php else: ?>
+                  <span><?= h($value) ?></span>
+                <?php endif; ?>
+              </div>
+            <?php endforeach; ?>
+          </div>
         </section>
       <?php endif; ?>
     </main>

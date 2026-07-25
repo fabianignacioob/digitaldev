@@ -39,6 +39,23 @@
           'placeholder' => 'tu_negocio',
       ]) ?>
       <p class="meta">Solo el usuario, sin https://instagram.com/.</p>
+      <?= $this->Form->control('business_address', [
+          'label' => 'Dirección del negocio',
+          'placeholder' => 'Av. Italia 850, Providencia',
+      ]) ?>
+      <?= $this->Form->control('business_hours', [
+          'label' => 'Horario de atención',
+          'placeholder' => 'Mar a Dom · 18:30 a 23:00',
+      ]) ?>
+      <?= $this->Form->control('public_phone', [
+          'label' => 'Teléfono público',
+          'placeholder' => '+56 9 1234 5678',
+      ]) ?>
+      <?= $this->Form->control('public_email', [
+          'label' => 'Correo público',
+          'type' => 'email',
+          'placeholder' => 'hola@tunegocio.cl',
+      ]) ?>
       <?= $this->Form->control('seo_title', [
           'label' => 'Título SEO',
       ]) ?>
