@@ -146,6 +146,9 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             <?php if ($product->featured): ?>
                 <span class="featured">Destacado</span>
             <?php endif; ?>
+            <?php if ($product->discount): ?>
+                <span class="discount">Descuento $<?= number_format((float)$product->discount, 0, ',', '.') ?></span>
+            <?php endif; ?>
         </div>
         <div class="product-body">
             <div class="product-heading">
@@ -157,9 +160,6 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             <?php endif; ?>
             <?php if ($product->duration): ?>
                 <div class="duration"><?= h($product->duration) ?></div>
-            <?php endif; ?>
-            <?php if ($product->discount): ?>
-                <span class="discount">Descuento $<?= number_format((float)$product->discount, 0, ',', '.') ?></span>
             <?php endif; ?>
             <?php if ($whatsapp): ?>
                 <a class="product-action" href="https://wa.me/<?= h($whatsapp) ?>?text=<?= $contactMessageFor($product) ?: $defaultContactMessage ?>" target="_blank" rel="noopener" aria-label="<?= h($contactLabel . ' ' . $product->name . ' por WhatsApp') ?>">
