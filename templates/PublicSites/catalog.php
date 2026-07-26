@@ -538,8 +538,8 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
 
         .featured {
             position: absolute;
-            top: 12px;
-            left: 12px;
+            top: 15px;
+            left: 15px;
             display: inline-flex;
             padding: 7px 10px;
             border-radius: 999px;
@@ -597,6 +597,13 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             border-radius: 999px;
             background: rgba(var(--primary-rgb), .12);
             color: var(--primary);
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .92);
         }
 
         .product-action {
