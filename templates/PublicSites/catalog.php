@@ -280,8 +280,8 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
 
         .logo,
         .logo-mark {
-            width: 38px;
-            height: 38px;
+            width: 50px;
+            height: 50px;
             flex: 0 0 38px;
             border-radius: 12px;
             object-fit: cover;
@@ -330,7 +330,7 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             align-items: center;
             justify-content: center;
             gap: 9px;
-            border-radius: 20px;
+            border-radius: 10px;
             font-weight: 900;
             line-height: 1;
             text-decoration: none;
@@ -511,13 +511,16 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             border-radius: 8px;
             background: rgba(255, 255, 255, .86);
             box-shadow: var(--shadow);
+            display: inline-flex;
         }
 
         .product-image {
             position: relative;
             aspect-ratio: 4 / 3;
             overflow: hidden;
-            background: rgba(var(--primary-rgb), .1);
+            /* background: rgba(var(--primary-rgb), .1); */
+            padding: 10px;
+            border-right: 1px solid var(--border);
         }
 
         .product-image img {
@@ -526,6 +529,8 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             display: block;
             object-fit: cover;
             transition: transform .2s ease;
+            border: 1px solid var(--border);
+            border-radius: 20px;
         }
 
         .product:hover .product-image img {
@@ -548,7 +553,7 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
 
         .product-body {
             display: grid;
-            gap: 14px;
+            gap: 5px;
             padding: 20px;
         }
 
@@ -596,7 +601,7 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
         }
 
         .product-action {
-            min-height: 48px;
+            min-height: 30px;
             margin-top: 2px;
             padding: 0 16px;
             background: var(--primary);
@@ -682,7 +687,7 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             }
 
             .nav {
-                min-height: 58px;
+                min-height: 70px;
             }
 
             .brand {
@@ -847,8 +852,8 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             <div class="container">
                 <div class="section-heading">
                     <div class="section-kicker"><?= h($kindLabel) ?></div>
-                    <h2><?= h($sectionTitle) ?></h2>
-                    <p><?= h($isCatalog ? 'Revisa los productos disponibles y consulta por WhatsApp en un toque.' : 'Elige lo que quieres y envía tu pedido directo por WhatsApp.') ?></p>
+                    <!-- <h2><?= h($sectionTitle) ?></h2> -->
+                    <!-- <p><?= h($isCatalog ? 'Revisa los productos disponibles y consulta por WhatsApp en un toque.' : 'Elige lo que quieres y envía tu pedido directo por WhatsApp.') ?></p> -->
                 </div>
 
                 <?php if ($usesCategories): ?>
