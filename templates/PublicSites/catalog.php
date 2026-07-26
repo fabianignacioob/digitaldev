@@ -511,7 +511,6 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             border-radius: 8px;
             background: rgba(255, 255, 255, .86);
             box-shadow: var(--shadow);
-            display: inline-flex;
         }
 
         .product-image {
@@ -769,6 +768,10 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
 
             .products {
                 grid-template-columns: 1fr;
+            }
+
+            .product {
+                display: inline-flex !important;
             }
 
             .product-body {
