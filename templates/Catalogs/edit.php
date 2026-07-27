@@ -547,7 +547,7 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                                     </div>
                                 </div>
                                 <div class="product-actions">
-                                    <?= $this->Form->button('Guardar cambios', ['class' => 'button secondary']) ?>
+                                    <?= $this->Form->button('Guardar cambios', ['class' => 'button primary']) ?>
                                 </div>
                                 <?= $this->Form->end() ?>
                                 <section class="variant-section" aria-labelledby="product-<?= (int)$product->id ?>-variants-title">

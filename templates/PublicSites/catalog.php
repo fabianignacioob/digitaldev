@@ -560,6 +560,8 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
         }
 
         .product {
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -619,7 +621,9 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
         }
 
         .product-body {
-            display: grid;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
             gap: 5px;
             padding: 20px;
         }
@@ -673,7 +677,7 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
 
         .product-action {
             min-height: 30px;
-            margin-top: 2px;
+            margin-top: auto;
             padding: 0 16px;
             background: var(--primary);
             color: #fff;
