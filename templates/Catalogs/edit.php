@@ -165,7 +165,7 @@ $backgroundPresetLabels = [
             ]) ?>
         </div>
         <div data-background-image-fields>
-            <label>Fondos sugeridos</label>
+            <label>Fondo banner sugerido</label>
             <div class="preset-grid">
                 <?php foreach ($backgroundPresets as $key => $path): ?>
                     <label class="preset-option <?= $currentPreset === $key ? 'selected' : '' ?>">

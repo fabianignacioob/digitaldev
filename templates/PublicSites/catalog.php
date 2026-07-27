@@ -147,7 +147,7 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
                 <span class="featured">Destacado</span>
             <?php endif; ?>
             <?php if ($product->discount): ?>
-                <span class="discount">Descuento $<?= number_format((float)$product->discount, 0, ',', '.') ?></span>
+                <span class="discount">Oferta $<?= number_format((float)$product->discount, 0, ',', '.') ?></span>
             <?php endif; ?>
         </div>
         <div class="product-body">
@@ -515,11 +515,11 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
 
         .product-image {
             position: relative;
-            aspect-ratio: 4 / 3;
+            aspect-ratio: 1 / 1;
             overflow: hidden;
             /* background: rgba(var(--primary-rgb), .1); */
-            padding: 10px;
-            border-right: 1px solid var(--border);
+            /* padding: 10px; */
+            /* border-right: 1px solid var(--border); */
         }
 
         .product-image img {
@@ -528,8 +528,8 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             display: block;
             object-fit: cover;
             transition: transform .2s ease;
-            border: 1px solid var(--border);
-            border-radius: 20px;
+            /* border: 1px solid var(--border); */
+            /* border-radius: 20px; */
         }
 
         .product:hover .product-image img {
@@ -538,10 +538,10 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
 
         .featured {
             position: absolute;
-            top: 15px;
+            top: 8px;
             left: 15px;
             display: inline-flex;
-            padding: 7px 10px;
+            padding: 5px 10px;
             border-radius: 999px;
             background: rgba(255, 255, 255, .92);
             color: var(--foreground);
@@ -593,17 +593,14 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
         }
 
         .discount {
-            padding: 7px 10px;
-            border-radius: 999px;
             background: rgba(var(--primary-rgb), .12);
             color: var(--primary);
             position: absolute;
-            bottom: 15px;
+            bottom: 8px;
             right: 15px;
             display: inline-flex;
             padding: 5px 10px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, .92);
         }
 
         .product-action {
@@ -784,6 +781,15 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             .product-body {
                 padding: 20px;
             }
+
+            .product-image {
+                border-right: none !important;
+            }
+
+            .discount {
+                font-size: 10px;
+            }
+        }
 
         }
     </style>
