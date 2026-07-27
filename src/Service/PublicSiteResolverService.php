@@ -72,8 +72,10 @@ class PublicSiteResolverService
                 'Templates',
                 'Themes',
                 'CatalogSettings',
-                'CatalogCategories.CatalogProducts',
-                'CatalogProducts',
+                'CatalogCategories.CatalogProducts.MeasurementTypes',
+                'CatalogCategories.CatalogProducts.CatalogProductVariants',
+                'CatalogProducts.MeasurementTypes',
+                'CatalogProducts.CatalogProductVariants',
                 'SiteSections' => function ($q) {
                     return $q->where(['SiteSections.visible' => true])
                         ->orderByAsc('SiteSections.sort_order');

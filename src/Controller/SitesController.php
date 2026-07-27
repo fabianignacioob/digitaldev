@@ -181,8 +181,10 @@ class SitesController extends AppController
                 'Themes',
                 'SiteSections',
                 'CatalogSettings',
-                'CatalogCategories.CatalogProducts',
-                'CatalogProducts',
+                'CatalogCategories.CatalogProducts.MeasurementTypes',
+                'CatalogCategories.CatalogProducts.CatalogProductVariants',
+                'CatalogProducts.MeasurementTypes',
+                'CatalogProducts.CatalogProductVariants',
             ])
             ->where(['Sites.id' => $id, 'Sites.user_id' => $this->currentUserId()])
             ->firstOrFail();

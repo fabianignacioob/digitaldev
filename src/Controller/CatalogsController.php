@@ -12,6 +12,12 @@ use RuntimeException;
 
 class CatalogsController extends AppController
 {
+    private const AVAILABILITY_OPTIONS = [
+        'available' => 'Disponible',
+        'unavailable' => 'Agotado o no disponible',
+        'coming_soon' => 'Próximamente',
+    ];
+
     private const BACKGROUND_PRESETS = [
         'parchment' => 'img/catalog-backgrounds/menu-parchment.png',
         'wood' => 'img/catalog-backgrounds/menu-wood.png',
@@ -38,7 +44,7 @@ class CatalogsController extends AppController
             ->orderByAsc('sort_order')
             ->all();
         $catalogProducts = $this->fetchTable('CatalogProducts')->find()
-            ->contain(['CatalogCategories'])
+            ->contain(['CatalogCategories', 'MeasurementTypes', 'CatalogProductVariants'])
             ->where(['CatalogProducts.site_id' => $siteId])
             ->orderByAsc('CatalogProducts.sort_order')
             ->all();
@@ -47,6 +53,11 @@ class CatalogsController extends AppController
             ->orderByAsc('name')
             ->toArray();
         $backgroundPresets = self::BACKGROUND_PRESETS;
+        $measurementTypes = $this->fetchTable('MeasurementTypes')->find()
+            ->where(['active' => true])
+            ->orderByAsc('sort_order')
+            ->all();
+        $availabilityOptions = self::AVAILABILITY_OPTIONS;
 
         $this->set(compact(
             'site',
@@ -59,6 +70,8 @@ class CatalogsController extends AppController
             'featuredItemsEnabled',
             'templateKind',
             'itemTypeOptions',
+            'measurementTypes',
+            'availabilityOptions',
         ));
 
         return null;
@@ -329,12 +342,12 @@ class CatalogsController extends AppController
 
         $this->request->allowMethod(['post', 'patch', 'put']);
         $product = $this->fetchTable('CatalogProducts')->find()
-            ->contain(['Sites.Templates'])
+            ->contain(['Sites.Templates', 'MeasurementTypes', 'CatalogProductVariants'])
             ->where(['CatalogProducts.id' => $id, 'Sites.user_id' => $this->currentUserId()])
             ->firstOrFail();
         $site = $product->site;
         $siteId = (int)$product->site_id;
-        $data = $this->normalizeProductData((array)$this->request->getData(), $site, false);
+        $data = $this->normalizeProductData((array)$this->request->getData(), $site, false, $product);
         $oldImagePath = $product->image_path;
         try {
             $imagePath = $this->saveCatalogUpload('product_image', $siteId, 'products');
@@ -357,6 +370,68 @@ class CatalogsController extends AppController
         } else {
             $this->Flash->error('No pudimos actualizar el elemento.');
         }
+
+        return $this->redirect(['action' => 'edit', $siteId]);
+    }
+
+    public function addVariant(int $productId): Response
+    {
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $this->request->allowMethod(['post']);
+        $product = $this->getOwnedProduct($productId);
+        if ($product->measurement_type_id === null) {
+            $this->Flash->error('Define primero el tipo de medida del producto antes de agregar variantes.');
+
+            return $this->redirect(['action' => 'edit', (int)$product->site_id]);
+        }
+        $variants = $this->fetchTable('CatalogProductVariants');
+        $data = $this->normalizeVariantData((array)$this->request->getData(), $product);
+        $data['catalog_product_id'] = $productId;
+        $data['sort_order'] = $this->nextVariantSortOrder($productId);
+
+        $variant = $variants->newEntity($data);
+        if ($variants->save($variant)) {
+            $this->Flash->success('Opción agregada.');
+        } else {
+            $this->Flash->error('No pudimos agregar la opción. Revisa su nombre, medida y valor.');
+        }
+
+        return $this->redirect(['action' => 'edit', (int)$product->site_id]);
+    }
+
+    public function updateVariant(int $id): Response
+    {
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $this->request->allowMethod(['post', 'patch', 'put']);
+        $variant = $this->getOwnedVariant($id);
+        $data = $this->normalizeVariantData((array)$this->request->getData(), $variant->catalog_product);
+        $variant = $this->fetchTable('CatalogProductVariants')->patchEntity($variant, $data);
+        if ($this->fetchTable('CatalogProductVariants')->save($variant)) {
+            $this->Flash->success('Opción actualizada.');
+        } else {
+            $this->Flash->error('No pudimos actualizar la opción.');
+        }
+
+        return $this->redirect(['action' => 'edit', (int)$variant->catalog_product->site_id]);
+    }
+
+    public function deleteVariant(int $id): Response
+    {
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $this->request->allowMethod(['post', 'delete']);
+        $variant = $this->getOwnedVariant($id);
+        $siteId = (int)$variant->catalog_product->site_id;
+        $this->fetchTable('CatalogProductVariants')->deleteOrFail($variant);
+        $this->Flash->success('Opción eliminada.');
 
         return $this->redirect(['action' => 'edit', $siteId]);
     }
@@ -457,6 +532,22 @@ class CatalogsController extends AppController
             ->firstOrFail();
     }
 
+    private function getOwnedProduct(int $productId): \App\Model\Entity\CatalogProduct
+    {
+        return $this->fetchTable('CatalogProducts')->find()
+            ->contain(['Sites.Templates', 'MeasurementTypes', 'CatalogProductVariants'])
+            ->where(['CatalogProducts.id' => $productId, 'Sites.user_id' => $this->currentUserId()])
+            ->firstOrFail();
+    }
+
+    private function getOwnedVariant(int $variantId): \App\Model\Entity\CatalogProductVariant
+    {
+        return $this->fetchTable('CatalogProductVariants')->find()
+            ->contain(['CatalogProducts.Sites.Templates', 'CatalogProducts.MeasurementTypes'])
+            ->where(['CatalogProductVariants.id' => $variantId, 'Sites.user_id' => $this->currentUserId()])
+            ->firstOrFail();
+    }
+
     private function ensureCatalogSetting(int $siteId): \App\Model\Entity\CatalogSetting
     {
         $settings = $this->fetchTable('CatalogSettings');
@@ -512,7 +603,12 @@ class CatalogsController extends AppController
         return $options;
     }
 
-    private function normalizeProductData(array $data, \App\Model\Entity\Site $site, bool $creating): array
+    private function normalizeProductData(
+        array $data,
+        \App\Model\Entity\Site $site,
+        bool $creating,
+        ?\App\Model\Entity\CatalogProduct $existingProduct = null,
+    ): array
     {
         $validItemTypes = $this->planService()->validItemTypesForTemplate($site);
         if (!in_array((string)($data['item_type'] ?? ''), $validItemTypes, true)) {
@@ -531,10 +627,57 @@ class CatalogsController extends AppController
         if (($data['duration'] ?? '') === '') {
             $data['duration'] = null;
         }
+        $data['measurement_type_id'] = !empty($data['measurement_type_id']) ? (int)$data['measurement_type_id'] : null;
+        if ($existingProduct && !empty($existingProduct->catalog_product_variants)) {
+            $data['measurement_type_id'] = $existingProduct->measurement_type_id;
+        }
+        if ($data['measurement_type_id'] !== null && !$this->fetchTable('MeasurementTypes')->exists([
+            'id' => $data['measurement_type_id'],
+            'active' => true,
+        ])) {
+            throw new BadRequestException('El tipo de medida seleccionado no está disponible.');
+        }
         $data['featured'] = $this->planService()->hasFeature((int)$this->currentUserId(), 'featured_items_enabled')
             && !empty($data['featured']);
         $data['active'] = $creating ? true : !empty($data['active']);
+        $data['availability'] = array_key_exists((string)($data['availability'] ?? ''), self::AVAILABILITY_OPTIONS)
+            ? (string)$data['availability']
+            : 'available';
         unset($data['sort_order']);
+
+        return $data;
+    }
+
+    private function normalizeVariantData(array $data, \App\Model\Entity\CatalogProduct $product): array
+    {
+        $data['measurement_value'] = ($data['measurement_value'] ?? '') === '' ? null : $data['measurement_value'];
+        $data['measurement_unit'] = trim((string)($data['measurement_unit'] ?? '')) ?: null;
+        $data['price'] = ($data['price'] ?? '') === '' ? null : $data['price'];
+        $data['availability'] = array_key_exists((string)($data['availability'] ?? ''), self::AVAILABILITY_OPTIONS)
+            ? (string)$data['availability']
+            : 'available';
+
+        if ($product->measurement_type_id === null) {
+            $data['measurement_value'] = null;
+            $data['measurement_unit'] = null;
+
+            return $data;
+        }
+
+        $type = $this->fetchTable('MeasurementTypes')->find()
+            ->where(['id' => $product->measurement_type_id, 'active' => true])
+            ->first();
+        if (!$type) {
+            throw new BadRequestException('El tipo de medida seleccionado no está disponible.');
+        }
+        $units = $type->units;
+        if (is_string($units)) {
+            $units = json_decode($units, true) ?: [];
+        }
+        $allowedUnits = array_values(array_filter((array)$units, 'is_string'));
+        if ($data['measurement_unit'] !== null && !in_array($data['measurement_unit'], $allowedUnits, true)) {
+            throw new BadRequestException('La unidad seleccionada no corresponde al tipo de medida.');
+        }
 
         return $data;
     }
@@ -559,5 +702,16 @@ class CatalogsController extends AppController
             ->first();
 
         return ((int)($lastProduct->sort_order ?? 0)) + 1;
+    }
+
+    private function nextVariantSortOrder(int $productId): int
+    {
+        $lastVariant = $this->fetchTable('CatalogProductVariants')->find()
+            ->select(['sort_order'])
+            ->where(['catalog_product_id' => $productId])
+            ->orderByDesc('sort_order')
+            ->first();
+
+        return ((int)($lastVariant->sort_order ?? 0)) + 1;
     }
 }

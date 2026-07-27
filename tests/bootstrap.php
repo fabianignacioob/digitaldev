@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 
 use Cake\Chronos\Chronos;
+use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\TestSuite\ConnectionHelper;
 use Migrations\TestSuite\Migrator;
@@ -58,3 +59,6 @@ ConnectionHelper::addTestAliases();
 // (new SchemaLoader())->loadSqlFiles('./tests/schema.sql', 'test');
 
 (new Migrator())->run();
+
+// Las migraciones de pruebas pueden agregar o eliminar columnas entre ejecuciones.
+Cache::clear('_cake_model_');

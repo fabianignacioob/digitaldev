@@ -169,6 +169,123 @@ class CatalogsControllerTest extends TestCase
         $this->assertSame(1, $this->table('CatalogProducts')->find()->where(['site_id' => $siteId])->count());
     }
 
+    public function testProductAvailabilityAndVariantsAreStoredAndShownPublicly(): void
+    {
+        $siteId = $this->createSite($this->userId, 'carta-simple', 'variantes-' . uniqid(), 'Pizzería Demo');
+        $measurementTypes = $this->table('MeasurementTypes');
+        $sizeType = $measurementTypes->find()->where(['slug' => 'size'])->first();
+        if (!$sizeType) {
+            $measurementTypes->getConnection()->insert('measurement_types', [
+                'slug' => 'size',
+                'name' => 'Tamaño',
+                'units' => json_encode(['cm', 'in'], JSON_UNESCAPED_UNICODE),
+                'sort_order' => 1,
+                'active' => true,
+                'created' => DateTime::now(),
+                'modified' => DateTime::now(),
+            ]);
+            $sizeType = $measurementTypes->find()->where(['slug' => 'size'])->firstOrFail();
+        }
+        $product = $this->table('CatalogProducts')->newEntity([
+            'site_id' => $siteId,
+            'item_type' => 'menu_item',
+            'name' => 'Pizza napolitana',
+            'description' => 'Tomate, mozzarella y albahaca.',
+            'measurement_type_id' => $sizeType->id,
+            'price' => null,
+            'availability' => 'available',
+            'active' => true,
+            'sort_order' => 1,
+        ]);
+        $this->table('CatalogProducts')->saveOrFail($product);
+
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+        $this->post('/carta/productos/' . $product->id . '/variantes', [
+            'name' => 'Familiar',
+            'measurement_value' => '40',
+            'measurement_unit' => 'cm',
+            'price' => '14990',
+            'availability' => 'available',
+        ]);
+        $this->assertRedirect('/sitios/' . $siteId . '/carta');
+
+        $variant = $this->table('CatalogProductVariants')->find()
+            ->where(['catalog_product_id' => $product->id])
+            ->firstOrFail();
+        $this->assertSame('Familiar', $variant->name);
+        $this->assertSame(40.0, (float)$variant->measurement_value);
+        $this->assertSame('cm', $variant->measurement_unit);
+        $this->assertSame('available', $variant->availability);
+
+        $this->get('/sitios/preview/' . $siteId);
+        $this->assertResponseOk();
+        $this->assertResponseContains('Familiar');
+        $this->assertResponseContains('40 cm');
+
+        $this->post('/sitios/publicar/' . $siteId);
+        $this->get('/s/' . $this->table('Sites')->get($siteId)->subdomain);
+        $this->assertResponseOk();
+        $this->assertResponseContains('Desde $14.990');
+        $this->assertResponseContains('Familiar');
+        $this->assertResponseContains('40 cm');
+        $this->assertResponseContains('Pizza%20napolitana%20en');
+        $this->assertResponseNotContains('Pizza%20napolitana%20%28Familiar%2040%20cm%29');
+
+        $this->post('/carta/productos/editar/' . $product->id, [
+            'item_type' => 'menu_item',
+            'name' => 'Pizza napolitana',
+            'description' => '',
+            'price' => '',
+            'discount' => '',
+            'duration' => '',
+            'availability' => 'unavailable',
+            'active' => '1',
+        ]);
+        $product = $this->table('CatalogProducts')->get($product->id);
+        $this->assertSame('unavailable', $product->availability);
+
+        $this->get('/s/' . $this->table('Sites')->get($siteId)->subdomain);
+        $this->assertResponseContains('Agotado');
+        $this->assertResponseNotContains('Pizza%20napolitana%20en');
+    }
+
+    public function testCannotModifyAnotherUsersVariant(): void
+    {
+        $siteId = $this->createSite($this->userId, 'catalogo-simple', 'variante-propia-' . uniqid());
+        $product = $this->table('CatalogProducts')->newEntity([
+            'site_id' => $siteId,
+            'item_type' => 'product',
+            'name' => 'Tornillo Phillips',
+            'availability' => 'available',
+            'active' => true,
+            'sort_order' => 1,
+        ]);
+        $this->table('CatalogProducts')->saveOrFail($product);
+        $variant = $this->table('CatalogProductVariants')->newEntity([
+            'catalog_product_id' => $product->id,
+            'name' => '2 pulgadas',
+            'price' => 190,
+            'availability' => 'available',
+            'sort_order' => 1,
+        ]);
+        $this->table('CatalogProductVariants')->saveOrFail($variant);
+
+        $otherUserId = $this->createUser('otra-variante-' . uniqid() . '@example.test');
+        $this->createActiveSubscription($otherUserId, 'full');
+        $this->loginAs($otherUserId);
+        $this->enableCsrfToken();
+        $this->post('/carta/variantes/editar/' . $variant->id, [
+            'name' => 'No autorizado',
+            'price' => '1',
+            'availability' => 'available',
+        ]);
+
+        $this->assertResponseCode(404);
+        $variant = $this->table('CatalogProductVariants')->get($variant->id);
+        $this->assertSame('2 pulgadas', $variant->name);
+    }
+
     public function testPublicAccessAndSuspensionByExpiredLicense(): void
     {
         $siteId = $this->createSite($this->userId, 'carta-simple', 'publico-' . uniqid());

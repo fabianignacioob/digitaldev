@@ -19,6 +19,16 @@ $backgroundPresetLabels = [
     'natural-fiber' => 'Papel natural',
     'rustic-wood' => 'Madera rústica',
 ];
+$measurementTypeOptions = [];
+$measurementUnits = [];
+foreach ($measurementTypes ?? [] as $measurementType) {
+    $measurementTypeOptions[(int)$measurementType->id] = $measurementType->name;
+    $units = $measurementType->units;
+    if (is_string($units)) {
+        $units = json_decode($units, true) ?: [];
+    }
+    $measurementUnits[(int)$measurementType->id] = array_values(array_filter((array)$units, 'is_string'));
+}
 ?>
 
 <section class="page-head">
@@ -35,6 +45,30 @@ $backgroundPresetLabels = [
 <?= $this->Html->script('sortable.min') ?>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const measurementUnits = <?= json_encode($measurementUnits, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+        const syncMeasurementUnit = (typeSelect) => {
+            const unitSelect = document.getElementById(typeSelect.dataset.unitTarget || '');
+            if (!unitSelect) {
+                return;
+            }
+
+            const selected = unitSelect.dataset.selected || unitSelect.value;
+            const units = measurementUnits[typeSelect.value] || [];
+            unitSelect.replaceChildren(new Option('Sin unidad', ''));
+            units.forEach((unit) => unitSelect.add(new Option(unit, unit, false, unit === selected)));
+            unitSelect.disabled = !typeSelect.value || units.length === 0;
+        };
+        document.querySelectorAll('[data-measurement-type]').forEach((typeSelect) => {
+            typeSelect.addEventListener('change', () => {
+                const unitSelect = document.getElementById(typeSelect.dataset.unitTarget || '');
+                if (unitSelect) {
+                    unitSelect.dataset.selected = '';
+                }
+                syncMeasurementUnit(typeSelect);
+            });
+            syncMeasurementUnit(typeSelect);
+        });
+
         const backgroundType = document.getElementById('background-type');
         const colorFields = document.querySelector('[data-background-color-fields]');
         const imageFields = document.querySelector('[data-background-image-fields]');
@@ -290,7 +324,7 @@ $backgroundPresetLabels = [
 
 <section class="card catalog-products-panel">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <h2><?= h($templateKind === 'catalogo' ? 'Elementos' : 'Productos') ?></h2>
             <p>Agrega elementos con imagen, descripción, valor opcional y visibilidad. Después ordénalos arrastrando las tarjetas.</p>
             <?= $this->Form->create(null, [
@@ -318,6 +352,13 @@ $backgroundPresetLabels = [
                     'options' => $categoryOptions,
                 ]) ?>
             <?php endif; ?>
+            <?= $this->Form->control('measurement_type_id', [
+                'id' => 'product-create-measurement-type',
+                'label' => 'Tipo de medida para sus opciones',
+                'empty' => 'Sin variantes de medida',
+                'options' => $measurementTypeOptions,
+                'required' => false,
+            ]) ?>
 
             <?= $this->Form->control('description', [
                 'id' => 'product-create-description',
@@ -342,6 +383,12 @@ $backgroundPresetLabels = [
                 'label' => 'Duración opcional',
                 'placeholder' => 'Ej: 45 min, 1 sesión, mensual',
             ]) ?>
+            <?= $this->Form->control('availability', [
+                'id' => 'product-create-availability',
+                'label' => 'Disponibilidad',
+                'options' => $availabilityOptions,
+                'default' => 'available',
+            ]) ?>
             <?php if ($featuredItemsEnabled): ?>
                 <?= $this->Form->control('featured', [
                     'id' => 'product-create-featured',
@@ -354,7 +401,7 @@ $backgroundPresetLabels = [
             </div>
             <?= $this->Form->end() ?>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <p class="product-sort-help">Usa el control ↕ para cambiar el orden. Los cambios se guardan al soltar cada tarjeta.</p>
             <p class="product-sort-status" data-product-sort-status role="status" aria-live="polite"></p>
             <div class="product-editor-list" id="catalog-products-sortable" data-reorder-url="/sitios/<?= (int)$site->id ?>/carta/productos/orden">
@@ -364,11 +411,15 @@ $backgroundPresetLabels = [
                         <aside class="product-media-panel">
                             <div class="product-status-stack">
                                 <span class="status"><?= $product->active ? 'Visible' : 'Oculto' ?></span>
+                                <span class="status"><?= h($availabilityOptions[$product->availability ?? 'available'] ?? 'Disponible') ?></span>
                                 <?php if ($product->featured): ?>
                                     <span class="status">Destacado</span>
                                 <?php endif; ?>
                                 <?php if ($product->price === null): ?>
                                     <span class="status">Consultar</span>
+                                <?php endif; ?>
+                                <?php if (!empty($product->catalog_product_variants)): ?>
+                                    <span class="status"><?= count($product->catalog_product_variants) ?> opciones</span>
                                 <?php endif; ?>
                             </div>
                             <div class="product-media">
@@ -441,6 +492,23 @@ $backgroundPresetLabels = [
                                             ]) ?>
                                         </div>
                                     <?php endif; ?>
+                                    <div>
+                                        <?php if (!empty($product->catalog_product_variants)): ?>
+                                            <?= $this->Form->hidden('measurement_type_id', ['value' => $product->measurement_type_id]) ?>
+                                            <label>Tipo de medida</label>
+                                            <p class="meta product-measurement-type"><?= h($product->measurement_type->name ?? 'Sin medida') ?></p>
+                                            <p class="meta">Para cambiarlo, elimina primero sus opciones actuales.</p>
+                                        <?php else: ?>
+                                            <?= $this->Form->control('measurement_type_id', [
+                                                'id' => 'product-' . (int)$product->id . '-measurement-type',
+                                                'label' => 'Tipo de medida para sus opciones',
+                                                'empty' => 'Sin variantes de medida',
+                                                'options' => $measurementTypeOptions,
+                                                'value' => $product->measurement_type_id,
+                                                'required' => false,
+                                            ]) ?>
+                                        <?php endif; ?>
+                                    </div>
                                     <div class="field-wide">
                                         <?= $this->Form->control('description', ['id' => 'product-' . (int)$product->id . '-description', 'label' => 'Descripción corta', 'value' => $product->description]) ?>
                                     </div>
@@ -452,6 +520,14 @@ $backgroundPresetLabels = [
                                     </div>
                                     <div>
                                         <?= $this->Form->control('duration', ['id' => 'product-' . (int)$product->id . '-duration', 'label' => 'Duración opcional', 'value' => $product->duration]) ?>
+                                    </div>
+                                    <div>
+                                        <?= $this->Form->control('availability', [
+                                            'id' => 'product-' . (int)$product->id . '-availability',
+                                            'label' => 'Disponibilidad',
+                                            'options' => $availabilityOptions,
+                                            'value' => $product->availability ?: 'available',
+                                        ]) ?>
                                     </div>
                                     <div class="field-full">
                                         <?= $this->Form->control('product_image', ['id' => 'product-' . (int)$product->id . '-image', 'label' => 'Cambiar imagen', 'type' => 'file']) ?>
@@ -474,6 +550,99 @@ $backgroundPresetLabels = [
                                     <?= $this->Form->button('Guardar cambios', ['class' => 'button secondary']) ?>
                                 </div>
                                 <?= $this->Form->end() ?>
+                                <section class="variant-section" aria-labelledby="product-<?= (int)$product->id ?>-variants-title">
+                                    <div class="variant-section-heading">
+                                        <div>
+                                            <h3 id="product-<?= (int)$product->id ?>-variants-title">Variantes<?= $product->measurement_type ? ' de ' . h(strtolower((string)$product->measurement_type->name)) : '' ?></h3>
+                                            <p class="meta">Agrega las opciones del producto, por ejemplo: Individual, Mediana y Familiar.</p>
+                                        </div>
+                                    </div>
+                                    <?php if (!$product->measurement_type_id): ?>
+                                        <p class="meta">Elige y guarda primero un tipo de medida para agregar sus variantes.</p>
+                                    <?php else: ?>
+                                    <?= $this->Form->create(null, [
+                                        'url' => ['controller' => 'Catalogs', 'action' => 'addVariant', $product->id],
+                                        'class' => 'variant-form',
+                                    ]) ?>
+                                    <div class="variant-form-grid">
+                                        <?= $this->Form->control('name', [
+                                            'id' => 'variant-create-' . (int)$product->id . '-name',
+                                            'label' => 'Nombre de la opción',
+                                            'placeholder' => 'Ej: Mediana, Familiar, Pack 100',
+                                        ]) ?>
+                                        <?= $this->Form->control('measurement_value', [
+                                            'id' => 'variant-create-' . (int)$product->id . '-value',
+                                            'label' => 'Medida opcional',
+                                            'type' => 'number',
+                                            'step' => '0.01',
+                                            'min' => '0',
+                                            'required' => false,
+                                            'placeholder' => 'Ej: 30',
+                                        ]) ?>
+                                        <?= $this->Form->control('measurement_unit', [
+                                            'id' => 'variant-create-' . (int)$product->id . '-unit',
+                                            'label' => 'Unidad',
+                                            'type' => 'select',
+                                            'options' => $measurementUnits[(int)$product->measurement_type_id] ?? [],
+                                            'empty' => 'Sin unidad',
+                                            'disabled' => !$product->measurement_type_id,
+                                        ]) ?>
+                                        <?= $this->Form->control('price', [
+                                            'id' => 'variant-create-' . (int)$product->id . '-price',
+                                            'label' => 'Valor',
+                                            'type' => 'number',
+                                            'step' => '0.01',
+                                            'min' => '0',
+                                            'required' => false,
+                                        ]) ?>
+                                        <?= $this->Form->control('availability', [
+                                            'id' => 'variant-create-' . (int)$product->id . '-availability',
+                                            'label' => 'Disponibilidad',
+                                            'options' => $availabilityOptions,
+                                            'default' => 'available',
+                                        ]) ?>
+                                    </div>
+                                    <div class="product-actions variant-actions">
+                                        <?= $this->Form->button('Agregar opción', ['class' => 'button secondary']) ?>
+                                    </div>
+                                    <?= $this->Form->end() ?>
+
+                                    <?php if (!empty($product->catalog_product_variants)): ?>
+                                        <div class="variant-list">
+                                            <?php foreach ($product->catalog_product_variants as $variant): ?>
+                                                <?php $variantUnitOptions = $measurementUnits[(int)$product->measurement_type_id] ?? []; ?>
+                                                <?= $this->Form->create($variant, [
+                                                    'url' => ['controller' => 'Catalogs', 'action' => 'updateVariant', $variant->id],
+                                                    'class' => 'variant-editor-row',
+                                                ]) ?>
+                                                <div class="variant-form-grid">
+                                                    <?= $this->Form->control('name', ['id' => 'variant-' . (int)$variant->id . '-name', 'label' => 'Opción', 'value' => $variant->name]) ?>
+                                                    <?= $this->Form->control('measurement_value', ['id' => 'variant-' . (int)$variant->id . '-value', 'label' => 'Medida opcional', 'type' => 'number', 'step' => '0.01', 'min' => '0', 'required' => false, 'value' => $variant->measurement_value]) ?>
+                                                    <?= $this->Form->control('measurement_unit', [
+                                                        'id' => 'variant-' . (int)$variant->id . '-unit',
+                                                        'label' => 'Unidad',
+                                                        'type' => 'select',
+                                                        'options' => $variantUnitOptions,
+                                                        'empty' => 'Sin unidad',
+                                                        'value' => $variant->measurement_unit,
+                                                        'disabled' => !$product->measurement_type_id,
+                                                    ]) ?>
+                                                    <?= $this->Form->control('price', ['id' => 'variant-' . (int)$variant->id . '-price', 'label' => 'Valor', 'type' => 'number', 'step' => '0.01', 'min' => '0', 'required' => false, 'value' => $variant->price]) ?>
+                                                    <?= $this->Form->control('availability', ['id' => 'variant-' . (int)$variant->id . '-availability', 'label' => 'Disponibilidad', 'options' => $availabilityOptions, 'value' => $variant->availability ?: 'available']) ?>
+                                                </div>
+                                                <div class="product-actions variant-actions">
+                                                    <?= $this->Form->button('Guardar opción', ['class' => 'button secondary']) ?>
+                                                    <?= $this->Form->postLink('Eliminar opción', ['controller' => 'Catalogs', 'action' => 'deleteVariant', $variant->id], [
+                                                        'class' => 'button danger',
+                                                        'confirm' => '¿Eliminar esta opción?',
+                                                    ]) ?>
+                                                </div>
+                                                <?= $this->Form->end() ?>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php endif; ?>
+                                </section>
                             </div>
                         </div>
                     </article>

@@ -180,6 +180,15 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/carta/productos/editar/{id}', ['controller' => 'Catalogs', 'action' => 'updateProduct'])
             ->setPass(['id'])
             ->setPatterns(['id' => '\d+']);
+        $builder->connect('/carta/productos/{productId}/variantes', ['controller' => 'Catalogs', 'action' => 'addVariant'])
+            ->setPass(['productId'])
+            ->setPatterns(['productId' => '\d+']);
+        $builder->connect('/carta/variantes/editar/{id}', ['controller' => 'Catalogs', 'action' => 'updateVariant'])
+            ->setPass(['id'])
+            ->setPatterns(['id' => '\d+']);
+        $builder->connect('/carta/variantes/eliminar/{id}', ['controller' => 'Catalogs', 'action' => 'deleteVariant'])
+            ->setPass(['id'])
+            ->setPatterns(['id' => '\d+']);
         $builder->connect('/carta/categorias/eliminar/{id}', ['controller' => 'Catalogs', 'action' => 'deleteCategory'])
             ->setPass(['id'])
             ->setPatterns(['id' => '\d+']);

@@ -128,7 +128,38 @@ $secondaryRgb = $hexToRgb($secondary);
 $brandInitial = strtoupper(substr(trim((string)$site->name), 0, 1)) ?: 'C';
 $ctaHref = $whatsapp ? 'https://wa.me/' . h($whatsapp) . '?text=' . $defaultContactMessage : '#contenido-principal';
 $ctaText = $isCatalog ? 'Consultar' : '';
-$formatPrice = static function ($product): string {
+$availabilityLabels = [
+    'available' => 'Disponible',
+    'unavailable' => 'Agotado',
+    'coming_soon' => 'Próximamente',
+];
+$formatMeasure = static function ($variant): string {
+    $parts = [];
+    if ($variant->measurement_value !== null && $variant->measurement_value !== '') {
+        $parts[] = rtrim(rtrim(number_format((float)$variant->measurement_value, 2, '.', ''), '0'), '.');
+    }
+    if ($variant->measurement_unit) {
+        $parts[] = (string)$variant->measurement_unit;
+    }
+
+    return implode(' ', $parts);
+};
+$productVariants = static function ($product): array {
+    return array_values(array_filter((array)($product->catalog_product_variants ?? []), static fn ($variant): bool => !empty($variant->name)));
+};
+$formatPrice = static function ($product) use ($productVariants): string {
+    $variants = $productVariants($product);
+    if ($variants !== []) {
+        $prices = array_values(array_filter(array_map(
+            static fn ($variant) => $variant->price === null ? null : (float)$variant->price,
+            $variants,
+        ), static fn ($price): bool => $price !== null));
+        if ($prices === []) {
+            return 'Consultar';
+        }
+
+        return 'Desde $' . number_format(min($prices), 0, ',', '.');
+    }
     if ($product->price === null) {
         return 'Consultar';
     }
@@ -136,9 +167,13 @@ $formatPrice = static function ($product): string {
     return trim((string)($product->price_prefix ? $product->price_prefix . ' ' : '') . '$' . number_format((float)$product->price, 0, ',', '.'));
 };
 $contactMessageFor = static function ($product) use ($siteNameForMessage): string {
-    return rawurlencode('Hola, quiero consultar por ' . trim((string)$product->name) . ' en ' . $siteNameForMessage . '.');
+    $item = trim((string)$product->name);
+
+    return rawurlencode('Hola, quiero consultar por ' . $item . ' en ' . $siteNameForMessage . '.');
 };
-$renderProduct = static function ($product) use ($productFallback, $formatPrice, $whatsapp, $contactMessageFor, $defaultContactMessage, $contactLabel): void {
+$renderProduct = static function ($product) use ($productFallback, $formatPrice, $formatMeasure, $productVariants, $availabilityLabels, $whatsapp, $contactMessageFor, $defaultContactMessage, $contactLabel): void {
+    $availability = $product->availability ?? 'available';
+    $variants = $productVariants($product);
     ?>
     <article class="product">
         <div class="product-image">
@@ -149,22 +184,41 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             <?php if ($product->discount): ?>
                 <span class="discount">Oferta $<?= number_format((float)$product->discount, 0, ',', '.') ?></span>
             <?php endif; ?>
+            <?php if ($availability !== 'available'): ?>
+                <span class="availability-badge"><?= h($availabilityLabels[$availability] ?? 'No disponible') ?></span>
+            <?php endif; ?>
         </div>
         <div class="product-body">
             <div class="product-heading">
                 <h3><?= h($product->name) ?></h3>
                 <span class="price"><?= h($formatPrice($product)) ?></span>
             </div>
+            <?php if ($variants): ?>
+                <div class="product-variants" aria-label="Opciones de <?= h($product->name) ?>">
+                    <?php foreach ($variants as $variant): ?>
+                        <?php
+                        $variantAvailability = $variant->availability ?? 'available';
+                        $measure = $formatMeasure($variant);
+                        ?>
+                        <div class="variant-row">
+                            <span><?= h(trim((string)$variant->name)) ?></span>
+                            <?php if ($variantAvailability !== 'available'): ?>
+                                <small><?= h($availabilityLabels[$variantAvailability] ?? 'No disponible') ?></small>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
             <?php if ($product->description): ?>
                 <p><?= h($product->description) ?></p>
             <?php endif; ?>
             <?php if ($product->duration): ?>
                 <div class="duration"><?= h($product->duration) ?></div>
             <?php endif; ?>
-            <?php if ($whatsapp): ?>
+            <?php if ($whatsapp && $availability === 'available'): ?>
                 <a class="product-action" href="https://wa.me/<?= h($whatsapp) ?>?text=<?= $contactMessageFor($product) ?: $defaultContactMessage ?>" target="_blank" rel="noopener" aria-label="<?= h($contactLabel . ' ' . $product->name . ' por WhatsApp') ?>">
                     <span class="wa-icon" aria-hidden="true"></span>
-                    <?= h($product->item_type === 'service' ? 'Cotizar' : $contactLabel . ' por WhatsApp') ?>
+                    <?= h($product->item_type === 'service' ? 'Cotizar' : $contactLabel) ?>
                 </a>
             <?php endif; ?>
         </div>
@@ -550,6 +604,20 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             text-transform: uppercase;
         }
 
+        .availability-badge {
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            display: inline-flex;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(7, 23, 53, .86);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
         .product-body {
             display: grid;
             gap: 5px;
@@ -610,6 +678,34 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             background: var(--primary);
             color: #fff;
             box-shadow: 0 12px 22px rgba(var(--primary-rgb), .18);
+        }
+
+        .product-variants {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 3px;
+            color: rgba(var(--secondary-rgb), .76);
+            font-size: 11px;
+        }
+
+        .variant-row {
+            display: inline-flex;
+            align-items: baseline;
+        }
+
+        .variant-row:not(:last-child)::after {
+            content: ',';
+        }
+
+        .variant-row span {
+            color: var(--foreground);
+            font-weight: 500;
+        }
+
+        .variant-row small {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 12px;
         }
 
         .empty {

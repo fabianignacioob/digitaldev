@@ -9,6 +9,8 @@ use Cake\Validation\Validator;
 
 class CatalogProductsTable extends Table
 {
+    public const AVAILABILITIES = ['available', 'unavailable', 'coming_soon'];
+
     public function initialize(array $config): void
     {
         parent::initialize($config);
@@ -19,6 +21,11 @@ class CatalogProductsTable extends Table
         $this->addBehavior('Timestamp');
         $this->belongsTo('Sites');
         $this->belongsTo('CatalogCategories');
+        $this->belongsTo('MeasurementTypes');
+        $this->hasMany('CatalogProductVariants', [
+            'dependent' => true,
+            'sort' => ['CatalogProductVariants.sort_order' => 'ASC'],
+        ]);
     }
 
     public function validationDefault(Validator $validator): Validator
@@ -26,6 +33,7 @@ class CatalogProductsTable extends Table
         return $validator
             ->integer('site_id')->notEmptyString('site_id')
             ->integer('catalog_category_id')->allowEmptyString('catalog_category_id')
+            ->integer('measurement_type_id')->allowEmptyString('measurement_type_id')
             ->scalar('image_path')->maxLength('image_path', 255)->allowEmptyString('image_path')
             ->scalar('item_type')->maxLength('item_type', 30)->notEmptyString('item_type')
             ->scalar('name')->maxLength('name', 140)->requirePresence('name', 'create')->notEmptyString('name')
@@ -36,6 +44,7 @@ class CatalogProductsTable extends Table
             ->scalar('duration')->maxLength('duration', 80)->allowEmptyString('duration')
             ->boolean('featured')
             ->boolean('active')
+            ->scalar('availability')->inList('availability', self::AVAILABILITIES)->notEmptyString('availability')
             ->integer('sort_order');
     }
 
@@ -44,6 +53,10 @@ class CatalogProductsTable extends Table
         $rules->add($rules->existsIn(['site_id'], 'Sites'), ['errorField' => 'site_id']);
         $rules->add($rules->existsIn(['catalog_category_id'], 'CatalogCategories'), [
             'errorField' => 'catalog_category_id',
+            'allowNullableNulls' => true,
+        ]);
+        $rules->add($rules->existsIn(['measurement_type_id'], 'MeasurementTypes'), [
+            'errorField' => 'measurement_type_id',
             'allowNullableNulls' => true,
         ]);
 
