@@ -888,6 +888,8 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
 
             .product {
                 display: inline-flex !important;
+                flex-direction: row;
+                align-items: stretch;
             }
 
             .product-body {
@@ -895,7 +897,9 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             }
 
             .product-image {
-                border-right: none !important;
+                flex: 0 0 36%;
+                aspect-ratio: auto;
+                border-right: 1px solid var(--border);
             }
 
             .discount {
