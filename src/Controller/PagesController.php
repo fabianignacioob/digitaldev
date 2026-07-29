@@ -62,7 +62,12 @@ class PagesController extends AppController
         $this->set(compact('page', 'subpage'));
 
         if ($page === 'home') {
-            $this->viewBuilder()->disableAutoLayout();
+            $this->viewBuilder()->setLayout('marketing');
+            $plans = $this->fetchTable('Plans')->find()
+                ->where(['active' => true])
+                ->orderByAsc('sort_order')
+                ->all();
+            $this->set(compact('plans'));
         } elseif (in_array($page, ['servicio', 'planes'], true)) {
             $this->viewBuilder()->setLayout('marketing');
             if ($page === 'planes') {

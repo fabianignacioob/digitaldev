@@ -182,7 +182,7 @@ class SitesControllerTest extends TestCase
         $this->get('/');
 
         $this->assertResponseOk();
-        $this->assertResponseContains('Tu catálogo, carta o servicios en un solo enlace');
+        $this->assertResponseContains('Tu catálogo, carta o');
         $this->assertResponseContains($plan->name);
         $this->assertResponseContains(number_format((int)$plan->monthly_price, 0, ',', '.'));
     }

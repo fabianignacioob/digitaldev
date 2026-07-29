@@ -1,113 +1,30 @@
 <?php
-$this->assign('title', 'Servicio mensual de sitios editables | CatOps');
-$this->assign('metaDescription', 'Servicio mensual de CatOps para crear una web editable, con plantilla, panel simple, subdominio y opción de dominio propio.');
+declare(strict_types=1);
+
+$this->assign('title', 'Cómo funciona CatOps | Servicio mensual');
+$this->assign('metaDescription', 'Conoce cómo CatOps permite crear, editar y compartir cartas, catálogos y páginas de servicios.');
 ?>
-
-<section class="hero">
+<section class="page-hero">
   <div class="container hero-grid">
-    <div>
-      <span class="kicker">Servicio mensual CatOps</span>
-      <h1>Tu web editable, lista para vender</h1>
-      <p class="lead">
-        Diseñamos una plataforma simple para que una pyme, emprendimiento o
-        negocio local pueda elegir una plantilla, ajustar su contenido y tener
-        una landing activa sin entrar en procesos técnicos complejos.
-      </p>
-      <div class="actions">
-        <a class="button" href="/planes">Ver planes</a>
-        <a class="button secondary" href="/registro">Crear cuenta</a>
-      </div>
-    </div>
-    <div class="visual service-visual" aria-hidden="true"></div>
+    <div><span class="eyebrow">El servicio CatOps</span><h1>Una presencia digital clara, editable y lista para compartir</h1><p class="hero-copy">CatOps ayuda a negocios pequeños a concentrar su oferta en un solo enlace, sin depender de conocimientos técnicos para actualizarlo.</p><div class="actions"><a class="button" href="/registro">Crear mi sitio</a><a class="button secondary" href="/planes">Ver planes</a></div></div>
+    <div class="page-visual" aria-hidden="true"></div>
   </div>
 </section>
-
 <section>
-  <div class="container">
-    <div class="section-head">
-      <h2>Qué incluye el servicio</h2>
-      <p>
-        La idea es resolver lo esencial: presencia digital clara, editable y
-        mantenible, con soporte para seguir mejorando sin partir de cero.
-      </p>
-    </div>
-    <div class="grid">
-      <article class="card">
-        <h3>Plantillas listas para adaptar</h3>
-        <p>El usuario elige una base visual según su tipo de negocio y luego personaliza los textos principales.</p>
-      </article>
-      <article class="card">
-        <h3>Panel de edición simple</h3>
-        <p>Logo, colores, títulos, descripciones, WhatsApp, redes y secciones visibles desde un panel privado.</p>
-      </article>
-      <article class="card">
-        <h3>Publicación flexible</h3>
-        <p>Se puede partir con subdominio CatOps y más adelante conectar un dominio propio si el cliente ya tiene uno.</p>
-      </article>
-    </div>
-  </div>
+  <div class="container"><div class="section-head"><span class="section-kicker">Lo que puedes crear</span><h2>El formato que mejor explica tu oferta</h2><p>Elige una base simple para mostrar lo que vendes hoy y mantenla actualizada desde tu panel.</p></div><div class="grid three service-grid">
+    <article class="card"><h3>Carta digital</h3><p>Para restaurantes, cafeterías y negocios de comida que necesitan publicar preparaciones, valores, disponibilidad y contacto.</p></article>
+    <article class="card"><h3>Catálogo de productos</h3><p>Para tiendas y emprendimientos que buscan ordenar fotos, descripciones, precios y variantes en un enlace compartible.</p></article>
+    <article class="card"><h3>Catálogo de servicios</h3><p>Para profesionales y prestadores que quieren explicar lo que hacen, sus valores referenciales y cómo contactarlos.</p></article>
+  </div></div>
 </section>
-
-<section>
-  <div class="container">
-    <div class="section-head">
-      <h2>Cómo funciona</h2>
-      <p>Un flujo corto para negocios que necesitan claridad, no una herramienta difícil de administrar.</p>
-    </div>
-    <div class="grid">
-      <article class="card">
-        <span class="kicker">1</span>
-        <h3>Registro y elección</h3>
-        <p>El cliente crea su cuenta, escoge una plantilla y define el nombre de su proyecto.</p>
-      </article>
-      <article class="card">
-        <span class="kicker">2</span>
-        <h3>Configuración</h3>
-        <p>Sube logo, ajusta textos, decide qué secciones mostrar y revisa una vista previa.</p>
-      </article>
-      <article class="card">
-        <span class="kicker">3</span>
-        <h3>Publicación mensual</h3>
-        <p>El sitio queda publicado como servicio mensual, con mantención base y opción de mejoras.</p>
-      </article>
-    </div>
-  </div>
+<section class="section-blue">
+  <div class="container"><div class="section-head"><span class="section-kicker">Un flujo simple</span><h2>De la idea al enlace compartible</h2><p>Un proceso corto para no detener tu negocio con configuraciones técnicas.</p></div><div class="grid three steps">
+    <article class="step"><h3>Crea tu cuenta</h3><p>Regístrate, verifica tu correo y comienza con la opción que mejor acompañe tu negocio.</p></article>
+    <article class="step"><h3>Configura el contenido</h3><p>Agrega logo, textos, contacto, productos o servicios y revisa una vista previa.</p></article>
+    <article class="step"><h3>Publica y comparte</h3><p>Activa tu sitio y comparte el enlace en tus canales de venta y comunicación.</p></article>
+  </div></div>
 </section>
-
-<section>
-  <div class="container">
-    <div class="section-head">
-      <h2>Para quién está pensado</h2>
-      <p>
-        Negocios que quieren promocionar servicios, validar una idea, presentar
-        productos o tener una web simple sin construir un sistema grande desde el inicio.
-      </p>
-    </div>
-    <div class="grid">
-      <article class="card">
-        <h3>Servicios profesionales</h3>
-        <p>Consultorías, técnicos, asesorías, inmobiliarias, salud, educación o atención local.</p>
-      </article>
-      <article class="card">
-        <h3>Catálogos simples</h3>
-        <p>Negocios que necesitan mostrar una oferta clara y recibir contactos por WhatsApp.</p>
-      </article>
-      <article class="card">
-        <h3>Campañas y lanzamientos</h3>
-        <p>Landings rápidas para probar una propuesta, captar interesados o presentar un nuevo servicio.</p>
-      </article>
-    </div>
-  </div>
+<section class="section-soft">
+  <div class="container proof"><div><span class="section-kicker">Diseñado para administrar</span><h2>Tu información siempre lista para responder</h2><p>Cambia valores, textos, fotos o disponibilidad cuando lo necesites. El sitio se adapta a celular, tablet y computador.</p><ul class="benefit-list"><li>Edición de contenido sin código</li><li>Contacto centralizado por WhatsApp e Instagram</li><li>Vista previa antes de publicar</li><li>Un enlace propio para compartir</li></ul></div><div class="proof-media"><img src="/img/responsive2.png" alt="Ejemplo de sitio CatOps en dispositivos responsivos"></div></div>
 </section>
-
-<section class="cta container">
-  <h2>Elige un plan y comienza con una base simple</h2>
-  <p>
-    Por ahora el proceso de pago no está integrado. La selección del plan sirve
-    para definir alcance, mensualidad y nivel de acompañamiento.
-  </p>
-  <div class="actions center">
-    <a class="button" href="/planes">Comparar planes</a>
-    <a class="button secondary" href="/login">Entrar al sistema</a>
-  </div>
-</section>
+<section class="final-cta"><div class="container cta-inner"><div><span class="section-kicker">Empieza cuando quieras</span><h2>Elige una base y publícala a tu ritmo</h2><p>Compara los planes para encontrar el número de sitios y herramientas que necesita tu negocio.</p></div><div class="actions"><a class="button" href="/planes">Comparar planes</a><a class="button secondary" href="/login">Ingresar</a></div></div></section>

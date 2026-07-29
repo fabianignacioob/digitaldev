@@ -16,7 +16,7 @@ class PublicSitesController extends AppController
             : $resolver->resolveByHost((string)$this->request->host());
 
         if (($result['isBaseHost'] ?? false) === true) {
-            $this->viewBuilder()->disableAutoLayout();
+            $this->viewBuilder()->setLayout('marketing');
             $plans = $this->fetchTable('Plans')->find()
                 ->where(['active' => true])
                 ->orderByAsc('sort_order')

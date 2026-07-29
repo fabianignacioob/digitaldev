@@ -401,17 +401,20 @@
             color: #fff;
         }
 
+        .types-intro .button.secondary {
+            color: #fff;
+            border-color: transparent;
+            background: linear-gradient(135deg, var(--orange-500), var(--orange-600));
+            box-shadow: 0 12px 24px rgba(244, 106, 18, .28);
+        }
+
         .types-list {
             display: grid;
             gap: 18px;
         }
 
         .type-card {
-            display: grid;
             min-height: 178px;
-            grid-template-columns: minmax(0, 1fr) minmax(142px, 180px);
-            gap: 22px;
-            align-items: stretch;
             padding: 20px;
             border-color: rgba(255, 255, 255, .28);
             background: rgba(255, 255, 255, .96);
@@ -435,24 +438,6 @@
             color: var(--blue-800);
             font-size: 14px;
             font-weight: 900;
-        }
-
-        .type-media {
-            display: grid;
-            min-height: 136px;
-            place-items: center;
-            border: 1px dashed rgba(4, 31, 85, .25);
-            border-radius: var(--radius);
-            background:
-                linear-gradient(135deg, rgba(7, 51, 127, .08), rgba(244, 106, 18, .08)),
-                #f5f8fc;
-        }
-
-        .type-media span {
-            color: rgba(4, 31, 85, .5);
-            font-size: 12px;
-            font-weight: 900;
-            text-transform: uppercase;
         }
 
         .steps {
@@ -516,6 +501,29 @@
             border-radius: 50%;
             background: var(--orange-600);
             box-shadow: inset 0 0 0 5px #fff;
+        }
+
+        .demo-note {
+            margin-top: 18px;
+            padding: 16px 18px;
+            border-left: 3px solid var(--orange-600);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            background: var(--orange-100);
+            color: #583b27;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .daily-card {
+            min-height: auto;
+        }
+
+        .daily-card .benefit-list {
+            margin: 0;
+        }
+
+        .proof .actions {
+            margin-top: 24px;
         }
 
         .plans-header {
@@ -671,6 +679,45 @@
             box-shadow: none;
         }
 
+        .trust-grid {
+            display: grid;
+            gap: 18px;
+        }
+
+        .trust-item {
+            padding: 24px;
+            border: 1px solid rgba(3, 18, 53, .1);
+            border-radius: var(--radius);
+            background: linear-gradient(180deg, #fff, #f8fbff);
+            color: #2d455f;
+            font-weight: 800;
+            line-height: 1.55;
+            box-shadow: 0 12px 30px rgba(3, 18, 53, .06);
+        }
+
+        .faq-list {
+            max-width: 880px;
+            margin: 0 auto;
+            border-top: 1px solid var(--line);
+        }
+
+        .faq-list details {
+            border-bottom: 1px solid var(--line);
+            background: #fff;
+        }
+
+        .faq-list summary {
+            padding: 20px 6px;
+            color: var(--blue-950);
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .faq-list p {
+            padding: 0 6px 20px;
+            margin: 0;
+        }
+
         .final-cta {
             position: relative;
             overflow: hidden;
@@ -720,6 +767,21 @@
         .footer-layout img {
             width: 120px;
             filter: brightness(0) invert(1);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 18px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, .72);
+            font-weight: 800;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
         }
 
         @media (max-width: 920px) {
@@ -805,14 +867,6 @@
                 text-align: center;
             }
 
-            .type-card {
-                grid-template-columns: 1fr;
-            }
-
-            .type-media {
-                min-height: 170px;
-            }
-
             .hero-visual {
                 min-height: 320px;
             }
@@ -842,8 +896,9 @@
                     <li><a href="#solucion">Solución</a></li>
                     <li><a href="#para-quien">Para quién es</a></li>
                     <li><a href="#como-funciona">Cómo funciona</a></li>
+                    <li><a href="#ejemplos">Ejemplos</a></li>
                     <li><a href="#planes">Planes</a></li>
-                    <li><a href="#preguntas">Preguntas</a></li>
+                    <li><a href="#preguntas">Preguntas frecuentes</a></li>
                     <li><a href="/login">Ingresar</a></li>
                     <li><a class="nav-cta" href="/registro">Crear mi sitio</a></li>
                 </ul>
@@ -905,31 +960,22 @@
                 </aside>
                 <div class="types-list">
                     <article class="card type-card">
-                        <div>
-                            <span class="type-label">Restaurantes y cafeterías</span>
-                            <h3>Carta digital</h3>
-                            <p>Muestra preparaciones, precios e imágenes en una carta que puedes actualizar sin reenviar archivos.</p>
-                            <a class="type-link" href="/registro">Crear una carta</a>
-                        </div>
-                        <div class="type-media" aria-label="Espacio para imagen de carta digital"><span>Imagen</span></div>
+                        <span class="type-label">Restaurantes y cafeterías</span>
+                        <h3>Carta digital</h3>
+                        <p>Muestra preparaciones, precios e imágenes en una carta que puedes actualizar sin reenviar archivos.</p>
+                        <a class="type-link" href="/registro">Crear una carta</a>
                     </article>
                     <article class="card type-card">
-                        <div>
-                            <span class="type-label">Tiendas y emprendimientos</span>
-                            <h3>Catálogo de productos</h3>
-                            <p>Ordena productos, fotos, descripciones y precios para que tus clientes consulten desde un solo enlace.</p>
-                            <a class="type-link" href="/registro">Crear un catálogo</a>
-                        </div>
-                        <div class="type-media" aria-label="Espacio para imagen de catálogo de productos"><span>Imagen</span></div>
+                        <span class="type-label">Tiendas y emprendimientos</span>
+                        <h3>Catálogo de productos</h3>
+                        <p>Ordena productos, fotos, descripciones y precios para que tus clientes consulten desde un solo enlace.</p>
+                        <a class="type-link" href="/registro">Crear un catálogo</a>
                     </article>
                     <article class="card type-card">
-                        <div>
-                            <span class="type-label">Profesionales y prestadores</span>
-                            <h3>Catálogo de servicios</h3>
-                            <p>Presenta lo que haces, valores referenciales y formas de contacto para recibir consultas por WhatsApp.</p>
-                            <a class="type-link" href="/registro">Crear mis servicios</a>
-                        </div>
-                        <div class="type-media" aria-label="Espacio para imagen de catálogo de servicios"><span>Imagen</span></div>
+                        <span class="type-label">Profesionales y prestadores</span>
+                        <h3>Catálogo de servicios</h3>
+                        <p>Presenta lo que haces, valores referenciales y formas de contacto para recibir consultas por WhatsApp.</p>
+                        <a class="type-link" href="/registro">Crear mis servicios</a>
                     </article>
                 </div>
             </div>
@@ -959,7 +1005,37 @@
             </div>
         </section>
 
-        <section class="section-soft">
+        <section class="section-soft" id="beneficios">
+            <div class="container">
+                <div class="section-head">
+                    <span class="section-kicker">Para el día a día</span>
+                    <h2>Hecho para el día a día de un negocio pequeño</h2>
+                    <p>Lo importante es que tu información esté clara, disponible y sea fácil de mantener.</p>
+                </div>
+                <div class="grid three">
+                    <article class="card problem-card daily-card">
+                        <ul class="benefit-list">
+                            <li>No necesitas programación.</li>
+                            <li>Funciona en celulares.</li>
+                        </ul>
+                    </article>
+                    <article class="card problem-card daily-card">
+                        <ul class="benefit-list">
+                            <li>Actualizas desde tu panel.</li>
+                            <li>Compartes un solo enlace.</li>
+                        </ul>
+                    </article>
+                    <article class="card problem-card daily-card">
+                        <ul class="benefit-list">
+                            <li>Recibes consultas por WhatsApp.</li>
+                            <li>Mantienes precios y servicios al día.</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-soft" id="ejemplos">
             <div class="container proof">
                 <div class="proof-media">
                     <img src="../img/catalogo1.png" alt="Ejemplo de catálogo digital CatOps" loading="lazy">
@@ -968,12 +1044,8 @@
                     <span class="eyebrow">Así se ve tu información</span>
                     <h2>Tu negocio se ve bien desde cualquier pantalla</h2>
                     <p>La misma página se adapta para quien la abre desde celular, tablet o computador. Es el formato que usan tus clientes cuando llegan desde WhatsApp o Instagram.</p>
-                    <ul class="benefit-list">
-                        <li>No necesitas programación.</li>
-                        <li>Actualizas desde tu panel.</li>
-                        <li>Recibes consultas por WhatsApp.</li>
-                        <li>Mantienes precios y servicios al día.</li>
-                    </ul>
+                    <p class="demo-note">La imagen muestra una vista real del formato responsivo de CatOps. El contenido, logo y colores se configuran desde el panel.</p>
+                    <div class="actions"><a class="button secondary" href="/servicio">Ver cómo funciona el servicio</a></div>
                 </div>
             </div>
         </section>
@@ -994,45 +1066,56 @@
                 <div class="grid three pricing-grid">
                     <article class="card plan-card">
                         <h3>Básico</h3>
-                        <p>Para comenzar a mostrar tu negocio de forma simple y profesional.</p>
+                        <p>Para comenzar a mostrar tu negocio online.</p>
                         <div class="price">$6.990<small>/mes</small></div>
                         <div class="plan-note">Anual: $76.900</div>
                         <ul class="plan-list">
+                            <li>1 sitio configurado</li>
                             <li>1 sitio publicado</li>
-                            <li>Hasta 80 productos o servicios</li>
-                            <li>10 categorías para ordenar tu oferta</li>
-                            <li>Carta, catálogo o servicios</li>
-                            <li>WhatsApp, QR y diseño responsive</li>
+                            <li>WhatsApp incluido</li>
+                            <li>Instagram incluido</li>
+                            <li>Carta, catálogo o página de servicios</li>
+                            <li>SEO básico</li>
+                            <li>Subdominio CatOps</li>
+                            <li>Tema visual simple</li>
+                            <li>Hasta 3 productos destacados</li>
                         </ul>
                         <a class="button" href="/registro">Elegir Básico</a>
                     </article>
                     <article class="card plan-card featured">
                         <span class="badge">Recomendado</span>
                         <h3>Negocio</h3>
-                        <p>Para negocios que necesitan más contenido, categorías y personalización.</p>
+                        <p>Para negocios que necesitan más organización y presencia digital.</p>
                         <div class="price">$9.990<small>/mes</small></div>
                         <div class="plan-note">Anual: $119.900</div>
                         <ul class="plan-list">
-                            <li>3 sitios publicados</li>
-                            <li>Hasta 250 productos o servicios</li>
-                            <li>25 categorías para ordenar tu oferta</li>
-                            <li>Carta, catálogo o servicios</li>
-                            <li>Productos destacados incluidos</li>
-                            <li>Personalización extendida en Beta</li>
+                            <li>Hasta 3 sitios configurados</li>
+                            <li>Hasta 2 sitios publicados</li>
+                            <li>Todo lo incluido en Básico</li>
+                            <li>Carta, catálogo o servicios organizados por categorías</li>
+                            <li>SEO estándar</li>
+                            <li>Conexión de dominio propio</li>
+                            <li>Personalización visual por bloques</li>
+                            <li>Hasta 10 productos destacados</li>
+                            <li>Código QR</li>
                         </ul>
                         <a class="button" href="/registro">Elegir Negocio</a>
                     </article>
                     <article class="card plan-card">
                         <h3>Full</h3>
-                        <p>Para administrar varias marcas, propuestas o negocios con herramientas avanzadas.</p>
+                        <p>Para negocios con varias marcas, sucursales o líneas de servicio.</p>
                         <div class="price">$16.990<small>/mes</small></div>
                         <div class="plan-note">Anual: $189.900</div>
                         <ul class="plan-list">
-                            <li>5 sitios publicados</li>
-                            <li>Hasta 500 productos o servicios</li>
-                            <li>50 categorías para ordenar tu oferta</li>
-                            <li>Temas premium en Beta</li>
-                            <li>Marca CatOps removible en Beta</li>
+                            <li>Hasta 5 sitios configurados</li>
+                            <li>Hasta 5 sitios publicados</li>
+                            <li>Todo lo incluido en Negocio</li>
+                            <li>SEO avanzado</li>
+                            <li>Conexión de dominios propios</li>
+                            <li>Personalización avanzada por bloques</li>
+                            <li>Productos destacados ilimitados</li>
+                            <li>Código QR</li>
+                            <li>Soporte prioritario</li>
                         </ul>
                         <a class="button" href="/registro">Elegir Full</a>
                     </article>
@@ -1040,7 +1123,7 @@
             </div>
         </section>
 
-        <section class="section-soft" id="preguntas">
+        <section class="section-soft" id="confianza">
             <div class="container">
                 <div class="section-head">
                     <span class="section-kicker">Lo esencial</span>
@@ -1064,7 +1147,47 @@
             </div>
         </section>
 
-        <section class="final-cta">
+        <section id="preguntas">
+            <div class="container">
+                <div class="section-head">
+                    <span class="section-kicker">Preguntas frecuentes</span>
+                    <h2>Lo esencial antes de crear tu sitio</h2>
+                    <p>Respuestas rápidas para entender cómo funciona CatOps antes de publicar.</p>
+                </div>
+                <div class="faq-list">
+                    <details>
+                        <summary>¿Necesito saber programación?</summary>
+                        <p>No. El panel está pensado para editar textos, productos, precios, imágenes y datos de contacto sin programar.</p>
+                    </details>
+                    <details>
+                        <summary>¿Puedo actualizar mis productos o servicios?</summary>
+                        <p>Sí. Puedes mantener precios, descripciones, fotos y disponibilidad de contenido desde tu panel.</p>
+                    </details>
+                    <details>
+                        <summary>¿Puedo usar mi propio dominio?</summary>
+                        <p>Puedes comenzar con un subdominio de CatOps. La conexión de un dominio propio se revisa y configura antes de activarla; no se realiza automáticamente hoy.</p>
+                    </details>
+                    <details>
+                        <summary>¿Se ve bien en celulares?</summary>
+                        <p>Sí. Las páginas se construyen para funcionar en celular, tablet y computador.</p>
+                    </details>
+                    <details>
+                        <summary>¿Incluye carrito o compras online?</summary>
+                        <p>No. CatOps está pensado para mostrar tu oferta y recibir consultas por WhatsApp; no incluye carrito ni pagos en línea para clientes finales.</p>
+                    </details>
+                    <details>
+                        <summary>¿Cómo funciona la renovación?</summary>
+                        <p>La suscripción cubre períodos mensuales y se renueva después de la confirmación del pago. No existen cobros automáticos.</p>
+                    </details>
+                    <details>
+                        <summary>¿Qué pasa si necesito ayuda?</summary>
+                        <p>Puedes contactarnos para resolver dudas sobre la configuración y el uso de tu sitio.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section class="final-cta" id="crear">
             <div class="container cta-inner">
                 <div>
                     <span class="section-kicker">Lleva tu negocio al mundo digital</span>
@@ -1081,7 +1204,14 @@
 
     <footer>
         <div class="container footer-layout">
-            <img src="../img/catops-logo.png" alt="CatOps">
+            <a href="#inicio" aria-label="Ir al inicio"><img src="../img/catops-logo.png" alt="CatOps"></a>
+            <nav class="footer-links" aria-label="Enlaces secundarios">
+                <a href="#como-funciona">Cómo funciona</a>
+                <a href="#planes">Planes</a>
+                <a href="#preguntas">Preguntas frecuentes</a>
+                <a href="/servicio">¿Necesitas algo a medida?</a>
+                <a href="https://www.instagram.com/catops.cl" target="_blank" rel="noopener">Instagram</a>
+            </nav>
             <span>CatOps · Simple · Rápido · Efectivo</span>
         </div>
     </footer>
