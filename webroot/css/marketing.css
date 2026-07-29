@@ -78,7 +78,7 @@ body.marketing-page {
 .marketing-page .card-icon { display: inline-grid; place-items: center; width: 42px; height: 42px; margin-bottom: 20px; border-radius: 50%; color: #fff; background: var(--blue-900); font-weight: 900; }
 .marketing-page .types-section { background: var(--paper); }
 .marketing-page .types-layout { display: grid; grid-template-columns: minmax(250px, .72fr) minmax(0, 1.28fr); gap: 32px; align-items: stretch; }
-.marketing-page .types-intro { display: flex; flex-direction: column; justify-content: space-between; padding: 34px; border-radius: var(--radius); color: #fff; background: linear-gradient(145deg, rgba(3,18,53,.94), rgba(3,18,53,.66)), url('/img/service-platform-bg.png') center / cover; box-shadow: 0 24px 54px rgba(3,18,53,.26); }
+.marketing-page .types-intro { display: flex; flex-direction: column; justify-content: space-between; padding: 34px; border-radius: var(--radius); color: #fff; background: linear-gradient(145deg, rgba(3,18,53,.92), rgba(3,18,53,.6)), url('/img/home-types-intro.png') center / cover; box-shadow: 0 24px 54px rgba(3,18,53,.26); }
 .marketing-page .types-intro h2, .marketing-page .types-intro .section-kicker, .marketing-page .types-intro p { color: #fff; }
 .marketing-page .types-intro .button.secondary { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--orange-500), var(--orange-600)); box-shadow: 0 12px 24px rgba(244,106,18,.28); }
 .marketing-page .types-list { display: grid; gap: 18px; }
@@ -142,9 +142,9 @@ body.marketing-page {
 @media (max-width: 920px) {
   .marketing-page .nav { position: relative; min-height: 64px; }
   .marketing-page .nav-toggle { display: inline-grid; place-items: center; }
-  .marketing-page .nav-links { position: absolute; top: calc(100% + 1px); right: 0; left: 0; display: none; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; padding: 12px 16px 16px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.98); box-shadow: 0 14px 24px rgba(3,18,53,.1); }
+  .marketing-page .nav-links { position: absolute; top: calc(100% + 1px); right: 0; left: 0; display: none; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; padding: 12px 0 16px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.98); box-shadow: 0 14px 24px rgba(3,18,53,.1); }
   .marketing-page .nav.is-open .nav-links { display: grid; }
-  .marketing-page .nav-links a { justify-content: center; min-height: 42px; }
+  .marketing-page .nav-links a { min-width: 0; justify-content: center; min-height: 42px; padding: 0 6px; text-align: center; line-height: 1.2; }
   .marketing-page .nav-links .nav-cta { grid-column: span 2; margin-top: 4px; }
   .marketing-page .hero::after { width: 34vw; }
   .marketing-page .types-layout, .marketing-page .proof, .marketing-page .page-hero .hero-grid { grid-template-columns: 1fr; }
@@ -153,7 +153,8 @@ body.marketing-page {
   .marketing-page .cta-inner { align-items: flex-start; flex-direction: column; }
 }
 @media (max-width: 700px) {
-  .marketing-page section { padding: 62px 0; }
+  .marketing-page section { padding: 54px 0; }
+  .marketing-page .section-head { margin-bottom: 28px; }
   .marketing-page .three, .marketing-page .trust-grid { grid-template-columns: 1fr; }
   .marketing-page .hero-grid { min-height: 0; padding: 72px 0 78px; }
   .marketing-page .hero::after { width: 46vw; clip-path: polygon(58% 0,100% 0,100% 100%,0 100%); opacity: .92; }
@@ -164,13 +165,15 @@ body.marketing-page {
 @media (max-width: 520px) {
   .marketing-page .container { width: min(100% - 28px, 1120px); }
   .marketing-page .brand img { width: 98px; }
-  .marketing-page .nav-links { grid-template-columns: 1fr; }
-  .marketing-page .nav-links .nav-cta { grid-column: auto; }
+  .marketing-page .nav-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .marketing-page .nav-links .nav-cta { grid-column: span 2; }
   .marketing-page .hero::after { display: none; }
   .marketing-page h1 { font-size: 42px; }
   .marketing-page .hero-copy { max-width: none; font-size: 17px; }
   .marketing-page .actions { align-items: stretch; flex-direction: column; }
   .marketing-page .button { width: 100%; }
+  .marketing-page section { padding: 48px 0; }
+  .marketing-page .hero-grid { padding: 60px 0 64px; }
   .marketing-page .types-intro, .marketing-page .problem-card, .marketing-page .plan-card { padding: 24px; }
   .marketing-page .footer-layout { align-items: flex-start; flex-direction: column; }
 }

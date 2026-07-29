@@ -52,11 +52,13 @@
           const open = nav.classList.toggle('is-open');
           toggle.setAttribute('aria-expanded', String(open));
           toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+          toggle.textContent = open ? '×' : '☰';
         });
         nav.querySelectorAll('.nav-links a').forEach((link) => link.addEventListener('click', () => {
           nav.classList.remove('is-open');
           toggle.setAttribute('aria-expanded', 'false');
           toggle.setAttribute('aria-label', 'Abrir menú');
+          toggle.textContent = '☰';
         }));
       })();
     </script>
