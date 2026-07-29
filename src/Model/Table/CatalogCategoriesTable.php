@@ -18,7 +18,9 @@ class CatalogCategoriesTable extends Table
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->belongsTo('Sites');
-        $this->hasMany('CatalogProducts');
+        $this->hasMany('CatalogProducts', [
+            'sort' => ['CatalogProducts.sort_order' => 'ASC', 'CatalogProducts.name' => 'ASC'],
+        ]);
     }
 
     public function validationDefault(Validator $validator): Validator

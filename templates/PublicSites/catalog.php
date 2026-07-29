@@ -71,10 +71,10 @@ $pageBackground = h($backgroundColor);
 $title = $setting->title ?? $site->name;
 $slogan = $setting->slogan ?? 'Nuestra carta';
 $intro = $setting->intro_text ?? null;
-$categorizedIds = [];
 $templateSlug = $site->template->slug ?? 'carta-simple';
+$productPresentation = ($productPresentation ?? 'catalog') === 'menu' ? 'menu' : 'catalog';
 $usesCategories = in_array($templateSlug, ['carta-categorias', 'catalogo-categorias'], true);
-$isCatalog = str_starts_with((string)$templateSlug, 'catalogo-');
+$isCatalog = $productPresentation === 'catalog';
 $kindLabel = $isCatalog ? 'Catálogo' : 'Carta';
 $elementLabel = $isCatalog ? 'productos' : 'preparaciones';
 $sectionTitle = $isCatalog ? 'Productos destacados' : 'Sabores disponibles';
@@ -83,6 +83,12 @@ if (!$whatsapp) {
     $whatsapp = $site->whatsapp ?? '';
 }
 $whatsapp = preg_replace('/\D+/', '', (string)$whatsapp);
+$showWhatsapp = (bool)($site->show_whatsapp ?? true);
+$instagramUrl = trim((string)($site->instagram ?? ''));
+$showInstagram = (bool)($site->show_instagram ?? true) && $instagramUrl !== '';
+$showProductAction = $setting && $setting->show_product_action !== null
+    ? (bool)$setting->show_product_action
+    : true;
 $contactLabel = $isCatalog ? 'Consultar' : 'Pedir';
 $siteNameForMessage = trim((string)$site->name);
 $defaultContactMessage = rawurlencode('Hola, quiero consultar por ' . $siteNameForMessage . '.');
@@ -91,7 +97,7 @@ $businessAddress = trim((string)($site->business_address ?? ''));
 $businessHours = trim((string)($site->business_hours ?? ''));
 $publicPhone = trim((string)($site->public_phone ?? ''));
 $publicEmail = trim((string)($site->public_email ?? ''));
-$displayPhone = $publicPhone ?: ($whatsapp ? '+' . $whatsapp : '');
+$displayPhone = $publicPhone ?: ($showWhatsapp && $whatsapp ? '+' . $whatsapp : '');
 $contactItems = [];
 if ($businessAddress) {
     $contactItems[] = ['label' => 'Dónde estamos', 'value' => $businessAddress];
@@ -171,7 +177,7 @@ $contactMessageFor = static function ($product) use ($siteNameForMessage): strin
 
     return rawurlencode('Hola, quiero consultar por ' . $item . ' en ' . $siteNameForMessage . '.');
 };
-$renderProduct = static function ($product) use ($productFallback, $formatPrice, $formatMeasure, $productVariants, $availabilityLabels, $whatsapp, $contactMessageFor, $defaultContactMessage, $contactLabel): void {
+$renderProduct = static function ($product) use ($productFallback, $formatPrice, $formatMeasure, $productVariants, $availabilityLabels, $whatsapp, $showProductAction, $contactMessageFor, $defaultContactMessage, $contactLabel): void {
     $availability = $product->availability ?? 'available';
     $variants = $productVariants($product);
     ?>
@@ -209,11 +215,11 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
                 <div class="product-variants" aria-label="Opciones de <?= h($product->name) ?>">
                     <?php foreach ($variants as $variant): ?>
                         <?php
-                $variantAvailability = $variant->availability ?? 'available';
+                        $variantAvailability = $variant->availability ?? 'available';
                         $measure = $formatMeasure($variant);
                         ?>
                         <div class="variant-row">
-                            <span><?= h(trim((string)$variant->name)) ?></span>
+                            <span><?= h(trim((string)$variant->name . ($measure ? ' ' . $measure : ''))) ?></span>
                             <?php if ($variantAvailability !== 'available'): ?>
                                 <small><?= h($availabilityLabels[$variantAvailability] ?? 'No disponible') ?></small>
                             <?php endif; ?>
@@ -227,13 +233,52 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             <?php if ($product->duration): ?>
                 <div class="duration"><?= h($product->duration) ?></div>
             <?php endif; ?>
-            <?php if ($whatsapp && $availability === 'available'): ?>
+            <?php if ($showProductAction && $whatsapp && $availability === 'available'): ?>
                 <a class="product-action" href="https://wa.me/<?= h($whatsapp) ?>?text=<?= $contactMessageFor($product) ?: $defaultContactMessage ?>" target="_blank" rel="noopener" aria-label="<?= h($contactLabel . ' ' . $product->name . ' por WhatsApp') ?>">
                     <span class="wa-icon" aria-hidden="true"></span>
                     <?= h($product->item_type === 'service' ? 'Cotizar' : $contactLabel) ?>
                 </a>
             <?php endif; ?>
         </div>
+    </article>
+<?php
+};
+$renderMenuItem = static function ($product) use ($formatPrice, $formatMeasure, $productVariants, $availabilityLabels, $whatsapp, $showProductAction, $contactMessageFor, $defaultContactMessage, $contactLabel): void {
+    $availability = $product->availability ?? 'available';
+    $variants = $productVariants($product);
+    ?>
+    <article class="menu-item">
+        <div class="menu-item-copy">
+            <div class="menu-item-heading">
+                <h3><?= h($product->name) ?></h3>
+                <span class="menu-item-price"><?= h($formatPrice($product)) ?></span>
+            </div>
+            <?php if ($product->description): ?>
+                <p class="menu-item-description"><?= h($product->description) ?></p>
+            <?php endif; ?>
+            <?php if ($variants): ?>
+                <div class="menu-item-variants" aria-label="Opciones de <?= h($product->name) ?>">
+                    <?php foreach ($variants as $variant): ?>
+                        <?php
+                        $variantAvailability = $variant->availability ?? 'available';
+                        $measure = $formatMeasure($variant);
+                        ?>
+                        <span><?= h(trim((string)$variant->name . ($measure ? ' ' . $measure : ''))) ?><?php if ($variantAvailability !== 'available'): ?> <small><?= h($availabilityLabels[$variantAvailability] ?? 'No disponible') ?></small><?php endif; ?></span>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+            <div class="menu-item-meta">
+                <?php if ($product->featured): ?><span class="menu-item-badge">Destacado</span><?php endif; ?>
+                <?php if ($product->discount): ?><span class="menu-item-badge">Oferta $<?= number_format((float)$product->discount, 0, ',', '.') ?></span><?php endif; ?>
+                <?php if ($product->duration): ?><span><?= h($product->duration) ?></span><?php endif; ?>
+                <?php if ($availability !== 'available'): ?><span class="menu-item-unavailable"><?= h($availabilityLabels[$availability] ?? 'No disponible') ?></span><?php endif; ?>
+            </div>
+        </div>
+        <?php if ($showProductAction && $whatsapp && $availability === 'available'): ?>
+            <a class="menu-item-action" href="https://wa.me/<?= h($whatsapp) ?>?text=<?= $contactMessageFor($product) ?: $defaultContactMessage ?>" target="_blank" rel="noopener" aria-label="<?= h($contactLabel . ' ' . $product->name . ' por WhatsApp') ?>">
+                <?= h($product->item_type === 'service' ? 'Cotizar' : $contactLabel) ?>
+            </a>
+        <?php endif; ?>
     </article>
 <?php
 };
@@ -724,6 +769,104 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
             font-size: 12px;
         }
 
+        .menu-list {
+            display: grid;
+            border-top: 1px solid var(--border);
+        }
+
+        .menu-item {
+            display: flex;
+            gap: 18px;
+            align-items: flex-end;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .menu-item-copy {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .menu-item-heading {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: baseline;
+        }
+
+        .menu-item h3,
+        .menu-item-price {
+            color: var(--foreground);
+            font-weight: 900;
+            line-height: 1.25;
+        }
+
+        .menu-item h3 {
+            font-size: 17px;
+        }
+
+        .menu-item-price {
+            font-size: 16px;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .menu-item-description {
+            margin-top: 5px;
+            color: rgba(var(--secondary-rgb), .68);
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .menu-item-variants,
+        .menu-item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px 8px;
+            margin-top: 7px;
+            color: rgba(var(--secondary-rgb), .72);
+            font-size: 12px;
+        }
+
+        .menu-item-variants span:not(:last-child)::after {
+            content: ',';
+        }
+
+        .menu-item-variants small,
+        .menu-item-unavailable {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .menu-item-badge {
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: rgba(var(--primary-rgb), .12);
+            color: var(--primary);
+            font-weight: 850;
+        }
+
+        .menu-item-action {
+            display: inline-flex;
+            min-height: 34px;
+            flex: 0 0 auto;
+            align-items: center;
+            justify-content: center;
+            padding: 0 13px;
+            border: 1px solid rgba(var(--primary-rgb), .34);
+            border-radius: 8px;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 850;
+            text-decoration: none;
+        }
+
+        .menu-item-action:hover,
+        .menu-item-action:focus-visible {
+            background: var(--primary);
+            color: #fff;
+        }
+
         .empty {
             padding: 28px;
             border: 1px dashed rgba(var(--secondary-rgb), .2);
@@ -886,6 +1029,18 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
                 grid-template-columns: 1fr;
             }
 
+            .menu-item {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 10px 14px;
+                align-items: start;
+            }
+
+            .menu-item-action {
+                grid-column: 1 / -1;
+                justify-self: start;
+            }
+
             .product {
                 display: inline-flex !important;
                 flex-direction: row;
@@ -926,11 +1081,6 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
                     <span class="brand-kicker"><?= h($kindLabel) ?> digital</span>
                 </span>
             </a>
-            <!-- <?php if ($whatsapp): ?>
-                <a class="whatsapp" href="<?= $ctaHref ?>" target="_blank" rel="noopener" aria-label="<?= h($ctaText) ?> por WhatsApp">
-                    <?= h($ctaText) ?>
-                </a>
-            <?php endif; ?> -->
         </nav>
     </header>
 
@@ -946,7 +1096,7 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
                     <?php endif; ?>
                     <div class="hero-actions">
                         <a class="hero-action primary" href="#carta"><?= h($isCatalog ? 'Ver productos' : 'Ver la carta') ?></a>
-                        <?php if ($whatsapp): ?>
+                        <?php if ($showWhatsapp && $whatsapp): ?>
                             <a class="hero-action" href="<?= $ctaHref ?>" target="_blank" rel="noopener">
                             <svg width="24px" height="24px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -964,6 +1114,11 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
 </g>
 </svg>
                                 <?= h($ctaText . ' ahora') ?>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($showInstagram): ?>
+                            <a class="hero-action" href="<?= h($instagramUrl) ?>" target="_blank" rel="noopener">
+                                Instagram
                             </a>
                         <?php endif; ?>
                     </div>
@@ -988,58 +1143,14 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
                     <!-- <p><?= h($isCatalog ? 'Revisa los productos disponibles y consulta por WhatsApp en un toque.' : 'Elige lo que quieres y envía tu pedido directo por WhatsApp.') ?></p> -->
                 </div>
 
-                <?php if ($usesCategories): ?>
-                    <?php foreach ($site->catalog_categories ?? [] as $category): ?>
-                        <?php
-                        $categoryProducts = [];
-                        foreach ($category->catalog_products ?? [] as $product) {
-                            if ($product->active) {
-                                $categoryProducts[] = $product;
-                                $categorizedIds[] = $product->id;
-                            }
-                        }
-                        ?>
-                        <?php if ($categoryProducts): ?>
-                            <div class="category">
-                                <h2 class="category-title"><?= h($category->name) ?></h2>
-                                <div class="products">
-                                    <?php foreach ($categoryProducts as $product): ?>
-                                        <?php $renderProduct($product); ?>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-
-                    <?php
-                    $uncategorized = [];
-                    foreach ($site->catalog_products ?? [] as $product) {
-                        if ($product->active && !$product->catalog_category_id && !in_array($product->id, $categorizedIds, true)) {
-                            $uncategorized[] = $product;
-                        }
-                    }
-                    ?>
-                    <?php if ($uncategorized): ?>
-                        <div class="category">
-                            <h2 class="category-title"><?= h($isCatalog ? 'Otros productos' : 'Otras preparaciones') ?></h2>
-                            <div class="products">
-                                <?php foreach ($uncategorized as $product): ?>
-                                    <?php $renderProduct($product); ?>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                <?php else: ?>
-                    <?php if ($activeProducts): ?>
-                        <div class="category">
-                            <div class="products">
-                                <?php foreach ($activeProducts as $product): ?>
-                                    <?php $renderProduct($product); ?>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                <?php endif; ?>
+                <?= $this->element('public/products/' . ($productPresentation === 'menu' ? 'menu_list' : 'catalog_grid'), [
+                    'site' => $site,
+                    'activeProducts' => $activeProducts,
+                    'usesCategories' => $usesCategories,
+                    'isCatalog' => $isCatalog,
+                    'renderProduct' => $renderProduct,
+                    'renderMenuItem' => $renderMenuItem,
+                ]) ?>
 
                 <?php if (!$activeProducts): ?>
                     <div class="empty">Este <?= h(strtolower($kindLabel)) ?> aún no tiene productos publicados.</div>

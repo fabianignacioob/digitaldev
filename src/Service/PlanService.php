@@ -349,6 +349,14 @@ class PlanService
         return self::TEMPLATE_TYPES[$slug]['kind'] ?? 'servicios';
     }
 
+    /**
+     * Selects the public product presentation without relying on labels or site names.
+     */
+    public function publicProductPresentation(string|object|null $template): string
+    {
+        return $this->templateKind($template) === 'carta' ? 'menu' : 'catalog';
+    }
+
     public function templateSupportsCategories(string|object|null $template): bool
     {
         $slug = $this->templateSlug($template);

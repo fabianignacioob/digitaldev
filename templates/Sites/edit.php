@@ -74,6 +74,17 @@
         'placeholder' => 'tu_negocio',
     ]) ?>
     <p class="meta">Solo el usuario, sin https://instagram.com/.</p>
+    <fieldset class="contact-visibility-options">
+      <legend>Mostrar en el sitio público</legend>
+      <?= $this->Form->control('show_whatsapp', [
+          'label' => 'Mostrar acceso a WhatsApp',
+          'type' => 'checkbox',
+        ]) ?>
+      <?= $this->Form->control('show_instagram', [
+          'label' => 'Mostrar acceso a Instagram',
+          'type' => 'checkbox',
+        ]) ?>
+    </fieldset>
     <?= $this->Form->control('business_address', [
         'label' => 'Dirección del negocio',
         'placeholder' => 'Av. Italia 850, Providencia',

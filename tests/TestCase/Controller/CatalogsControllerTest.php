@@ -145,6 +145,154 @@ class CatalogsControllerTest extends TestCase
         $this->assertResponseNotContains('Servicio oculto');
     }
 
+    public function testPublicProductPresentationMatchesSelectedTemplateAndPreview(): void
+    {
+        $menuSiteId = $this->createSite($this->userId, 'carta-categorias', 'menu-' . uniqid(), 'Bistró Demo');
+        $category = $this->table('CatalogCategories')->newEntity([
+            'site_id' => $menuSiteId,
+            'name' => 'Entradas',
+            'sort_order' => 1,
+        ]);
+        $this->table('CatalogCategories')->saveOrFail($category);
+        $this->table('CatalogCategories')->saveOrFail($this->table('CatalogCategories')->newEntity([
+            'site_id' => $menuSiteId,
+            'name' => 'Categoría vacía',
+            'sort_order' => 2,
+        ]));
+        $this->table('CatalogProducts')->saveOrFail($this->table('CatalogProducts')->newEntity([
+            'site_id' => $menuSiteId,
+            'catalog_category_id' => $category->id,
+            'item_type' => 'menu_item',
+            'name' => 'Empanada de queso',
+            'description' => 'Masa artesanal y queso fundido.',
+            'price' => 4500,
+            'featured' => true,
+            'active' => true,
+            'sort_order' => 1,
+        ]));
+        $this->table('CatalogProducts')->saveOrFail($this->table('CatalogProducts')->newEntity([
+            'site_id' => $menuSiteId,
+            'item_type' => 'menu_item',
+            'name' => 'Sopa del día',
+            'active' => true,
+            'sort_order' => 2,
+        ]));
+        $menuSite = $this->table('Sites')->get($menuSiteId);
+        $menuSite->status = 'published';
+        $this->table('Sites')->saveOrFail($menuSite);
+
+        $this->get('/s/' . $menuSite->subdomain);
+        $this->assertResponseOk();
+        $this->assertResponseContains('class="menu-list"');
+        $this->assertResponseContains('Empanada de queso');
+        $this->assertResponseContains('Otras preparaciones');
+        $this->assertResponseNotContains('Categoría vacía');
+        $this->assertResponseNotContains('class="product-image"');
+
+        $this->loginAs($this->userId);
+        $this->get('/sitios/preview/' . $menuSiteId);
+        $this->assertResponseOk();
+        $this->assertResponseContains('class="menu-list"');
+
+        $catalogSiteId = $this->createSite($this->userId, 'catalogo-simple', 'catalogo-' . uniqid(), 'Tienda Demo');
+        $this->table('CatalogProducts')->saveOrFail($this->table('CatalogProducts')->newEntity([
+            'site_id' => $catalogSiteId,
+            'item_type' => 'product',
+            'name' => 'Producto con imagen',
+            'active' => true,
+            'sort_order' => 1,
+        ]));
+        $catalogSite = $this->table('Sites')->get($catalogSiteId);
+        $catalogSite->status = 'published';
+        $this->table('Sites')->saveOrFail($catalogSite);
+
+        $this->get('/s/' . $catalogSite->subdomain);
+        $this->assertResponseOk();
+        $this->assertResponseContains('class="products"');
+        $this->assertResponseContains('class="product-image"');
+    }
+
+    public function testUnknownTemplateFallsBackToCatalogPresentation(): void
+    {
+        $templates = $this->table('Templates');
+        $template = $templates->newEntity([
+            'name' => 'Plantilla histórica',
+            'slug' => 'legacy-' . uniqid(),
+            'active' => true,
+        ]);
+        $templates->saveOrFail($template);
+        $subdomain = 'legacy-' . uniqid();
+        $site = $this->table('Sites')->newEntity([
+            'user_id' => $this->userId,
+            'template_id' => $template->id,
+            'theme_id' => $this->themeId,
+            'name' => 'Sitio histórico',
+            'slug' => $subdomain,
+            'subdomain' => $subdomain,
+            'status' => 'published',
+            'whatsapp_country_code' => '56',
+            'whatsapp_number' => '912345678',
+        ]);
+        $this->table('Sites')->saveOrFail($site);
+        $this->table('CatalogSettings')->saveOrFail($this->table('CatalogSettings')->newEntity([
+            'site_id' => $site->id,
+            'background_type' => 'color',
+            'background_color' => '#fbfaf7',
+            'title' => 'Sitio histórico',
+            'slogan' => 'Catálogo de prueba',
+        ]));
+        $this->table('CatalogProducts')->saveOrFail($this->table('CatalogProducts')->newEntity([
+            'site_id' => $site->id,
+            'item_type' => 'product',
+            'name' => 'Producto histórico',
+            'active' => true,
+            'sort_order' => 1,
+        ]));
+
+        $this->get('/s/' . $subdomain);
+        $this->assertResponseOk();
+        $this->assertResponseContains('class="products"');
+        $this->assertResponseContains('Producto histórico');
+    }
+
+    public function testPublicContactVisibilityAndProductActionAreConfigurable(): void
+    {
+        $siteId = $this->createSite($this->userId, 'catalogo-simple', 'contacto-' . uniqid(), 'Tienda Contacto');
+        $site = $this->table('Sites')->get($siteId);
+        $site->status = 'published';
+        $site->show_whatsapp = false;
+        $site->show_instagram = true;
+        $site->instagram = 'https://instagram.com/tienda_contacto';
+        $this->table('Sites')->saveOrFail($site);
+        $settings = $this->table('CatalogSettings')->find()->where(['site_id' => $siteId])->firstOrFail();
+        $settings->show_product_action = false;
+        $this->table('CatalogSettings')->saveOrFail($settings);
+        $this->table('CatalogProducts')->saveOrFail($this->table('CatalogProducts')->newEntity([
+            'site_id' => $siteId,
+            'item_type' => 'product',
+            'name' => 'Producto de contacto',
+            'active' => true,
+            'sort_order' => 1,
+        ]));
+
+        $this->get('/s/' . $site->subdomain);
+        $this->assertResponseOk();
+        $this->assertResponseContains('https://instagram.com/tienda_contacto');
+        $this->assertResponseNotContains('https://wa.me/56912345678');
+        $this->assertResponseNotContains('class="product-action"');
+
+        $settings->show_product_action = true;
+        $this->table('CatalogSettings')->saveOrFail($settings);
+        $this->get('/s/' . $site->subdomain);
+        $this->assertResponseContains('class="product-action"');
+        $this->assertResponseContains('https://wa.me/56912345678');
+
+        $site->show_instagram = false;
+        $this->table('Sites')->saveOrFail($site);
+        $this->get('/s/' . $site->subdomain);
+        $this->assertResponseNotContains('https://instagram.com/tienda_contacto');
+    }
+
     public function testItemLimitByPlan(): void
     {
         $limitedUserId = $this->createUser('limite-' . uniqid() . '@example.test');

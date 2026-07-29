@@ -190,9 +190,10 @@ class SitesController extends AppController
             ->firstOrFail();
 
         $this->viewBuilder()->disableAutoLayout();
-        $this->set(compact('site'));
+        $productPresentation = $this->planService()->publicProductPresentation($site);
+        $this->set(compact('site', 'productPresentation'));
 
-        if (in_array($this->planService()->templateKind($site), ['carta', 'catalogo'], true)) {
+        if ($this->planService()->templateKind($site) !== 'landing') {
             return $this->render('/PublicSites/catalog');
         }
 
@@ -332,6 +333,7 @@ class SitesController extends AppController
             'title' => 'Nuestra propuesta',
             'slogan' => 'Productos y servicios presentados de forma simple.',
             'intro_text' => 'Revisa nuestras opciones y consulta disponibilidad por WhatsApp.',
+            'show_product_action' => true,
         ]));
     }
 

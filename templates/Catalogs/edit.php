@@ -266,6 +266,11 @@ foreach ($measurementTypes ?? [] as $measurementType) {
             'label' => 'Texto adicional',
             'type' => 'textarea',
         ]) ?>
+        <?= $this->Form->control('show_product_action', [
+            'label' => 'Mostrar botón de pedido o consulta en cada producto',
+            'type' => 'checkbox',
+        ]) ?>
+        <p class="meta">Esta opción se aplica a todos los productos o preparaciones del sitio.</p>
         <div class="form-actions form-actions-stacked">
             <?= $this->Form->button('Guardar diseño') ?>
         </div>

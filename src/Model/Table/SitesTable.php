@@ -29,7 +29,7 @@ class SitesTable extends Table
         $this->hasMany('Leads');
         $this->hasOne('CatalogSettings', ['dependent' => true]);
         $this->hasMany('CatalogCategories', ['dependent' => true, 'sort' => ['CatalogCategories.sort_order' => 'ASC']]);
-        $this->hasMany('CatalogProducts', ['dependent' => true, 'sort' => ['CatalogProducts.sort_order' => 'ASC']]);
+        $this->hasMany('CatalogProducts', ['dependent' => true, 'sort' => ['CatalogProducts.sort_order' => 'ASC', 'CatalogProducts.name' => 'ASC']]);
     }
 
     public function beforeMarshal(\Cake\Event\EventInterface $event, \ArrayObject $data, \ArrayObject $options): void
@@ -88,8 +88,10 @@ class SitesTable extends Table
             ->scalar('whatsapp_country_code')->maxLength('whatsapp_country_code', 8)->notEmptyString('whatsapp_country_code')
             ->scalar('whatsapp_number')->maxLength('whatsapp_number', 30)->allowEmptyString('whatsapp_number')
             ->scalar('whatsapp')->maxLength('whatsapp', 40)->allowEmptyString('whatsapp')
+            ->boolean('show_whatsapp')
             ->scalar('instagram_username')->maxLength('instagram_username', 80)->allowEmptyString('instagram_username')
             ->scalar('instagram')->maxLength('instagram', 180)->allowEmptyString('instagram')
+            ->boolean('show_instagram')
             ->scalar('business_address')->maxLength('business_address', 220)->allowEmptyString('business_address')
             ->scalar('business_hours')->maxLength('business_hours', 220)->allowEmptyString('business_hours')
             ->scalar('public_phone')->maxLength('public_phone', 60)->allowEmptyString('public_phone')

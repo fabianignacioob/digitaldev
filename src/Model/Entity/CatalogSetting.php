@@ -21,6 +21,7 @@ class CatalogSetting extends Entity
         'slogan_font' => true,
         'slogan' => true,
         'intro_text' => true,
+        'show_product_action' => true,
         'created' => true,
         'modified' => true,
         'site' => true,
