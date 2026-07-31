@@ -40,7 +40,10 @@ class DomainsTable extends Table
             ])
             ->scalar('type')->maxLength('type', 30)
             ->boolean('verified')
-            ->boolean('active');
+            ->boolean('active')
+            ->scalar('verification_token')->maxLength('verification_token', 120)->allowEmptyString('verification_token')
+            ->scalar('verification_method')->maxLength('verification_method', 30)->allowEmptyString('verification_method')
+            ->scalar('last_dns_error')->maxLength('last_dns_error', 500)->allowEmptyString('last_dns_error');
     }
 
     public function buildRules(RulesChecker $rules): RulesChecker

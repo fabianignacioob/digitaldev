@@ -18,8 +18,17 @@ class PaymentServiceTest extends TestCase
     {
         parent::setUp();
         putenv('SUBSCRIPTION_DURATION_DAYS=30');
+        putenv('WEBPAY_ENV');
+        putenv('WEBPAY_ENABLE_TEST_ORDER');
         $this->service = new PaymentService();
         $this->ensurePlans();
+    }
+
+    protected function tearDown(): void
+    {
+        putenv('WEBPAY_ENV');
+        putenv('WEBPAY_ENABLE_TEST_ORDER');
+        parent::tearDown();
     }
 
     public function testCreatePendingOrderUsesPlanPriceCurrencyAndUniqueReferences(): void
@@ -216,6 +225,43 @@ class PaymentServiceTest extends TestCase
         $this->assertGreaterThan(DateTime::now(), $subscription->ends_at);
     }
 
+    public function testIntegrationTestOrderUsesOnePesoAndDoesNotChangeSubscription(): void
+    {
+        putenv('WEBPAY_ENV=integration');
+        putenv('WEBPAY_ENABLE_TEST_ORDER=true');
+        $this->ensureIntegrationTestPlan();
+        $userId = $this->createUser('admin');
+
+        $payment = $this->service->createIntegrationTestOrder($userId);
+
+        $this->assertSame(PaymentService::INTEGRATION_TEST_PLAN_SLUG, $payment->plan_slug);
+        $this->assertSame(1, (int)$payment->expected_amount);
+        $this->assertSame('CLP', $payment->currency);
+        $this->assertNull($payment->subscription_id);
+
+        $payment = $this->service->confirm($payment, [
+            'amount' => 1,
+            'currency' => 'CLP',
+            'buy_order' => $payment->buy_order,
+            'session_id' => $payment->session_id,
+            'provider_reference' => 'tx-integration-test',
+            'authorization_code' => 'AUTH01',
+        ]);
+
+        $this->assertSame('paid', $payment->status);
+        $this->assertNotEmpty($payment->processed_at);
+        $this->assertSame(0, $this->table('Subscriptions')->find()->where(['user_id' => $userId])->count());
+    }
+
+    public function testIntegrationTestOrderRequiresEnabledEnvironmentAndSuperAdmin(): void
+    {
+        $this->ensureIntegrationTestPlan();
+        $userId = $this->createUser();
+
+        $this->expectException(RuntimeException::class);
+        $this->service->createIntegrationTestOrder($userId);
+    }
+
     public function testRejectedPaymentDoesNotRenewSubscription(): void
     {
         $userId = $this->createUser();
@@ -329,13 +375,13 @@ class PaymentServiceTest extends TestCase
         $this->assertSame('session_id_mismatch', $payment->error_code);
     }
 
-    private function createUser(): int
+    private function createUser(string $role = 'customer'): int
     {
         $user = $this->table('Users')->newEntity([
             'name' => 'Cliente Pago',
             'email' => 'pago-' . uniqid() . '@example.test',
             'password' => 'secret123',
-            'role' => 'customer',
+            'role' => $role,
             'active' => true,
             'email_verified' => true,
         ]);
@@ -392,6 +438,26 @@ class PaymentServiceTest extends TestCase
             }
             $this->table('Plans')->saveOrFail($plan);
         }
+    }
+
+    private function ensureIntegrationTestPlan(): void
+    {
+        $plan = $this->table('Plans')->find()
+            ->where(['slug' => PaymentService::INTEGRATION_TEST_PLAN_SLUG])
+            ->first();
+        if (!$plan) {
+            $plan = $this->table('Plans')->newEntity([
+                'slug' => PaymentService::INTEGRATION_TEST_PLAN_SLUG,
+            ]);
+        }
+        $plan->name = 'Prueba interna Webpay';
+        $plan->monthly_price = 1;
+        $plan->max_sites = 0;
+        $plan->max_published = 0;
+        $plan->sort_order = 999;
+        $plan->active = false;
+        $plan->capabilities = json_encode(['enabled_templates' => []]);
+        $this->table('Plans')->saveOrFail($plan);
     }
 
     private function table(string $name): object

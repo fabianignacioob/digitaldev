@@ -65,6 +65,8 @@ return function (RouteBuilder $routes): void {
             ->setPass(['plan'])
             ->setPatterns(['plan' => '[a-z0-9-]+']);
         $builder->connect('/login', ['controller' => 'Users', 'action' => 'login']);
+        $builder->connect('/recuperar-contrasena', ['controller' => 'Users', 'action' => 'forgotPassword']);
+        $builder->connect('/restablecer-contrasena', ['controller' => 'Users', 'action' => 'resetPassword']);
         $builder->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
         $builder->connect('/panel', ['controller' => 'Dashboard', 'action' => 'index']);
         $builder->connect('/admin', ['controller' => 'AdminDashboard', 'action' => 'index']);
@@ -132,11 +134,13 @@ return function (RouteBuilder $routes): void {
             ->setPass(['plan'])
             ->setPatterns(['plan' => '[a-z0-9-]+']);
         $builder->connect('/payments/create', ['controller' => 'Payments', 'action' => 'create']);
+        $builder->connect('/test-plan', ['controller' => 'Payments', 'action' => 'testPlan']);
         $builder->connect('/payments/result/{reference}', ['controller' => 'Payments', 'action' => 'result'])
             ->setPass(['reference'])
             ->setPatterns(['reference' => '[a-z0-9-]+']);
         $builder->connect('/payments/mock-confirm', ['controller' => 'Payments', 'action' => 'mockConfirm']);
         $builder->connect('/payments/webpay/return', ['controller' => 'Payments', 'action' => 'webpayReturn']);
+        $builder->connect('/internal/tls/allow', ['controller' => 'DomainTls', 'action' => 'allow']);
         $builder->connect('/sitios/nuevo', ['controller' => 'Sites', 'action' => 'add']);
         $builder->connect('/sitios/editar/{id}', ['controller' => 'Sites', 'action' => 'edit'])
             ->setPass(['id'])
@@ -150,6 +154,15 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/sitios/logo/eliminar/{id}', ['controller' => 'Sites', 'action' => 'deleteLogo'])
             ->setPass(['id'])
             ->setPatterns(['id' => '\d+']);
+        $builder->connect('/sitios/{id}/dominios', ['controller' => 'Sites', 'action' => 'addDomain'])
+            ->setPass(['id'])
+            ->setPatterns(['id' => '\d+']);
+        $builder->connect('/sitios/{siteId}/dominios/{domainId}/verificar', ['controller' => 'Sites', 'action' => 'verifyDomain'])
+            ->setPass(['siteId', 'domainId'])
+            ->setPatterns(['siteId' => '\d+', 'domainId' => '\d+']);
+        $builder->connect('/sitios/{siteId}/dominios/{domainId}/eliminar', ['controller' => 'Sites', 'action' => 'deleteDomain'])
+            ->setPass(['siteId', 'domainId'])
+            ->setPatterns(['siteId' => '\d+', 'domainId' => '\d+']);
         $builder->connect('/sitios/{siteId}/secciones', ['controller' => 'SiteSections', 'action' => 'edit'])
             ->setPass(['siteId'])
             ->setPatterns(['siteId' => '\d+']);

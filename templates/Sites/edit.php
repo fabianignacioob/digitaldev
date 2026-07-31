@@ -126,3 +126,54 @@
   <p>Plantilla seleccionada: <strong><?= h($site->template->name ?? 'Sin plantilla') ?></strong>. Si cambias la plantilla, guarda la configuración para ver las opciones correspondientes.</p>
   <a class="button secondary" href="/sitios/preview/<?= (int)$site->id ?>" target="_blank" rel="noopener">Abrir vista previa</a>
 </section>
+
+<section class="card site-followup-card">
+  <h2>Dominio propio</h2>
+  <?php if (!$customDomainAvailable): ?>
+    <p>Tu plan actual no incluye dominios propios. Puedes seguir usando <strong><?= h($site->subdomain . '.' . $baseDomain) ?></strong> o subir de plan para conectar un dominio registrado.</p>
+    <a class="button secondary" href="/planes">Ver planes</a>
+  <?php else: ?>
+    <p>Conecta un dominio registrado a este sitio. Uso actual: <strong><?= (int)$customDomainUsage['used'] ?> de <?= (int)$customDomainUsage['limit'] ?></strong>.</p>
+    <?php foreach ($customDomains as $domain): ?>
+      <article class="domain-setup">
+        <div class="domain-setup-heading">
+          <strong><?= h($domain->domain) ?></strong>
+          <span class="status <?= $domain->verified && $domain->active ? '' : 'draft' ?>"><?= $domain->verified && $domain->active ? 'Verificado' : 'Pendiente' ?></span>
+        </div>
+        <?php if ($domain->verified && $domain->active): ?>
+          <p class="meta">Activo en <a href="<?= h($domainService->publicUrl($domain)) ?>" target="_blank" rel="noopener"><?= h($domainService->publicUrl($domain)) ?></a>.</p>
+        <?php else: ?>
+          <p class="meta">En el proveedor DNS de tu dominio, agrega este registro TXT para demostrar que eres su propietario:</p>
+          <dl class="domain-dns-record">
+            <dt>Tipo</dt><dd>TXT</dd>
+            <dt>Nombre</dt><dd><code><?= h($domainService->verificationRecordName($domain)) ?></code></dd>
+            <dt>Valor</dt><dd><code><?= h($domain->verification_token) ?></code></dd>
+          </dl>
+          <p class="meta">Luego dirige el tráfico: para <strong>www</strong> usa un CNAME a <code><?= h($domainService->routingCnameTarget()) ?></code>. Para el dominio raíz usa un registro A a <code><?= h($domainService->routingIpv4() ?? 'la IP pública configurada por CatOps') ?></code>.</p>
+          <?php if ($domain->last_dns_error): ?><p class="form-error"><?= h($domain->last_dns_error) ?></p><?php endif; ?>
+          <div class="form-actions">
+            <?= $this->Form->postLink('Verificar DNS', '/sitios/' . (int)$site->id . '/dominios/' . (int)$domain->id . '/verificar', ['class' => 'button']) ?>
+          </div>
+        <?php endif; ?>
+        <div class="form-actions form-actions-stacked">
+          <?= $this->Form->postLink('Eliminar dominio', '/sitios/' . (int)$site->id . '/dominios/' . (int)$domain->id . '/eliminar', [
+              'class' => 'button danger',
+              'confirm' => '¿Eliminar este dominio? El sitio y su contenido seguirán disponibles con el subdominio de CatOps.',
+          ]) ?>
+        </div>
+      </article>
+    <?php endforeach; ?>
+    <?php if ($customDomainUsage['remaining'] > 0): ?>
+      <?= $this->Form->create(null, ['url' => '/sitios/' . (int)$site->id . '/dominios']) ?>
+      <?= $this->Form->control('domain', [
+          'label' => 'Agregar dominio',
+          'placeholder' => 'tunegocio.cl o www.tunegocio.cl',
+          'maxlength' => 180,
+          'required' => true,
+      ]) ?>
+      <p class="meta">No incluyas https:// ni rutas. En NIC.cl configura los DNS desde el proveedor que administre la zona del dominio.</p>
+      <?= $this->Form->button('Agregar dominio') ?>
+      <?= $this->Form->end() ?>
+    <?php endif; ?>
+  <?php endif; ?>
+</section>

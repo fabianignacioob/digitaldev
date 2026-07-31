@@ -999,6 +999,54 @@
             margin-top: 18px;
         }
 
+        .domain-setup {
+            margin: 18px 0;
+            padding: 16px;
+            border: 1px solid var(--catops-line);
+            border-radius: 12px;
+            background: #fffdf9;
+        }
+
+        .domain-setup-heading {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            color: var(--catops-navy);
+        }
+
+        .domain-dns-record {
+            display: grid;
+            grid-template-columns: 88px minmax(0, 1fr);
+            gap: 7px 12px;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+
+        .domain-dns-record dt {
+            color: var(--catops-muted);
+            font-weight: 700;
+        }
+
+        .domain-dns-record dd {
+            min-width: 0;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .domain-dns-record code {
+            color: var(--catops-navy);
+            font-size: 12px;
+        }
+
+        .form-error {
+            margin: 12px 0 0;
+            color: var(--catops-danger);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
         .catalog-products-panel {
             margin-top: 18px;
         }

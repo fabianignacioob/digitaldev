@@ -29,7 +29,7 @@ foreach ($plans as $plan) {
         <div class="trial-box"><strong>Prueba gratuita</strong><span>7 días del plan Básico al publicar tu primer sitio.</span></div>
       <?php endif; ?>
     </div>
-    <?= $this->element('marketing/plan_cards', compact('plans', 'currentUser')) ?>
+    <?= $this->element('marketing/plan_cards', compact('plans', 'currentUser', 'selectedPlan')) ?>
     <div class="plan-notice"><p>Los beneficios señalados como Beta se habilitan por etapas. Tu plan y sus límites vigentes siempre se ven desde el panel.</p></div>
   </div>
 </section>

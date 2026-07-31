@@ -23,8 +23,13 @@
             <li><a href="/#ejemplos">Ejemplos</a></li>
             <li><a href="/planes">Planes</a></li>
             <li><a href="/#preguntas">Preguntas frecuentes</a></li>
-            <li><a href="/login">Ingresar</a></li>
-            <li><a class="nav-cta" href="/registro">Crear mi sitio</a></li>
+            <?php if (!empty($currentUser)): ?>
+              <li><a href="/panel">Mis sitios</a></li>
+              <li><a class="nav-cta" href="/sitios/nuevo">Crear mi sitio</a></li>
+            <?php else: ?>
+              <li><a href="/login">Ingresar</a></li>
+              <li><a class="nav-cta" href="/registro">Crear mi sitio</a></li>
+            <?php endif; ?>
           </ul>
         </nav>
       </div>

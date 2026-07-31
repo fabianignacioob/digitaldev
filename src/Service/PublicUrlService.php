@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Cake\Datasource\FactoryLocator;
+
 class PublicUrlService
 {
     public function baseDomain(): string
@@ -19,7 +21,6 @@ class PublicUrlService
     {
         $host = strtolower(trim($host));
         $host = preg_replace('/:\d+$/', '', $host) ?? $host;
-        $host = preg_replace('/^www\./', '', $host) ?? $host;
 
         return trim($host, '.');
     }
@@ -52,6 +53,30 @@ class PublicUrlService
 
     public function publicUrl(object $site): string
     {
-        return $this->scheme() . '://' . $this->hostForSubdomain((string)$site->subdomain);
+        return $this->scheme() . '://' . $this->preferredHostForSite($site);
+    }
+
+    public function preferredHostForSite(object $site): string
+    {
+        foreach ((array)($site->domains ?? []) as $domain) {
+            if ((string)($domain->type ?? '') === 'custom' && (bool)($domain->verified ?? false) && (bool)($domain->active ?? false)) {
+                return $this->normalizeHost((string)$domain->domain);
+            }
+        }
+
+        $customDomain = FactoryLocator::get('Table')->get('Domains')->find()
+            ->select(['domain'])
+            ->where([
+                'site_id' => (int)$site->id,
+                'type' => 'custom',
+                'verified' => true,
+                'active' => true,
+            ])
+            ->orderByAsc('id')
+            ->first();
+
+        return $customDomain
+            ? $this->normalizeHost((string)$customDomain->domain)
+            : $this->hostForSubdomain((string)$site->subdomain);
     }
 }

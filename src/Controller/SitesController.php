@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\DomainAdministrationService;
 use App\Service\LocalImageStorageService;
 use App\Service\PublicUrlService;
 use App\Service\SubscriptionService;
@@ -164,7 +165,21 @@ class SitesController extends AppController
         $themes = $this->fetchTable('Themes')->find('list')->where(['active' => true])->all();
         $baseDomain = $this->publicUrlService()->baseDomain();
         $publicUrl = $this->publicUrlService()->publicUrl($site);
-        $this->set(compact('site', 'templates', 'themes', 'baseDomain', 'publicUrl'));
+        $domainService = $this->domainService();
+        $customDomainAvailable = $domainService->canManageCustomDomains((int)$this->currentUserId());
+        $customDomainUsage = $domainService->usageForUser((int)$this->currentUserId());
+        $customDomains = array_values(array_filter((array)$site->domains, static fn (object $domain): bool => (string)$domain->type === 'custom'));
+        $this->set(compact(
+            'site',
+            'templates',
+            'themes',
+            'baseDomain',
+            'publicUrl',
+            'domainService',
+            'customDomainAvailable',
+            'customDomainUsage',
+            'customDomains',
+        ));
 
         return null;
     }
@@ -264,6 +279,70 @@ class SitesController extends AppController
         $sites->saveOrFail($site);
         $this->imageStorage()->delete((string)$oldLogoPath);
         $this->Flash->success('Logo eliminado.');
+
+        return $this->redirect(['action' => 'edit', $site->id]);
+    }
+
+    public function addDomain(int $id): Response
+    {
+        $this->request->allowMethod(['post']);
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $site = $this->ownedSite($id);
+        try {
+            $this->domainService()->requestCustomDomain(
+                $site,
+                (int)$this->currentUserId(),
+                (string)$this->request->getData('domain'),
+            );
+            $this->Flash->success('Dominio agregado. Crea el registro TXT indicado y luego verifica la configuración.');
+        } catch (InvalidArgumentException $exception) {
+            $this->Flash->error($exception->getMessage());
+        }
+
+        return $this->redirect(['action' => 'edit', $site->id]);
+    }
+
+    public function verifyDomain(int $siteId, int $domainId): Response
+    {
+        $this->request->allowMethod(['post']);
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $site = $this->ownedSite($siteId);
+        $domain = $this->fetchTable('Domains')->find()
+            ->where(['id' => $domainId, 'site_id' => $site->id, 'type' => 'custom'])
+            ->firstOrFail();
+        try {
+            $this->domainService()->verifyCustomDomain($domain, (int)$this->currentUserId());
+            $this->Flash->success('Dominio verificado y activado. Puede tardar unos minutos en responder desde todos los navegadores.');
+        } catch (InvalidArgumentException $exception) {
+            $this->Flash->warning($exception->getMessage());
+        }
+
+        return $this->redirect(['action' => 'edit', $site->id]);
+    }
+
+    public function deleteDomain(int $siteId, int $domainId): Response
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $site = $this->ownedSite($siteId);
+        $domain = $this->fetchTable('Domains')->find()
+            ->where(['id' => $domainId, 'site_id' => $site->id, 'type' => 'custom'])
+            ->firstOrFail();
+        try {
+            $this->domainService()->removeCustomDomain($domain, (int)$this->currentUserId());
+            $this->Flash->success('Dominio eliminado. El contenido de tu sitio no fue modificado.');
+        } catch (InvalidArgumentException $exception) {
+            $this->Flash->error($exception->getMessage());
+        }
 
         return $this->redirect(['action' => 'edit', $site->id]);
     }
@@ -407,6 +486,18 @@ class SitesController extends AppController
     private function publicUrlService(): PublicUrlService
     {
         return new PublicUrlService();
+    }
+
+    private function domainService(): DomainAdministrationService
+    {
+        return new DomainAdministrationService();
+    }
+
+    private function ownedSite(int $id): object
+    {
+        return $this->fetchTable('Sites')->find()
+            ->where(['Sites.id' => $id, 'Sites.user_id' => $this->currentUserId()])
+            ->firstOrFail();
     }
 
     private function subscriptionService(): SubscriptionService

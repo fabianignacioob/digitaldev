@@ -20,6 +20,8 @@ class PaymentsCommandTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        putenv('WEBPAY_ENV');
+        putenv('WEBPAY_ENABLE_TEST_ORDER');
         $this->gateway = new FakeWebpayPlusGateway();
         Configure::write('Payments.webpayGateway', $this->gateway);
         $this->cleanTables();
@@ -29,7 +31,48 @@ class PaymentsCommandTest extends TestCase
     protected function tearDown(): void
     {
         Configure::delete('Payments.webpayGateway');
+        putenv('WEBPAY_ENV');
+        putenv('WEBPAY_ENABLE_TEST_ORDER');
         parent::tearDown();
+    }
+
+    public function testCreateIntegrationTestCreatesOnePesoGatewayOrderForAdmin(): void
+    {
+        putenv('WEBPAY_ENV=integration');
+        putenv('WEBPAY_ENABLE_TEST_ORDER=true');
+        $this->ensureIntegrationTestPlan();
+        $userId = $this->createUser('admin');
+
+        $this->exec('payments create_integration_test --user-id=' . $userId);
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Monto: $1 CLP');
+        $this->assertOutputContains('token_ws: token-webpay-test');
+        $payment = $this->table('Payments')->find()
+            ->where(['user_id' => $userId, 'plan_slug' => PaymentService::INTEGRATION_TEST_PLAN_SLUG])
+            ->firstOrFail();
+        $this->assertSame('pending', $payment->status);
+        $this->assertSame(1, (int)$payment->expected_amount);
+        $this->assertSame('token-webpay-test', $payment->gateway_token);
+    }
+
+    public function testCreateIntegrationTestMarksOrderAsFailedWhenGatewayCreationFails(): void
+    {
+        putenv('WEBPAY_ENV=integration');
+        putenv('WEBPAY_ENABLE_TEST_ORDER=true');
+        $this->ensureIntegrationTestPlan();
+        $this->gateway->throwOnCreate = true;
+        $userId = $this->createUser('admin');
+
+        $this->exec('payments create_integration_test --user-id=' . $userId);
+
+        $this->assertExitCode(1);
+        $payment = $this->table('Payments')->find()
+            ->where(['user_id' => $userId, 'plan_slug' => PaymentService::INTEGRATION_TEST_PLAN_SLUG])
+            ->firstOrFail();
+        $this->assertSame('failed', $payment->status);
+        $this->assertSame('gateway_create_failed', $payment->error_code);
+        $this->assertNull($payment->gateway_token);
     }
 
     public function testReconcileApprovesPendingGatewayPayment(): void
@@ -128,13 +171,13 @@ class PaymentsCommandTest extends TestCase
         ];
     }
 
-    private function createUser(): int
+    private function createUser(string $role = 'customer'): int
     {
         $user = $this->table('Users')->newEntity([
             'name' => 'Cliente Command Payment',
             'email' => 'command-payment-' . uniqid() . '@example.test',
             'password' => 'secret123',
-            'role' => 'customer',
+            'role' => $role,
             'active' => true,
             'email_verified' => true,
         ]);
@@ -156,6 +199,24 @@ class PaymentsCommandTest extends TestCase
         $plan->sort_order = 1;
         $plan->active = true;
         $plan->capabilities = json_encode(['enabled_templates' => ['carta-simple', 'catalogo-simple']]);
+        $this->table('Plans')->saveOrFail($plan);
+    }
+
+    private function ensureIntegrationTestPlan(): void
+    {
+        $plan = $this->table('Plans')->find()
+            ->where(['slug' => PaymentService::INTEGRATION_TEST_PLAN_SLUG])
+            ->first();
+        if (!$plan) {
+            $plan = $this->table('Plans')->newEntity(['slug' => PaymentService::INTEGRATION_TEST_PLAN_SLUG]);
+        }
+        $plan->name = 'Prueba interna Webpay';
+        $plan->monthly_price = 1;
+        $plan->max_sites = 0;
+        $plan->max_published = 0;
+        $plan->sort_order = 999;
+        $plan->active = false;
+        $plan->capabilities = json_encode(['enabled_templates' => []]);
         $this->table('Plans')->saveOrFail($plan);
     }
 

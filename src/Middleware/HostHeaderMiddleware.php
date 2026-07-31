@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use App\Service\DomainAdministrationService;
 use App\Service\PublicUrlService;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
@@ -94,15 +95,17 @@ class HostHeaderMiddleware implements MiddlewareInterface
         }
 
         $suffix = '.' . $baseDomain;
-        if (!str_ends_with($requestHost, $suffix)) {
-            return false;
+        if (str_ends_with($requestHost, $suffix)) {
+            // The public resolver accepts one subdomain label only; do not allow
+            // hosts that it cannot resolve or wildcard suffix bypasses.
+            $subdomain = substr($requestHost, 0, -strlen($suffix));
+
+            return self::isValidLabel($subdomain);
         }
 
-        // The public resolver accepts one subdomain label only; do not allow
-        // hosts that it cannot resolve or wildcard suffix bypasses.
-        $subdomain = substr($requestHost, 0, -strlen($suffix));
-
-        return self::isValidLabel($subdomain);
+        // Domains outside the CatOps zone are never accepted merely because they
+        // look valid. They must have completed DNS ownership verification.
+        return (new DomainAdministrationService())->isActiveVerifiedCustomHostname($requestHost);
     }
 
     private static function normalizeHostname(string $host): string

@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Cake\Datasource\FactoryLocator;
 use Cake\Datasource\ConnectionManager;
+use Cake\Datasource\FactoryLocator;
 use Cake\I18n\DateTime;
+use Cake\Log\Log;
 use Cake\ORM\Table;
 use RuntimeException;
+use Throwable;
 use function Cake\Core\env;
 
 class PaymentService
@@ -27,6 +29,7 @@ class PaymentService
 
     public const CURRENCY = 'CLP';
     public const PROVIDER = 'webpay_plus';
+    public const INTEGRATION_TEST_PLAN_SLUG = 'webpay-integration-test';
     private const SECRET_KEYS = [
         'card_number',
         'card',
@@ -44,20 +47,31 @@ class PaymentService
     public function __construct(
         private ?SubscriptionService $subscriptionService = null,
         private ?AuditLogService $auditLogService = null,
+        private ?EmailService $emailService = null,
     ) {
         $this->subscriptionService ??= new SubscriptionService();
         $this->auditLogService ??= new AuditLogService();
+        $this->emailService ??= new EmailService();
     }
 
-    public function createPendingOrder(int|array|object $user, string|object $plan, string $billingCycle = 'monthly'): object
+    public function createPendingOrder(
+        int|array|object $user,
+        string|object $plan,
+        string $billingCycle = 'monthly',
+        bool $allowIntegrationTestPlan = false,
+    ): object
     {
         $userId = $this->userId($user);
         $plan = is_object($plan) ? $plan : $this->planBySlug((string)$plan);
         if (!$userId) {
             throw new RuntimeException('Usuario inválido para crear la orden de pago.');
         }
-        if (!$plan || !(bool)$plan->active) {
+        $isIntegrationTestPlan = $plan && $this->isIntegrationTestPlan($plan);
+        if (!$plan || (!(bool)$plan->active && !($isIntegrationTestPlan && $allowIntegrationTestPlan))) {
             throw new RuntimeException('Plan inválido o inactivo.');
+        }
+        if ($isIntegrationTestPlan && !$allowIntegrationTestPlan) {
+            throw new RuntimeException('El plan de prueba de Webpay solo puede iniciarse desde la herramienta interna.');
         }
         $billingCycle = strtolower(trim($billingCycle));
         if (!in_array($billingCycle, ['monthly', 'annual'], true)) {
@@ -72,8 +86,10 @@ class PaymentService
             throw new RuntimeException('Este plan no está disponible en modalidad anual.');
         }
 
-        $currentSubscription = $this->latestSubscription($userId);
-        $this->assertUpgradePolicy($currentSubscription, $plan);
+        $currentSubscription = $isIntegrationTestPlan ? null : $this->latestSubscription($userId);
+        if (!$isIntegrationTestPlan) {
+            $this->assertUpgradePolicy($currentSubscription, $plan);
+        }
 
         $amount = $billingCycle === 'annual' ? $planService->annualPrice($plan) : (int)$plan->monthly_price;
         if (!$amount || $amount < 1) {
@@ -123,6 +139,48 @@ class PaymentService
     }
 
     /**
+     * Crea una orden de $1 exclusiva para comprobar la integración de Webpay.
+     * No está disponible desde las pantallas de cliente y nunca cambia una
+     * suscripción al confirmarse.
+     */
+    public function createIntegrationTestOrder(int|array|object $user): object
+    {
+        if (!$this->integrationTestOrderEnabled()) {
+            throw new RuntimeException('La orden de prueba requiere WEBPAY_ENV=integration y WEBPAY_ENABLE_TEST_ORDER=true.');
+        }
+
+        $userId = $this->userId($user);
+        $account = $this->users()->find()
+            ->select(['id', 'role', 'active'])
+            ->where(['id' => $userId])
+            ->first();
+        if (!$account || !(bool)$account->active || !in_array((string)$account->role, ['admin', 'superadmin'], true)) {
+            throw new RuntimeException('Solo un administrador activo puede crear una orden de prueba Webpay.');
+        }
+
+        $plan = $this->plans()->find()
+            ->where(['slug' => self::INTEGRATION_TEST_PLAN_SLUG])
+            ->first();
+        if (!$plan) {
+            throw new RuntimeException('No se encontró el plan interno de prueba Webpay. Ejecuta las migraciones pendientes.');
+        }
+
+        $payment = $this->createPendingOrder($account, $plan, 'monthly', true);
+        $this->auditLogService->log($userId, 'payment.integration_test_created', 'payments', (int)$payment->id, [
+            'internal_reference' => (string)$payment->internal_reference,
+            'amount' => 1,
+            'currency' => self::CURRENCY,
+        ]);
+
+        return $payment;
+    }
+
+    public function integrationTestOrderEnabled(): bool
+    {
+        return $this->integrationTestEnabled();
+    }
+
+    /**
      * Persists the transaction created by Webpay without exposing its token in
      * audit logs or response payloads.
      *
@@ -169,7 +227,8 @@ class PaymentService
 
         $connection = ConnectionManager::get('default');
 
-        return $connection->transactional(function () use ($payment, $providerResponse) {
+        $shouldNotify = false;
+        $result = $connection->transactional(function () use ($payment, $providerResponse, &$shouldNotify) {
             $payment = $this->payments()->get($payment->id);
             if ($payment->processed_at) {
                 $this->auditLogService->log((int)$payment->user_id, 'payment.duplicate_ignored', 'payments', (int)$payment->id);
@@ -215,6 +274,21 @@ class PaymentService
                 'internal_reference' => (string)$payment->internal_reference,
             ]);
 
+            if ($this->isIntegrationTestPayment($payment)) {
+                $payment->status = self::STATUS_PAID;
+                $payment->paid_at = $now;
+                $payment->confirmed_at = $now;
+                $payment->processed_at = $now;
+                $this->payments()->saveOrFail($payment);
+                $this->auditLogService->log((int)$payment->user_id, 'payment.paid', 'payments', (int)$payment->id);
+                $this->auditLogService->log((int)$payment->user_id, 'payment.integration_test_completed', 'payments', (int)$payment->id, [
+                    'internal_reference' => (string)$payment->internal_reference,
+                ]);
+                $shouldNotify = true;
+
+                return $payment;
+            }
+
             $subscription = $this->subscriptionForPayment($payment);
             $subscription->plan_slug = (string)$payment->plan_slug;
             $subscription->billing_cycle = (string)$payment->billing_cycle ?: 'monthly';
@@ -235,9 +309,16 @@ class PaymentService
                 'subscription_id' => (int)$subscription->id,
                 'plan_slug' => (string)$payment->plan_slug,
             ]);
+            $shouldNotify = true;
 
             return $payment;
         });
+
+        if ($shouldNotify) {
+            $this->notifyPaymentApproved($result);
+        }
+
+        return $result;
     }
 
     public function reject(object $payment, array $providerResponse): object
@@ -261,6 +342,7 @@ class PaymentService
         $this->auditLogService->log((int)$payment->user_id, 'payment.rejected', 'payments', (int)$payment->id, [
             'error_code' => (string)$payment->error_code,
         ]);
+        $this->notifyPaymentRejected($payment);
 
         return $payment;
     }
@@ -470,6 +552,24 @@ class PaymentService
         ]);
     }
 
+    private function notifyPaymentApproved(object $payment): void
+    {
+        try {
+            $this->emailService->sendPaymentApproved($this->users()->get($payment->user_id), $payment);
+        } catch (Throwable $exception) {
+            Log::warning('No se pudo enviar la confirmación de pago: ' . $exception->getMessage());
+        }
+    }
+
+    private function notifyPaymentRejected(object $payment): void
+    {
+        try {
+            $this->emailService->sendPaymentRejected($this->users()->get($payment->user_id), $payment);
+        } catch (Throwable $exception) {
+            Log::warning('No se pudo enviar el rechazo de pago: ' . $exception->getMessage());
+        }
+    }
+
     private function pendingExpirationMinutes(): int
     {
         return max(5, min(1440, (int)env('WEBPAY_PENDING_EXPIRATION_MINUTES', 10)));
@@ -547,6 +647,22 @@ class PaymentService
         return $this->plans()->find()
             ->where(['slug' => $slug, 'active' => true])
             ->first();
+    }
+
+    private function isIntegrationTestPlan(object $plan): bool
+    {
+        return (string)($plan->slug ?? '') === self::INTEGRATION_TEST_PLAN_SLUG;
+    }
+
+    private function isIntegrationTestPayment(object $payment): bool
+    {
+        return (string)($payment->plan_slug ?? '') === self::INTEGRATION_TEST_PLAN_SLUG;
+    }
+
+    private function integrationTestEnabled(): bool
+    {
+        return strtolower(trim((string)env('WEBPAY_ENV', ''))) === 'integration'
+            && filter_var(env('WEBPAY_ENABLE_TEST_ORDER', false), FILTER_VALIDATE_BOOL);
     }
 
     private function latestSubscription(int $userId): ?object
@@ -660,5 +776,10 @@ class PaymentService
     private function plans(): Table
     {
         return FactoryLocator::get('Table')->get('Plans');
+    }
+
+    private function users(): Table
+    {
+        return FactoryLocator::get('Table')->get('Users');
     }
 }

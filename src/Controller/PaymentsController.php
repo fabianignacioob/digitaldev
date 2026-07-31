@@ -14,6 +14,50 @@ use function Cake\Core\env;
 
 class PaymentsController extends AppController
 {
+    public function testPlan(): ?Response
+    {
+        if ($redirect = $this->requireAdmin()) {
+            return $redirect;
+        }
+
+        $this->viewBuilder()->setLayout('dashboard');
+        $paymentService = $this->paymentService();
+        $enabled = $paymentService->integrationTestOrderEnabled();
+
+        if (!$this->request->is('post')) {
+            $this->set(compact('enabled'));
+
+            return null;
+        }
+
+        $this->request->allowMethod(['post']);
+        if (!$enabled) {
+            throw new ForbiddenException('La prueba Webpay solo está disponible en el ambiente de integración.');
+        }
+
+        $payment = null;
+        try {
+            $payment = $paymentService->createIntegrationTestOrder((int)$this->currentUserId());
+            $transaction = $this->webpayGateway()->createTransaction(
+                (string)$payment->buy_order,
+                (string)$payment->session_id,
+                (int)$payment->expected_amount,
+            );
+            $payment = $paymentService->recordGatewayTransaction($payment, $transaction);
+            $this->set(compact('payment', 'transaction'));
+            $this->viewBuilder()->setTemplate('redirect');
+        } catch (\Throwable) {
+            if ($payment) {
+                $paymentService->markGatewaySetupFailed($payment);
+            }
+            $this->Flash->error('No pudimos iniciar la prueba de Webpay. Revisa la configuración de integración.');
+
+            return $this->redirect('/test-plan');
+        }
+
+        return null;
+    }
+
     public function create(): ?Response
     {
         $this->request->allowMethod(['post']);
@@ -110,6 +154,7 @@ class PaymentsController extends AppController
     public function webpayReturn(): ?Response
     {
         $this->request->allowMethod(['get', 'post']);
+        $this->viewBuilder()->setLayout('dashboard');
         $this->viewBuilder()->setTemplate('webpay_return');
         $data = array_merge($this->request->getQueryParams(), (array)$this->request->getData());
         $token = trim((string)($data['token_ws'] ?? ''));
@@ -151,7 +196,7 @@ class PaymentsController extends AppController
             return null;
         }
         if ($payment->processed_at) {
-            $message = $this->resultMessage((string)$payment->status);
+            $message = $this->resultMessage((string)$payment->status, $payment);
             $this->set(compact('payment', 'message'));
 
             return null;
@@ -161,7 +206,7 @@ class PaymentsController extends AppController
         $claim = $paymentService->claimGatewayCommit($payment);
         if (!$claim) {
             $payment = $this->paymentService()->paymentByGatewayToken($token) ?? $payment;
-            $message = $this->resultMessage((string)$payment->status);
+            $message = $this->resultMessage((string)$payment->status, $payment);
             $this->set(compact('payment', 'message'));
 
             return null;
@@ -178,7 +223,7 @@ class PaymentsController extends AppController
                 if ($recoveryAction === 'confirm') {
                     $payment = $paymentService->confirm($payment, $response);
                     $paymentService->recordGatewayStatusRecoveryEvent($payment, 'payment.gateway_status_recovered');
-                    $message = $this->resultMessage((string)$payment->status);
+                    $message = $this->resultMessage((string)$payment->status, $payment);
                     $this->set(compact('payment', 'message'));
 
                     return null;
@@ -186,7 +231,7 @@ class PaymentsController extends AppController
                 if ($recoveryAction === 'reject') {
                     $payment = $paymentService->reject($payment, $response);
                     $paymentService->recordGatewayStatusRecoveryEvent($payment, 'payment.gateway_status_recovered');
-                    $message = $this->resultMessage((string)$payment->status);
+                    $message = $this->resultMessage((string)$payment->status, $payment);
                     $this->set(compact('payment', 'message'));
 
                     return null;
@@ -194,7 +239,7 @@ class PaymentsController extends AppController
                 if ($recoveryAction === 'cancel') {
                     $payment = $paymentService->cancel($payment, $response);
                     $paymentService->recordGatewayStatusRecoveryEvent($payment, 'payment.gateway_status_recovered');
-                    $message = $this->resultMessage((string)$payment->status);
+                    $message = $this->resultMessage((string)$payment->status, $payment);
                     $this->set(compact('payment', 'message'));
 
                     return null;
@@ -202,14 +247,14 @@ class PaymentsController extends AppController
                 if ($recoveryAction === 'reverse') {
                     $payment = $paymentService->markReversed($payment, $response);
                     $paymentService->recordGatewayStatusRecoveryEvent($payment, 'payment.gateway_status_recovered');
-                    $message = $this->resultMessage((string)$payment->status);
+                    $message = $this->resultMessage((string)$payment->status, $payment);
                     $this->set(compact('payment', 'message'));
 
                     return null;
                 }
                 if ($recoveryAction !== 'commit') {
                     $payment = $paymentService->recordGatewayStatusInconclusive($payment, 'gateway_status_inconclusive');
-                    $message = $this->resultMessage((string)$payment->status);
+                    $message = $this->resultMessage((string)$payment->status, $payment);
                     $this->set(compact('payment', 'message'));
 
                     return null;
@@ -225,7 +270,7 @@ class PaymentsController extends AppController
             } else {
                 $payment = $paymentService->reject($payment, $response);
             }
-            $message = $this->resultMessage((string)$payment->status);
+            $message = $this->resultMessage((string)$payment->status, $payment);
         } catch (\Throwable) {
             $payment = $claim['recovered']
                 ? $paymentService->recordGatewayStatusInconclusive($payment, 'gateway_status_recovery_failed')
@@ -284,8 +329,15 @@ class PaymentsController extends AppController
         };
     }
 
-    private function resultMessage(string $status): string
+    private function resultMessage(string $status, ?object $payment = null): string
     {
+        if (
+            $status === PaymentService::STATUS_PAID
+            && (string)($payment->plan_slug ?? '') === PaymentService::INTEGRATION_TEST_PLAN_SLUG
+        ) {
+            return 'Pago de prueba aprobado. No se modificó ninguna suscripción.';
+        }
+
         return match ($status) {
             PaymentService::STATUS_PAID => 'Pago aprobado. Tu suscripción fue actualizada.',
             PaymentService::STATUS_REJECTED => 'El pago fue rechazado. Tu suscripción no fue modificada.',

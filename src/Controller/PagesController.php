@@ -75,7 +75,11 @@ class PagesController extends AppController
                     ->where(['active' => true])
                     ->orderByAsc('sort_order')
                     ->all();
-                $this->set(compact('plans'));
+                $selectedPlan = trim((string)$this->request->getQuery('plan'));
+                if (!$this->planService()->getPlanBySlug($selectedPlan)) {
+                    $selectedPlan = null;
+                }
+                $this->set(compact('plans', 'selectedPlan'));
             }
         }
 

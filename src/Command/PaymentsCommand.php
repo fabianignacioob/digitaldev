@@ -27,16 +27,19 @@ class PaymentsCommand extends Command
     protected function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         return $parser
-            ->setDescription('Concilia pagos pendientes de Webpay Plus.')
+            ->setDescription('Opera conciliaciones y pruebas controladas de Webpay Plus.')
             ->addArgument('action', [
                 'help' => 'Acción a ejecutar.',
-                'choices' => ['reconcile'],
+                'choices' => ['reconcile', 'create_integration_test'],
                 'required' => true,
             ])
             ->addOption('dry-run', [
                 'help' => 'Muestra los cambios sin modificar datos.',
                 'boolean' => true,
                 'default' => false,
+            ])
+            ->addOption('user-id', [
+                'help' => 'ID del administrador que ejecuta la prueba de integración.',
             ]);
     }
 
@@ -50,6 +53,7 @@ class PaymentsCommand extends Command
         try {
             $result = match ($action) {
                 'reconcile' => $this->reconcile($dryRun, $io),
+                'create_integration_test' => $this->createIntegrationTest((int)$args->getOption('user-id'), $dryRun, $io),
                 default => ['code' => self::CODE_ERROR, 'processed' => 0, 'skipped' => 0, 'errors' => 1, 'message' => 'Acción no reconocida.'],
             };
             $runs->finish(
@@ -121,6 +125,58 @@ class PaymentsCommand extends Command
             'errors' => $errors,
             'message' => $message,
         ];
+    }
+
+    /** @return array{code:int, processed:int, skipped:int, errors:int, message:string} */
+    private function createIntegrationTest(int $userId, bool $dryRun, ConsoleIo $io): array
+    {
+        if ($dryRun) {
+            $message = 'Dry-run: no se creó una orden de prueba Webpay.';
+            $io->out($message);
+
+            return ['code' => self::CODE_SUCCESS, 'processed' => 0, 'skipped' => 1, 'errors' => 0, 'message' => $message];
+        }
+        if ($userId < 1) {
+            $message = 'Debes indicar --user-id con el ID de un administrador.';
+            $io->err($message);
+
+            return ['code' => self::CODE_ERROR, 'processed' => 0, 'skipped' => 0, 'errors' => 1, 'message' => $message];
+        }
+
+        $payment = null;
+        $paymentService = new PaymentService();
+
+        try {
+            $payment = $paymentService->createIntegrationTestOrder($userId);
+            $transaction = $this->gateway()->createTransaction(
+                (string)$payment->buy_order,
+                (string)$payment->session_id,
+                (int)$payment->expected_amount,
+            );
+            $payment = $paymentService->recordGatewayTransaction($payment, $transaction);
+
+            $io->out('Orden de prueba Webpay creada.');
+            $io->out('Monto: $1 CLP');
+            $io->out('Referencia: ' . (string)$payment->internal_reference);
+            $io->out('URL: ' . (string)$transaction['url']);
+            $io->out('token_ws: ' . (string)$transaction['token']);
+
+            return [
+                'code' => self::CODE_SUCCESS,
+                'processed' => 1,
+                'skipped' => 0,
+                'errors' => 0,
+                'message' => 'Orden de prueba Webpay creada.',
+            ];
+        } catch (\Throwable $exception) {
+            if ($payment !== null) {
+                $paymentService->markGatewaySetupFailed($payment);
+            }
+            $message = 'No se pudo crear la orden de prueba Webpay: ' . $exception->getMessage();
+            $io->err($message);
+
+            return ['code' => self::CODE_ERROR, 'processed' => 0, 'skipped' => 0, 'errors' => 1, 'message' => 'La orden de prueba no pudo crearse.'];
+        }
     }
 
     private function gateway(): WebpayPlusGatewayInterface

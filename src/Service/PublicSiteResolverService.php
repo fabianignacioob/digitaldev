@@ -33,7 +33,21 @@ class PublicSiteResolverService
             return ['site' => null, 'reason' => null, 'isBaseHost' => true];
         }
         if ($subdomain === false) {
-            return ['site' => null, 'reason' => self::REASON_NOT_FOUND, 'isBaseHost' => false];
+            $domain = FactoryLocator::get('Table')->get('Domains')->find()
+                ->select(['site_id'])
+                ->where([
+                    'domain' => DomainAdministrationService::normalizeHostname($host),
+                    'type' => 'custom',
+                    'verified' => true,
+                    'active' => true,
+                ])
+                ->first();
+
+            if (!$domain) {
+                return ['site' => null, 'reason' => self::REASON_NOT_FOUND, 'isBaseHost' => false];
+            }
+
+            return $this->resolveQuery($this->baseSiteQuery()->where(['Sites.id' => (int)$domain->site_id]));
         }
 
         return $this->resolveBySubdomain($subdomain) + ['isBaseHost' => false];

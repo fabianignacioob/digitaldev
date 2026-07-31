@@ -38,6 +38,9 @@ class UsersTable extends Table
             ->scalar('verification_code_hash')->maxLength('verification_code_hash', 255)->allowEmptyString('verification_code_hash')
             ->dateTime('verification_expires')->allowEmptyDateTime('verification_expires')
             ->dateTime('verification_sent_at')->allowEmptyDateTime('verification_sent_at')
+            ->scalar('password_reset_token_hash')->maxLength('password_reset_token_hash', 64)->allowEmptyString('password_reset_token_hash')
+            ->dateTime('password_reset_expires')->allowEmptyDateTime('password_reset_expires')
+            ->dateTime('password_reset_requested_at')->allowEmptyDateTime('password_reset_requested_at')
             ->dateTime('trial_used_at')->allowEmptyDateTime('trial_used_at');
     }
 

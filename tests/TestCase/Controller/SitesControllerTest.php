@@ -299,6 +299,71 @@ class SitesControllerTest extends TestCase
         $this->assertResponseCode(404);
     }
 
+    public function testCustomerCanRequestCustomDomainForOwnSiteWhenPlanAllowsIt(): void
+    {
+        $plan = $this->table('Plans')->find()->where(['slug' => 'basica'])->firstOrFail();
+        $capabilities = json_decode((string)$plan->capabilities, true) ?: [];
+        $capabilities['custom_domain_enabled'] = true;
+        $capabilities['custom_domains_limit'] = 1;
+        $plan->capabilities = json_encode($capabilities);
+        $this->table('Plans')->saveOrFail($plan);
+        $siteId = $this->createSite($this->userId, 'dominio-cliente');
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/' . $siteId . '/dominios', ['domain' => 'mi-negocio.cl']);
+
+        $this->assertRedirect('/sitios/editar/' . $siteId);
+        $domain = $this->table('Domains')->find()
+            ->where(['site_id' => $siteId, 'domain' => 'mi-negocio.cl', 'type' => 'custom'])
+            ->first();
+        $this->assertNotEmpty($domain);
+        $this->assertFalse((bool)$domain->active);
+        $this->assertFalse((bool)$domain->verified);
+    }
+
+    public function testCustomerCannotManageAnotherUsersCustomDomain(): void
+    {
+        $otherUserId = $this->createUser('dominio-ajeno-' . uniqid() . '@example.test');
+        $this->createActiveSubscription($otherUserId);
+        $siteId = $this->createSite($otherUserId, 'dominio-ajeno');
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/' . $siteId . '/dominios', ['domain' => 'ajeno.cl']);
+
+        $this->assertResponseCode(404);
+        $this->assertSame(0, $this->table('Domains')->find()->where(['domain' => 'ajeno.cl'])->count());
+    }
+
+    public function testVerifiedCustomDomainResolvesWithProductionHostValidation(): void
+    {
+        $siteId = $this->createSite($this->userId, 'dominio-publico', 'Sitio con dominio');
+        $this->publishSiteDirectly($siteId);
+        $this->table('Domains')->saveOrFail($this->table('Domains')->newEntity([
+            'site_id' => $siteId,
+            'domain' => 'cliente-ejemplo.cl',
+            'type' => 'custom',
+            'verified' => true,
+            'active' => true,
+        ]));
+
+        $previousDebug = Configure::read('debug');
+        $previousFullBaseUrl = Configure::read('App.fullBaseUrl');
+        Configure::write('debug', false);
+        Configure::write('App.fullBaseUrl', 'https://catops.local');
+        try {
+            $this->configRequest(['headers' => ['Host' => 'cliente-ejemplo.cl']]);
+            $this->get('/');
+
+            $this->assertResponseOk();
+            $this->assertResponseContains('Sitio con dominio');
+        } finally {
+            Configure::write('debug', $previousDebug);
+            Configure::write('App.fullBaseUrl', $previousFullBaseUrl);
+        }
+    }
+
     private function createUser(string $email): int
     {
         $users = $this->table('Users');

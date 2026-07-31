@@ -147,6 +147,28 @@ class PlanServiceTest extends TestCase
         $this->assertSame('coming_soon', $byLabel['Código QR']['status']);
         $this->assertSame('coming_soon', $byLabel['Marca CatOps']['status']);
         $this->assertSame('available', $byLabel['Categorías']['status']);
+        $this->assertSame('No incluido', $byLabel['Dominio propio']['value']);
+    }
+
+    public function testCommercialRowsPresentEnabledCustomDomainsAsAvailable(): void
+    {
+        $plan = (object)[
+            'capabilities' => [
+                'sites_configured_limit' => 3,
+                'sites_published_limit' => 3,
+                'custom_domain_enabled' => true,
+                'custom_domains_limit' => 1,
+                'enabled_templates' => ['carta-simple'],
+            ],
+        ];
+
+        $rows = $this->service->commercialBenefitRows($plan);
+        $byLabel = [];
+        foreach ($rows as $row) {
+            $byLabel[$row['label']] = $row;
+        }
+        $this->assertSame('1 incluido', $byLabel['Dominio propio']['value']);
+        $this->assertSame('available', $byLabel['Dominio propio']['status']);
     }
 
     public function testTrialAndAnnualCapabilitiesAreValidatedWithSafeDefaults(): void

@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\EmailService;
 use App\Service\SubscriptionService;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\I18n\DateTime;
 use Cake\Log\Log;
-use Cake\Mailer\Mailer;
+use Cake\Routing\Router;
+use RuntimeException;
+use Throwable;
 
 class UsersController extends AppController
 {
@@ -132,7 +135,7 @@ class UsersController extends AppController
                 try {
                     (new SubscriptionService())->createTrialForUser((int)$user->id);
                     $trialCreated = true;
-                } catch (\RuntimeException $exception) {
+                } catch (RuntimeException $exception) {
                     $this->Flash->warning($exception->getMessage());
                 }
             }
@@ -144,15 +147,96 @@ class UsersController extends AppController
                 'email' => $user->email,
                 'role' => $user->role,
             ]);
+            $this->sendWelcomeEmail($user);
 
             $this->Flash->success($trialCreated
                 ? 'Correo verificado. Puedes crear tu sitio; la prueba de 7 días comienza al publicarlo.'
                 : 'Correo verificado. Elige un plan para activar tu primer sitio.');
 
-            return $this->redirect($trialCreated ? '/panel' : '/planes');
+            if ($trialCreated) {
+                return $this->redirect('/panel');
+            }
+
+            return $this->redirect('/planes?plan=' . rawurlencode($selectedPlan));
         }
 
         $this->set(compact('email'));
+
+        return null;
+    }
+
+    public function forgotPassword(): ?Response
+    {
+        $this->viewBuilder()->setLayout('auth');
+
+        if ($this->request->is('post')) {
+            $email = trim((string)$this->request->getData('email'));
+            $user = $this->fetchTable('Users')->find()
+                ->where(['email' => $email])
+                ->first();
+
+            if ($user) {
+                $token = bin2hex(random_bytes(32));
+                $user->password_reset_token_hash = hash('sha256', $token);
+                $user->password_reset_expires = DateTime::now()->addMinutes(30);
+                $user->password_reset_requested_at = DateTime::now();
+                $this->fetchTable('Users')->saveOrFail($user);
+
+                $resetUrl = Router::url([
+                    'controller' => 'Users',
+                    'action' => 'resetPassword',
+                    '?' => ['token' => $token],
+                ], true);
+
+                try {
+                    (new EmailService())->sendPasswordReset($user, $resetUrl);
+                } catch (Throwable $exception) {
+                    Log::warning('No se pudo enviar el correo de recuperación: ' . $exception->getMessage());
+                }
+            }
+
+            // The response is intentionally generic to avoid revealing registered emails.
+            $this->Flash->success('Si el correo está registrado, recibirás un enlace para recuperar tu contraseña.');
+
+            return $this->redirect(['action' => 'login']);
+        }
+
+        return null;
+    }
+
+    public function resetPassword(): ?Response
+    {
+        $this->viewBuilder()->setLayout('auth');
+        $token = trim((string)($this->request->getQuery('token') ?? $this->request->getData('token')));
+        $validToken = $this->passwordResetUser($token);
+
+        if (!$validToken) {
+            $this->Flash->error('El enlace de recuperación es inválido o ya venció.');
+
+            return $this->redirect(['action' => 'forgotPassword']);
+        }
+
+        if ($this->request->is('post')) {
+            $password = (string)$this->request->getData('password');
+            $confirmation = (string)$this->request->getData('password_confirmation');
+            if (strlen($password) < 8) {
+                $this->Flash->error('La contraseña debe tener al menos 8 caracteres.');
+            } elseif ($password !== $confirmation) {
+                $this->Flash->error('Las contraseñas no coinciden.');
+            } else {
+                $user = $validToken;
+                $user->password = $password;
+                $user->password_reset_token_hash = null;
+                $user->password_reset_expires = null;
+                $user->password_reset_requested_at = null;
+                $this->fetchTable('Users')->saveOrFail($user);
+                $this->Flash->success('Contraseña actualizada. Ya puedes iniciar sesión.');
+
+                return $this->redirect(['action' => 'login']);
+            }
+        }
+
+        $this->set(compact('token'));
 
         return null;
     }
@@ -256,21 +340,38 @@ class UsersController extends AppController
     private function sendVerificationEmail(object $user, string $code): void
     {
         try {
-            $mailer = new Mailer('default');
-            $mailer
-                ->setTo((string)$user->email, (string)$user->name)
-                ->setSubject('Código de verificación CatOps')
-                ->setEmailFormat('text')
-                ->setViewVars(['user' => $user, 'code' => $code])
-                ->viewBuilder()
-                ->setTemplate('verification_code');
-            $mailer->deliver();
-        } catch (\Throwable $exception) {
+            (new EmailService())->sendVerificationCode($user, $code);
+        } catch (Throwable $exception) {
             Log::warning('No se pudo enviar el código de verificación: ' . $exception->getMessage());
             if (Configure::read('debug')) {
                 $this->Flash->warning('Modo local: no hay SMTP activo. Código de prueba: ' . $code);
             }
         }
+    }
+
+    private function sendWelcomeEmail(object $user): void
+    {
+        try {
+            (new EmailService())->sendWelcome($user);
+        } catch (Throwable $exception) {
+            Log::warning('No se pudo enviar el correo de bienvenida: ' . $exception->getMessage());
+        }
+    }
+
+    private function passwordResetUser(string $token): ?object
+    {
+        if ($token === '' || !preg_match('/^[a-f0-9]{64}$/', $token)) {
+            return null;
+        }
+
+        $user = $this->fetchTable('Users')->find()
+            ->where(['password_reset_token_hash' => hash('sha256', $token)])
+            ->first();
+        if (!$user || !$user->password_reset_expires || $user->password_reset_expires < DateTime::now()) {
+            return null;
+        }
+
+        return $user;
     }
 
 }

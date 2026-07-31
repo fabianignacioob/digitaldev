@@ -110,7 +110,7 @@ $this->assign('metaDescription', 'Crea una carta, catálogo o página de servici
     <div class="faq-list">
       <details><summary>¿Necesito saber programación?</summary><p>No. El panel está pensado para editar textos, productos, precios, imágenes y datos de contacto sin programar.</p></details>
       <details><summary>¿Puedo actualizar mis productos o servicios?</summary><p>Sí. Puedes mantener precios, descripciones, fotos y disponibilidad desde tu panel.</p></details>
-      <details><summary>¿Puedo usar mi propio dominio?</summary><p>Puedes comenzar con un subdominio de CatOps. La conexión de dominio propio se habilitará según la disponibilidad del plan y la configuración del servicio.</p></details>
+      <details><summary>¿Puedo usar mi propio dominio?</summary><p>Sí. Todos los sitios reciben un subdominio de CatOps y los planes Negocio y Full permiten conectar dominios propios tras verificar sus registros DNS.</p></details>
       <details><summary>¿Se ve bien en celulares?</summary><p>Sí. Las páginas se construyen para funcionar en celular, tablet y computador.</p></details>
       <details><summary>¿Incluye carrito o compras online?</summary><p>No. CatOps está pensado para mostrar tu oferta y recibir consultas; no incluye carrito ni pagos para clientes finales.</p></details>
     </div>

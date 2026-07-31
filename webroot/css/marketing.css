@@ -485,6 +485,10 @@ body.marketing-page {
     box-shadow: 0 30px 60px rgba(6, 38, 93, 0.25);
     transform: translateY(-14px);
 }
+.marketing-page .plan-card.is-selected:not(.featured) {
+    border: 2px solid var(--orange-600);
+    box-shadow: 0 20px 44px rgba(243, 106, 18, 0.16);
+}
 .marketing-page .plan-card.featured h3,
 .marketing-page .plan-card.featured .price {
     color: #fff;

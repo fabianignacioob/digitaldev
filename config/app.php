@@ -250,7 +250,7 @@ return [
             //'username' => null,
             //'password' => null,
             'client' => null,
-            'tls' => false,
+            'tls' => filter_var(env('EMAIL_TLS', true), FILTER_VALIDATE_BOOLEAN),
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
     ],
@@ -267,7 +267,7 @@ return [
     'Email' => [
         'default' => [
             'transport' => 'default',
-            'from' => 'you@localhost',
+            'from' => env('EMAIL_FROM', 'you@localhost'),
             /*
              * Will by default be set to config value of App.encoding, if that exists otherwise to UTF-8.
              */

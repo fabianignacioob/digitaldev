@@ -9,4 +9,5 @@
 <?= $this->Form->button('Entrar') ?>
 <?= $this->Form->end() ?>
 
+<p><a class="muted-link" href="/recuperar-contrasena">¿Olvidaste tu contraseña?</a></p>
 <p>¿Aún no tienes cuenta? <a class="muted-link" href="/registro">Crear cuenta</a></p>

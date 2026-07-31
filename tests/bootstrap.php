@@ -31,9 +31,12 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 require dirname(__DIR__) . '/config/bootstrap.php';
 
-if (empty($_SERVER['HTTP_HOST']) && !Configure::read('App.fullBaseUrl')) {
-    Configure::write('App.fullBaseUrl', 'http://localhost');
+// Keep the test suite independent from developer-only config/.env values.
+// Individual host validation tests override this explicitly when required.
+if (empty($_SERVER['HTTP_HOST'])) {
+    $_SERVER['HTTP_HOST'] = 'localhost';
 }
+Configure::write('App.fullBaseUrl', 'http://localhost');
 
 // Fixate now to avoid one-second-leap-issues
 Chronos::setTestNow(Chronos::now());

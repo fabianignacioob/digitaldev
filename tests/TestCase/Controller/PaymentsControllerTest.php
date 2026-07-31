@@ -18,6 +18,8 @@ class PaymentsControllerTest extends TestCase
     private int $userId;
     private bool $previousDebug;
     private ?string $previousAppEnv;
+    private ?string $previousWebpayEnv;
+    private ?string $previousIntegrationTestOrder;
     private FakeWebpayPlusGateway $gateway;
 
     protected function setUp(): void
@@ -25,6 +27,8 @@ class PaymentsControllerTest extends TestCase
         parent::setUp();
         $this->previousDebug = (bool)Configure::read('debug');
         $this->previousAppEnv = getenv('APP_ENV') !== false ? (string)getenv('APP_ENV') : null;
+        $this->previousWebpayEnv = getenv('WEBPAY_ENV') !== false ? (string)getenv('WEBPAY_ENV') : null;
+        $this->previousIntegrationTestOrder = getenv('WEBPAY_ENABLE_TEST_ORDER') !== false ? (string)getenv('WEBPAY_ENABLE_TEST_ORDER') : null;
         $this->gateway = new FakeWebpayPlusGateway();
         Configure::write('Payments.webpayGateway', $this->gateway);
         $this->ensurePlan();
@@ -35,6 +39,8 @@ class PaymentsControllerTest extends TestCase
     {
         Configure::write('debug', $this->previousDebug);
         $this->previousAppEnv === null ? putenv('APP_ENV') : putenv('APP_ENV=' . $this->previousAppEnv);
+        $this->previousWebpayEnv === null ? putenv('WEBPAY_ENV') : putenv('WEBPAY_ENV=' . $this->previousWebpayEnv);
+        $this->previousIntegrationTestOrder === null ? putenv('WEBPAY_ENABLE_TEST_ORDER') : putenv('WEBPAY_ENABLE_TEST_ORDER=' . $this->previousIntegrationTestOrder);
         Configure::delete('Payments.webpayGateway');
         parent::tearDown();
     }
@@ -54,6 +60,40 @@ class PaymentsControllerTest extends TestCase
         $this->assertSame('pending', $payment->status);
         $this->assertSame(6990, (int)$payment->expected_amount);
         $this->assertSame('token-webpay-test', $payment->gateway_token);
+        $this->assertSame(1, $this->gateway->createCalls);
+    }
+
+    public function testIntegrationTestPlanIsRestrictedToAdministrators(): void
+    {
+        $this->loginAs($this->userId);
+
+        $this->get('/test-plan');
+
+        $this->assertResponseCode(403);
+    }
+
+    public function testIntegrationTestPlanCreatesOnePesoPaymentForAdministrator(): void
+    {
+        putenv('WEBPAY_ENV=integration');
+        putenv('WEBPAY_ENABLE_TEST_ORDER=true');
+        $this->ensureIntegrationTestPlan();
+        $this->gateway->createResponse = [
+            'token' => 'token-webpay-integration-' . uniqid(),
+            'url' => 'https://webpay.test/payment',
+        ];
+        $adminId = $this->createUser('admin');
+        $this->loginAs($adminId, 'admin');
+        $this->enableCsrfToken();
+
+        $this->post('/test-plan');
+
+        $this->assertResponseOk();
+        $payment = $this->table('Payments')->find()
+            ->where(['user_id' => $adminId, 'plan_slug' => PaymentService::INTEGRATION_TEST_PLAN_SLUG])
+            ->firstOrFail();
+        $this->assertSame(1, (int)$payment->expected_amount);
+        $this->assertSame('pending', $payment->status);
+        $this->assertStringStartsWith('token-webpay-integration-', (string)$payment->gateway_token);
         $this->assertSame(1, $this->gateway->createCalls);
     }
 
@@ -162,12 +202,14 @@ class PaymentsControllerTest extends TestCase
 
         $canceled = $this->gatewayPayment('token-canceled');
         $this->post('/payments/webpay/return', [
+            'token_ws' => $canceled->gateway_token,
             'TBK_TOKEN' => $canceled->gateway_token,
             'TBK_ORDEN_COMPRA' => $canceled->buy_order,
             'TBK_ID_SESION' => $canceled->session_id,
         ]);
         $this->assertResponseOk();
         $this->assertSame('canceled', $this->table('Payments')->get($canceled->id)->status);
+        $this->assertSame(0, $this->gateway->commitCalls);
 
         $timedOut = $this->gatewayPayment('token-timeout');
         $this->post('/payments/webpay/return', [
@@ -175,6 +217,7 @@ class PaymentsControllerTest extends TestCase
             'TBK_ID_SESION' => $timedOut->session_id,
         ]);
         $this->assertSame('canceled', $this->table('Payments')->get($timedOut->id)->status);
+        $this->assertSame(0, $this->gateway->commitCalls);
     }
 
     public function testPublicReturnKeepsPaymentPendingWhenGatewayTimesOut(): void
@@ -353,13 +396,13 @@ class PaymentsControllerTest extends TestCase
         ], $override);
     }
 
-    private function createUser(): int
+    private function createUser(string $role = 'customer'): int
     {
         $user = $this->table('Users')->newEntity([
             'name' => 'Cliente Pago Controller',
             'email' => 'pago-controller-' . uniqid() . '@example.test',
             'password' => 'secret123',
-            'role' => 'customer',
+            'role' => $role,
             'active' => true,
             'email_verified' => true,
         ]);
@@ -401,14 +444,32 @@ class PaymentsControllerTest extends TestCase
         $this->table('Plans')->saveOrFail($plan);
     }
 
-    private function loginAs(int $userId): void
+    private function ensureIntegrationTestPlan(): void
+    {
+        $plan = $this->table('Plans')->find()
+            ->where(['slug' => PaymentService::INTEGRATION_TEST_PLAN_SLUG])
+            ->first();
+        if (!$plan) {
+            $plan = $this->table('Plans')->newEntity(['slug' => PaymentService::INTEGRATION_TEST_PLAN_SLUG]);
+        }
+        $plan->name = 'Prueba interna Webpay';
+        $plan->monthly_price = 1;
+        $plan->max_sites = 0;
+        $plan->max_published = 0;
+        $plan->sort_order = 999;
+        $plan->active = false;
+        $plan->capabilities = json_encode(['enabled_templates' => []]);
+        $this->table('Plans')->saveOrFail($plan);
+    }
+
+    private function loginAs(int $userId, string $role = 'customer'): void
     {
         $this->session([
             'Auth.User' => [
                 'id' => $userId,
                 'name' => 'Cliente Pago Controller',
                 'email' => 'pago-controller@example.test',
-                'role' => 'customer',
+                'role' => $role,
             ],
         ]);
     }

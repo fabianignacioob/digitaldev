@@ -27,6 +27,16 @@ return [
     // WEBPAY_RETURN_URL=https://your-domain.cl/payments/webpay/return
     // WEBPAY_PENDING_EXPIRATION_MINUTES=10
     // WEBPAY_TIMEOUT_SECONDS=20
+    // WEBPAY_ENABLE_TEST_ORDER=false
+
+    // Resend SMTP. EMAIL_PASSWORD is your Resend API key.
+    // EMAIL_HOST=smtp.resend.com
+    // EMAIL_PORT=587
+    // EMAIL_USERNAME=resend
+    // EMAIL_PASSWORD=re_xxxxxxxxx
+    // EMAIL_TLS=true
+    // EMAIL_FROM=no-reply@notifications.example.cl
+    // EMAIL_FROM_NAME=CatOps
 
     /*
      * Security and encryption configuration
@@ -94,11 +104,12 @@ return [
      */
     'EmailTransport' => [
         'default' => [
-            'host' => 'localhost',
-            'port' => 25,
-            'username' => null,
-            'password' => null,
-            'client' => null,
+            'host' => env('EMAIL_HOST', 'localhost'),
+            'port' => (int)env('EMAIL_PORT', 25),
+            'username' => env('EMAIL_USERNAME', null),
+            'password' => env('EMAIL_PASSWORD', null),
+            'client' => env('EMAIL_CLIENT', null),
+            'tls' => filter_var(env('EMAIL_TLS', true), FILTER_VALIDATE_BOOLEAN),
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
     ],
