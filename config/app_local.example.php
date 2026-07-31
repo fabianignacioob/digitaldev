@@ -20,7 +20,9 @@ return [
      */
     'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
 
-    // Webpay Plus: define these values in config/.env or in the host secrets.
+    // Webpay Plus: config/.env is optional. Prefer host environment variables
+    // or a secret manager in production. If app_local.php is used instead,
+    // override the Payments.webpay array below; do not call putenv() here.
     // WEBPAY_ENV=integration
     // WEBPAY_COMMERCE_CODE=
     // WEBPAY_API_KEY=
@@ -28,6 +30,19 @@ return [
     // WEBPAY_PENDING_EXPIRATION_MINUTES=10
     // WEBPAY_TIMEOUT_SECONDS=20
     // WEBPAY_ENABLE_TEST_ORDER=false
+    // WEBPAY_ENABLE_PRODUCTION_TEST_ORDER=false
+
+    // 'Payments' => [
+    //     'webpay' => [
+    //         'environment' => 'production',
+    //         'commerceCode' => '<production-commerce-code>',
+    //         'apiKey' => '<production-api-key>',
+    //         'returnUrl' => 'https://your-domain.cl/payments/webpay/return',
+    //         'pendingExpirationMinutes' => 10,
+    //         'timeoutSeconds' => 20,
+    //         'productionValidationOrderEnabled' => false,
+    //     ],
+    // ],
 
     // Resend SMTP. EMAIL_PASSWORD is your Resend API key.
     // EMAIL_HOST=smtp.resend.com

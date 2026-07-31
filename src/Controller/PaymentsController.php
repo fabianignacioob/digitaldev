@@ -22,22 +22,23 @@ class PaymentsController extends AppController
 
         $this->viewBuilder()->setLayout('dashboard');
         $paymentService = $this->paymentService();
-        $enabled = $paymentService->integrationTestOrderEnabled();
+        $testOrder = $paymentService->testOrderConfiguration();
+        $enabled = $testOrder['enabled'];
 
         if (!$this->request->is('post')) {
-            $this->set(compact('enabled'));
+            $this->set(compact('enabled', 'testOrder'));
 
             return null;
         }
 
         $this->request->allowMethod(['post']);
         if (!$enabled) {
-            throw new ForbiddenException('La prueba Webpay solo está disponible en el ambiente de integración.');
+            throw new ForbiddenException('La prueba Webpay no está habilitada para este ambiente.');
         }
 
         $payment = null;
         try {
-            $payment = $paymentService->createIntegrationTestOrder((int)$this->currentUserId());
+            $payment = $paymentService->createConfiguredTestOrder((int)$this->currentUserId());
             $transaction = $this->webpayGateway()->createTransaction(
                 (string)$payment->buy_order,
                 (string)$payment->session_id,
@@ -50,7 +51,7 @@ class PaymentsController extends AppController
             if ($payment) {
                 $paymentService->markGatewaySetupFailed($payment);
             }
-            $this->Flash->error('No pudimos iniciar la prueba de Webpay. Revisa la configuración de integración.');
+            $this->Flash->error('No pudimos iniciar la prueba de Webpay. Revisa la configuración del ambiente.');
 
             return $this->redirect('/test-plan');
         }

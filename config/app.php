@@ -93,6 +93,8 @@ return [
             'returnUrl' => env('WEBPAY_RETURN_URL', ''),
             'pendingExpirationMinutes' => (int)env('WEBPAY_PENDING_EXPIRATION_MINUTES', 10),
             'timeoutSeconds' => (int)env('WEBPAY_TIMEOUT_SECONDS', 20),
+            'integrationTestOrderEnabled' => filter_var(env('WEBPAY_ENABLE_TEST_ORDER', false), FILTER_VALIDATE_BOOL),
+            'productionValidationOrderEnabled' => filter_var(env('WEBPAY_ENABLE_PRODUCTION_TEST_ORDER', false), FILTER_VALIDATE_BOOL),
         ],
     ],
 

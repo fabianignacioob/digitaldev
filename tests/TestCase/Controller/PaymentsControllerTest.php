@@ -20,6 +20,8 @@ class PaymentsControllerTest extends TestCase
     private ?string $previousAppEnv;
     private ?string $previousWebpayEnv;
     private ?string $previousIntegrationTestOrder;
+    private ?string $previousProductionValidationOrder;
+    private array $previousWebpayConfiguration;
     private FakeWebpayPlusGateway $gateway;
 
     protected function setUp(): void
@@ -29,6 +31,8 @@ class PaymentsControllerTest extends TestCase
         $this->previousAppEnv = getenv('APP_ENV') !== false ? (string)getenv('APP_ENV') : null;
         $this->previousWebpayEnv = getenv('WEBPAY_ENV') !== false ? (string)getenv('WEBPAY_ENV') : null;
         $this->previousIntegrationTestOrder = getenv('WEBPAY_ENABLE_TEST_ORDER') !== false ? (string)getenv('WEBPAY_ENABLE_TEST_ORDER') : null;
+        $this->previousProductionValidationOrder = getenv('WEBPAY_ENABLE_PRODUCTION_TEST_ORDER') !== false ? (string)getenv('WEBPAY_ENABLE_PRODUCTION_TEST_ORDER') : null;
+        $this->previousWebpayConfiguration = (array)Configure::read('Payments.webpay', []);
         $this->gateway = new FakeWebpayPlusGateway();
         Configure::write('Payments.webpayGateway', $this->gateway);
         $this->ensurePlan();
@@ -41,6 +45,8 @@ class PaymentsControllerTest extends TestCase
         $this->previousAppEnv === null ? putenv('APP_ENV') : putenv('APP_ENV=' . $this->previousAppEnv);
         $this->previousWebpayEnv === null ? putenv('WEBPAY_ENV') : putenv('WEBPAY_ENV=' . $this->previousWebpayEnv);
         $this->previousIntegrationTestOrder === null ? putenv('WEBPAY_ENABLE_TEST_ORDER') : putenv('WEBPAY_ENABLE_TEST_ORDER=' . $this->previousIntegrationTestOrder);
+        $this->previousProductionValidationOrder === null ? putenv('WEBPAY_ENABLE_PRODUCTION_TEST_ORDER') : putenv('WEBPAY_ENABLE_PRODUCTION_TEST_ORDER=' . $this->previousProductionValidationOrder);
+        Configure::write('Payments.webpay', $this->previousWebpayConfiguration);
         Configure::delete('Payments.webpayGateway');
         parent::tearDown();
     }
@@ -76,6 +82,8 @@ class PaymentsControllerTest extends TestCase
     {
         putenv('WEBPAY_ENV=integration');
         putenv('WEBPAY_ENABLE_TEST_ORDER=true');
+        Configure::write('Payments.webpay.environment', 'integration');
+        Configure::write('Payments.webpay.integrationTestOrderEnabled', true);
         $this->ensureIntegrationTestPlan();
         $this->gateway->createResponse = [
             'token' => 'token-webpay-integration-' . uniqid(),
@@ -94,6 +102,32 @@ class PaymentsControllerTest extends TestCase
         $this->assertSame(1, (int)$payment->expected_amount);
         $this->assertSame('pending', $payment->status);
         $this->assertStringStartsWith('token-webpay-integration-', (string)$payment->gateway_token);
+        $this->assertSame(1, $this->gateway->createCalls);
+    }
+
+    public function testProductionValidationPlanCreatesFiftyPesoPaymentForAdministrator(): void
+    {
+        putenv('WEBPAY_ENV=production');
+        putenv('WEBPAY_ENABLE_PRODUCTION_TEST_ORDER=true');
+        Configure::write('Payments.webpay.environment', 'production');
+        Configure::write('Payments.webpay.productionValidationOrderEnabled', true);
+        $this->ensureProductionValidationPlan();
+        $this->gateway->createResponse = [
+            'token' => 'token-webpay-production-' . uniqid(),
+            'url' => 'https://webpay.test/payment',
+        ];
+        $adminId = $this->createUser('superadmin');
+        $this->loginAs($adminId, 'superadmin');
+        $this->enableCsrfToken();
+
+        $this->post('/test-plan');
+
+        $this->assertResponseOk();
+        $payment = $this->table('Payments')->find()
+            ->where(['user_id' => $adminId, 'plan_slug' => PaymentService::PRODUCTION_VALIDATION_PLAN_SLUG])
+            ->firstOrFail();
+        $this->assertSame(50, (int)$payment->expected_amount);
+        $this->assertNull($payment->subscription_id);
         $this->assertSame(1, $this->gateway->createCalls);
     }
 
@@ -457,6 +491,24 @@ class PaymentsControllerTest extends TestCase
         $plan->max_sites = 0;
         $plan->max_published = 0;
         $plan->sort_order = 999;
+        $plan->active = false;
+        $plan->capabilities = json_encode(['enabled_templates' => []]);
+        $this->table('Plans')->saveOrFail($plan);
+    }
+
+    private function ensureProductionValidationPlan(): void
+    {
+        $plan = $this->table('Plans')->find()
+            ->where(['slug' => PaymentService::PRODUCTION_VALIDATION_PLAN_SLUG])
+            ->first();
+        if (!$plan) {
+            $plan = $this->table('Plans')->newEntity(['slug' => PaymentService::PRODUCTION_VALIDATION_PLAN_SLUG]);
+        }
+        $plan->name = 'Validación productiva Webpay';
+        $plan->monthly_price = 50;
+        $plan->max_sites = 0;
+        $plan->max_published = 0;
+        $plan->sort_order = 1000;
         $plan->active = false;
         $plan->capabilities = json_encode(['enabled_templates' => []]);
         $this->table('Plans')->saveOrFail($plan);

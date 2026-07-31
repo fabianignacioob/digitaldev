@@ -5,6 +5,7 @@ namespace App\Test\TestCase\Service;
 
 use App\Service\PaymentService;
 use App\Service\SubscriptionService;
+use Cake\Core\Configure;
 use Cake\Datasource\FactoryLocator;
 use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
@@ -13,13 +14,13 @@ use RuntimeException;
 class PaymentServiceTest extends TestCase
 {
     private PaymentService $service;
+    private array $previousWebpayConfiguration;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->previousWebpayConfiguration = (array)Configure::read('Payments.webpay', []);
         putenv('SUBSCRIPTION_DURATION_DAYS=30');
-        putenv('WEBPAY_ENV');
-        putenv('WEBPAY_ENABLE_TEST_ORDER');
         $this->service = new PaymentService();
         $this->ensurePlans();
     }
@@ -28,6 +29,8 @@ class PaymentServiceTest extends TestCase
     {
         putenv('WEBPAY_ENV');
         putenv('WEBPAY_ENABLE_TEST_ORDER');
+        putenv('WEBPAY_ENABLE_PRODUCTION_TEST_ORDER');
+        Configure::write('Payments.webpay', $this->previousWebpayConfiguration);
         parent::tearDown();
     }
 
@@ -229,6 +232,8 @@ class PaymentServiceTest extends TestCase
     {
         putenv('WEBPAY_ENV=integration');
         putenv('WEBPAY_ENABLE_TEST_ORDER=true');
+        Configure::write('Payments.webpay.environment', 'integration');
+        Configure::write('Payments.webpay.integrationTestOrderEnabled', true);
         $this->ensureIntegrationTestPlan();
         $userId = $this->createUser('admin');
 
@@ -251,6 +256,46 @@ class PaymentServiceTest extends TestCase
         $this->assertSame('paid', $payment->status);
         $this->assertNotEmpty($payment->processed_at);
         $this->assertSame(0, $this->table('Subscriptions')->find()->where(['user_id' => $userId])->count());
+    }
+
+    public function testProductionValidationOrderUsesFiftyPesosAndDoesNotChangeSubscription(): void
+    {
+        putenv('WEBPAY_ENV=production');
+        putenv('WEBPAY_ENABLE_PRODUCTION_TEST_ORDER=true');
+        Configure::write('Payments.webpay.environment', 'production');
+        Configure::write('Payments.webpay.productionValidationOrderEnabled', true);
+        $this->ensureProductionValidationPlan();
+        $userId = $this->createUser('superadmin');
+
+        $payment = $this->service->createProductionValidationOrder($userId);
+
+        $this->assertSame(PaymentService::PRODUCTION_VALIDATION_PLAN_SLUG, $payment->plan_slug);
+        $this->assertSame(50, (int)$payment->expected_amount);
+        $this->assertSame('CLP', $payment->currency);
+        $this->assertNull($payment->subscription_id);
+
+        $payment = $this->service->confirm($payment, [
+            'amount' => 50,
+            'currency' => 'CLP',
+            'buy_order' => $payment->buy_order,
+            'session_id' => $payment->session_id,
+            'provider_reference' => 'tx-production-validation',
+            'authorization_code' => 'AUTH50',
+        ]);
+
+        $this->assertSame('paid', $payment->status);
+        $this->assertSame(0, $this->table('Subscriptions')->find()->where(['user_id' => $userId])->count());
+    }
+
+    public function testProductionValidationOrderRequiresExplicitTemporaryFlag(): void
+    {
+        putenv('WEBPAY_ENV=production');
+        Configure::write('Payments.webpay.environment', 'production');
+        Configure::write('Payments.webpay.productionValidationOrderEnabled', false);
+        $this->ensureProductionValidationPlan();
+
+        $this->expectException(RuntimeException::class);
+        $this->service->createProductionValidationOrder($this->createUser('superadmin'));
     }
 
     public function testIntegrationTestOrderRequiresEnabledEnvironmentAndSuperAdmin(): void
@@ -455,6 +500,24 @@ class PaymentServiceTest extends TestCase
         $plan->max_sites = 0;
         $plan->max_published = 0;
         $plan->sort_order = 999;
+        $plan->active = false;
+        $plan->capabilities = json_encode(['enabled_templates' => []]);
+        $this->table('Plans')->saveOrFail($plan);
+    }
+
+    private function ensureProductionValidationPlan(): void
+    {
+        $plan = $this->table('Plans')->find()
+            ->where(['slug' => PaymentService::PRODUCTION_VALIDATION_PLAN_SLUG])
+            ->first();
+        if (!$plan) {
+            $plan = $this->table('Plans')->newEntity(['slug' => PaymentService::PRODUCTION_VALIDATION_PLAN_SLUG]);
+        }
+        $plan->name = 'Validación productiva Webpay';
+        $plan->monthly_price = 50;
+        $plan->max_sites = 0;
+        $plan->max_published = 0;
+        $plan->sort_order = 1000;
         $plan->active = false;
         $plan->capabilities = json_encode(['enabled_templates' => []]);
         $this->table('Plans')->saveOrFail($plan);

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\FactoryLocator;
 use Cake\I18n\DateTime;
@@ -30,6 +31,7 @@ class PaymentService
     public const CURRENCY = 'CLP';
     public const PROVIDER = 'webpay_plus';
     public const INTEGRATION_TEST_PLAN_SLUG = 'webpay-integration-test';
+    public const PRODUCTION_VALIDATION_PLAN_SLUG = 'webpay-production-validation';
     private const SECRET_KEYS = [
         'card_number',
         'card',
@@ -58,7 +60,7 @@ class PaymentService
         int|array|object $user,
         string|object $plan,
         string $billingCycle = 'monthly',
-        bool $allowIntegrationTestPlan = false,
+        bool $allowInternalTestPlan = false,
     ): object
     {
         $userId = $this->userId($user);
@@ -66,11 +68,11 @@ class PaymentService
         if (!$userId) {
             throw new RuntimeException('Usuario inválido para crear la orden de pago.');
         }
-        $isIntegrationTestPlan = $plan && $this->isIntegrationTestPlan($plan);
-        if (!$plan || (!(bool)$plan->active && !($isIntegrationTestPlan && $allowIntegrationTestPlan))) {
+        $isInternalTestPlan = $plan && $this->isInternalTestPlan($plan);
+        if (!$plan || (!(bool)$plan->active && !($isInternalTestPlan && $allowInternalTestPlan))) {
             throw new RuntimeException('Plan inválido o inactivo.');
         }
-        if ($isIntegrationTestPlan && !$allowIntegrationTestPlan) {
+        if ($isInternalTestPlan && !$allowInternalTestPlan) {
             throw new RuntimeException('El plan de prueba de Webpay solo puede iniciarse desde la herramienta interna.');
         }
         $billingCycle = strtolower(trim($billingCycle));
@@ -86,8 +88,8 @@ class PaymentService
             throw new RuntimeException('Este plan no está disponible en modalidad anual.');
         }
 
-        $currentSubscription = $isIntegrationTestPlan ? null : $this->latestSubscription($userId);
-        if (!$isIntegrationTestPlan) {
+        $currentSubscription = $isInternalTestPlan ? null : $this->latestSubscription($userId);
+        if (!$isInternalTestPlan) {
             $this->assertUpgradePolicy($currentSubscription, $plan);
         }
 
@@ -138,17 +140,60 @@ class PaymentService
         return $payment;
     }
 
-    /**
-     * Crea una orden de $1 exclusiva para comprobar la integración de Webpay.
-     * No está disponible desde las pantallas de cliente y nunca cambia una
-     * suscripción al confirmarse.
-     */
+    /** Crea una orden interna de $1 exclusiva del ambiente de integración. */
     public function createIntegrationTestOrder(int|array|object $user): object
     {
         if (!$this->integrationTestOrderEnabled()) {
             throw new RuntimeException('La orden de prueba requiere WEBPAY_ENV=integration y WEBPAY_ENABLE_TEST_ORDER=true.');
         }
 
+        return $this->createInternalTestOrder($user, self::INTEGRATION_TEST_PLAN_SLUG, 'payment.integration_test_created');
+    }
+
+    /**
+     * Crea una orden interna de $50 para validar el comercio en producción.
+     * Nunca renueva ni crea suscripciones.
+     */
+    public function createProductionValidationOrder(int|array|object $user): object
+    {
+        if (!$this->productionValidationOrderEnabled()) {
+            throw new RuntimeException('La validación productiva requiere WEBPAY_ENV=production y WEBPAY_ENABLE_PRODUCTION_TEST_ORDER=true.');
+        }
+
+        return $this->createInternalTestOrder($user, self::PRODUCTION_VALIDATION_PLAN_SLUG, 'payment.production_validation_created');
+    }
+
+    /** @return array{environment:string, amount:int, enabled:bool, title:string, description:string} */
+    public function testOrderConfiguration(): array
+    {
+        if ($this->webpayEnvironment() === 'production') {
+            return [
+                'environment' => 'producción',
+                'amount' => 50,
+                'enabled' => $this->productionValidationOrderEnabled(),
+                'title' => 'Validación productiva Webpay Plus',
+                'description' => 'Orden interna de $50 CLP para validar el comercio productivo. No crea ni renueva suscripciones.',
+            ];
+        }
+
+        return [
+            'environment' => 'integración',
+            'amount' => 1,
+            'enabled' => $this->integrationTestOrderEnabled(),
+            'title' => 'Prueba de integración Webpay Plus',
+            'description' => 'Orden interna de $1 CLP para comprobar el flujo real de Transbank. No crea ni renueva suscripciones.',
+        ];
+    }
+
+    public function createConfiguredTestOrder(int|array|object $user): object
+    {
+        return $this->webpayEnvironment() === 'production'
+            ? $this->createProductionValidationOrder($user)
+            : $this->createIntegrationTestOrder($user);
+    }
+
+    private function createInternalTestOrder(int|array|object $user, string $planSlug, string $auditAction): object
+    {
         $userId = $this->userId($user);
         $account = $this->users()->find()
             ->select(['id', 'role', 'active'])
@@ -159,16 +204,16 @@ class PaymentService
         }
 
         $plan = $this->plans()->find()
-            ->where(['slug' => self::INTEGRATION_TEST_PLAN_SLUG])
+            ->where(['slug' => $planSlug])
             ->first();
         if (!$plan) {
             throw new RuntimeException('No se encontró el plan interno de prueba Webpay. Ejecuta las migraciones pendientes.');
         }
 
         $payment = $this->createPendingOrder($account, $plan, 'monthly', true);
-        $this->auditLogService->log($userId, 'payment.integration_test_created', 'payments', (int)$payment->id, [
+        $this->auditLogService->log($userId, $auditAction, 'payments', (int)$payment->id, [
             'internal_reference' => (string)$payment->internal_reference,
-            'amount' => 1,
+            'amount' => (int)$payment->expected_amount,
             'currency' => self::CURRENCY,
         ]);
 
@@ -178,6 +223,12 @@ class PaymentService
     public function integrationTestOrderEnabled(): bool
     {
         return $this->integrationTestEnabled();
+    }
+
+    public function productionValidationOrderEnabled(): bool
+    {
+        return $this->webpayEnvironment() === 'production'
+            && (bool)Configure::read('Payments.webpay.productionValidationOrderEnabled', false);
     }
 
     /**
@@ -208,7 +259,7 @@ class PaymentService
         $this->payments()->saveOrFail($payment);
         $this->auditLogService->log((int)$payment->user_id, 'payment.webpay_created', 'payments', (int)$payment->id, [
             'internal_reference' => (string)$payment->internal_reference,
-            'environment' => strtolower((string)env('WEBPAY_ENV', 'integration')),
+            'environment' => $this->webpayEnvironment(),
         ]);
 
         return $payment;
@@ -274,14 +325,14 @@ class PaymentService
                 'internal_reference' => (string)$payment->internal_reference,
             ]);
 
-            if ($this->isIntegrationTestPayment($payment)) {
+            if ($this->isInternalTestPayment($payment)) {
                 $payment->status = self::STATUS_PAID;
                 $payment->paid_at = $now;
                 $payment->confirmed_at = $now;
                 $payment->processed_at = $now;
                 $this->payments()->saveOrFail($payment);
                 $this->auditLogService->log((int)$payment->user_id, 'payment.paid', 'payments', (int)$payment->id);
-                $this->auditLogService->log((int)$payment->user_id, 'payment.integration_test_completed', 'payments', (int)$payment->id, [
+                $this->auditLogService->log((int)$payment->user_id, $this->internalTestCompletedAuditAction($payment), 'payments', (int)$payment->id, [
                     'internal_reference' => (string)$payment->internal_reference,
                 ]);
                 $shouldNotify = true;
@@ -649,20 +700,38 @@ class PaymentService
             ->first();
     }
 
-    private function isIntegrationTestPlan(object $plan): bool
+    private function isInternalTestPlan(object $plan): bool
     {
-        return (string)($plan->slug ?? '') === self::INTEGRATION_TEST_PLAN_SLUG;
+        return in_array((string)($plan->slug ?? ''), [
+            self::INTEGRATION_TEST_PLAN_SLUG,
+            self::PRODUCTION_VALIDATION_PLAN_SLUG,
+        ], true);
     }
 
-    private function isIntegrationTestPayment(object $payment): bool
+    private function isInternalTestPayment(object $payment): bool
     {
-        return (string)($payment->plan_slug ?? '') === self::INTEGRATION_TEST_PLAN_SLUG;
+        return in_array((string)($payment->plan_slug ?? ''), [
+            self::INTEGRATION_TEST_PLAN_SLUG,
+            self::PRODUCTION_VALIDATION_PLAN_SLUG,
+        ], true);
     }
 
     private function integrationTestEnabled(): bool
     {
-        return strtolower(trim((string)env('WEBPAY_ENV', ''))) === 'integration'
-            && filter_var(env('WEBPAY_ENABLE_TEST_ORDER', false), FILTER_VALIDATE_BOOL);
+        return $this->webpayEnvironment() === 'integration'
+            && (bool)Configure::read('Payments.webpay.integrationTestOrderEnabled', false);
+    }
+
+    private function webpayEnvironment(): string
+    {
+        return strtolower(trim((string)Configure::read('Payments.webpay.environment', env('WEBPAY_ENV', 'integration'))));
+    }
+
+    private function internalTestCompletedAuditAction(object $payment): string
+    {
+        return (string)$payment->plan_slug === self::PRODUCTION_VALIDATION_PLAN_SLUG
+            ? 'payment.production_validation_completed'
+            : 'payment.integration_test_completed';
     }
 
     private function latestSubscription(int $userId): ?object
