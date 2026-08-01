@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-$this->assign('title', 'CatOps | Carta, catálogo y servicios en un solo enlace');
-$this->assign('metaDescription', 'Crea una carta, catálogo o página de servicios para tu negocio y compártela en un solo enlace.');
+$this->assign('title', 'CatOps | Crea la vitrina digital de tu negocio');
+$this->assign('metaDescription', 'Crea una vitrina digital para mostrar tu carta, catálogo o servicios y compártela en un solo enlace.');
 ?>
 <section class="hero" id="inicio">
   <div class="container hero-grid">
     <div>
       <span class="eyebrow">Para pequeños negocios en Chile</span>
-      <h1>Tu catálogo, carta o <span class="accent">servicios</span> en un solo enlace</h1>
-      <p class="hero-copy">Crea una página sencilla para mostrar tus productos, precios, imágenes y datos de contacto. Actualízala cuando quieras y compártela por WhatsApp, Instagram o donde vendas.</p>
+      <h1>Crea la <span class="accent">vitrina digital</span> de tu negocio</h1>
+      <p class="hero-copy">Muestra tus productos, servicios o carta en un solo lugar. Actualízala cuando quieras y compártela por WhatsApp, Instagram o código QR.</p>
       <div class="actions">
-        <a class="button" href="/registro">Crear mi sitio</a>
-        <a class="button secondary" href="#ejemplos">Ver un ejemplo</a>
+        <a class="button" href="/registro">Crear mi vitrina</a>
+        <a class="button secondary" href="#ejemplos">Ver una vitrina de ejemplo</a>
       </div>
-      <p class="support-line"><span>Sin conocimientos técnicos</span><span>Adaptado a celular</span><span>Fácil de actualizar</span></p>
+      <p class="support-line"><span>Sin conocimientos técnicos</span><span>Adaptada a celulares</span><span>Fácil de actualizar</span></p>
     </div>
   </div>
 </section>
@@ -39,7 +39,7 @@ $this->assign('metaDescription', 'Crea una carta, catálogo o página de servici
     <article class="types-intro">
       <div>
         <span class="section-kicker">Una solución, tres formatos</span>
-        <h2>Elige el tipo de sitio que necesita tu negocio</h2>
+        <h2>Elige la vitrina que necesita tu negocio</h2>
         <p>Una base simple para restaurantes, tiendas, emprendimientos y servicios que venden por mensaje.</p>
       </div>
       <a class="button secondary" href="/servicio">Conocer el servicio</a>
@@ -56,7 +56,7 @@ $this->assign('metaDescription', 'Crea una carta, catálogo o página de servici
   <div class="container">
     <div class="section-head"><span class="section-kicker">Cómo funciona</span><h2>Publica en tres pasos</h2><p>Sin instalar programas ni aprender herramientas difíciles.</p></div>
     <div class="grid three steps">
-      <article class="step"><h3>Elige el tipo de sitio</h3><p>Parte con una carta digital, catálogo de productos o catálogo de servicios.</p></article>
+      <article class="step"><h3>Elige el tipo de vitrina</h3><p>Parte con una carta digital, catálogo de productos o catálogo de servicios.</p></article>
       <article class="step"><h3>Agrega tu contenido</h3><p>Sube tu logo, fotos, productos, precios, descripciones y datos de contacto.</p></article>
       <article class="step"><h3>Publica y comparte</h3><p>Activa tu enlace y compártelo donde tus clientes ya te encuentran.</p></article>
     </div>
@@ -87,7 +87,7 @@ $this->assign('metaDescription', 'Crea una carta, catálogo o página de servici
   <div class="container">
     <div class="plans-header">
       <div class="section-head"><span class="section-kicker">Planes claros</span><h2>Elige un plan para partir simple y crecer con orden</h2><p>Renovación mensual o anual mediante pago seguro. Sin cobros automáticos.</p></div>
-      <div class="trial-box"><strong>Prueba gratuita</strong><span>7 días del plan Básico al publicar tu primer sitio.</span></div>
+      <div class="trial-box"><strong>Prueba gratuita</strong><span>7 días del plan Básico al publicar tu primera vitrina.</span></div>
     </div>
     <?= $this->element('marketing/plan_cards', compact('plans', 'currentUser')) ?>
   </div>
@@ -99,18 +99,18 @@ $this->assign('metaDescription', 'Crea una carta, catálogo o página de servici
     <div class="grid trust-grid">
       <article class="card problem-card"><h3>Panel privado</h3><p>Administra contenido, productos y datos de contacto sin tocar código.</p></article>
       <article class="card problem-card"><h3>Compartible</h3><p>Tu enlace se puede enviar por WhatsApp, Instagram, redes sociales o QR.</p></article>
-      <article class="card problem-card"><h3>Flexible</h3><p>Parte con un subdominio CatOps y escala según las necesidades de tu negocio.</p></article>
+      <article class="card problem-card"><h3>Flexible</h3><p>Parte con un enlace VitrinaHub y escala según las necesidades de tu negocio.</p></article>
     </div>
   </div>
 </section>
 
 <section id="preguntas">
   <div class="container">
-    <div class="section-head"><span class="section-kicker">Preguntas frecuentes</span><h2>Lo esencial antes de crear tu sitio</h2><p>Respuestas rápidas para entender cómo funciona CatOps antes de publicar.</p></div>
+    <div class="section-head"><span class="section-kicker">Preguntas frecuentes</span><h2>Lo esencial antes de crear tu vitrina</h2><p>Respuestas rápidas para entender cómo funciona CatOps antes de publicar.</p></div>
     <div class="faq-list">
       <details><summary>¿Necesito saber programación?</summary><p>No. El panel está pensado para editar textos, productos, precios, imágenes y datos de contacto sin programar.</p></details>
       <details><summary>¿Puedo actualizar mis productos o servicios?</summary><p>Sí. Puedes mantener precios, descripciones, fotos y disponibilidad desde tu panel.</p></details>
-      <details><summary>¿Puedo usar mi propio dominio?</summary><p>Sí. Todos los sitios reciben un subdominio de CatOps y los planes Negocio y Full permiten conectar dominios propios tras verificar sus registros DNS.</p></details>
+      <details><summary>¿Puedo usar mi propio dominio?</summary><p>Sí. Todas las vitrinas reciben un subdominio de VitrinaHub y los planes Negocio y Full permiten conectar dominios propios tras verificar sus registros DNS.</p></details>
       <details><summary>¿Se ve bien en celulares?</summary><p>Sí. Las páginas se construyen para funcionar en celular, tablet y computador.</p></details>
       <details><summary>¿Incluye carrito o compras online?</summary><p>No. CatOps está pensado para mostrar tu oferta y recibir consultas; no incluye carrito ni pagos para clientes finales.</p></details>
     </div>
@@ -120,6 +120,6 @@ $this->assign('metaDescription', 'Crea una carta, catálogo o página de servici
 <section class="final-cta" id="crear">
   <div class="container cta-inner">
     <div><span class="section-kicker">Lleva tu negocio al mundo digital</span><h2>Publica lo que vendes en un solo enlace</h2><p>Parte con una carta, catálogo o página de servicios que puedas actualizar cuando quieras.</p></div>
-    <div class="actions"><a class="button" href="/registro">Crear mi sitio</a><a class="button secondary" href="/login">Ingresar</a></div>
+    <div class="actions"><a class="button" href="/registro">Crear mi vitrina</a><a class="button secondary" href="/login">Ingresar</a></div>
   </div>
 </section>

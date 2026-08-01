@@ -27,7 +27,7 @@ class SiteQrCodeService
     {
         $parts = parse_url($url);
         if (!is_array($parts) || !in_array($parts['scheme'] ?? '', ['http', 'https'], true) || empty($parts['host'])) {
-            throw new InvalidArgumentException('La URL pública del sitio no es válida para generar el código QR.');
+            throw new InvalidArgumentException('El enlace público de la vitrina no es válido para generar el código QR.');
         }
 
         return new QrCode(

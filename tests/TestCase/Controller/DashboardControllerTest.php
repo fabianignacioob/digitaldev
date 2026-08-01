@@ -37,11 +37,11 @@ class DashboardControllerTest extends TestCase
         $this->get('/panel');
 
         $this->assertResponseOk();
-        $this->assertResponseContains('Mis sitios');
-        $this->assertResponseContains('Sitios configurados');
+        $this->assertResponseContains('Mis vitrinas');
+        $this->assertResponseContains('Vitrinas configuradas');
         $this->assertResponseContains('Plan Básico');
         $this->assertResponseContains('Extender 30 días');
-        $this->assertResponseContains('Tus sitios');
+        $this->assertResponseContains('Tus vitrinas');
     }
 
     private function ensureBasicPlan(): void

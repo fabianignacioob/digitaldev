@@ -28,11 +28,26 @@ class PublicSiteResolverService
 
     public function resolveByHost(string $host): array
     {
-        $subdomain = $this->urlService->subdomainFromHost($host);
-        if ($subdomain === null) {
-            return ['site' => null, 'reason' => null, 'isBaseHost' => true];
+        $host = $this->urlService->normalizeHost($host);
+        if ($this->urlService->isPlatformHost($host)) {
+            return ['site' => null, 'reason' => null, 'isBaseHost' => true, 'isPlatformHost' => true];
         }
-        if ($subdomain === false) {
+
+        if ($this->urlService->isPublicBaseHost($host)) {
+            return ['site' => null, 'reason' => null, 'isBaseHost' => true, 'isPublicBaseHost' => true];
+        }
+
+        $subdomain = $this->urlService->subdomainFromHost($host);
+        if (is_string($subdomain)) {
+            return $this->resolveBySubdomain($subdomain) + ['isBaseHost' => false, 'isLegacySubdomain' => false];
+        }
+
+        $legacySubdomain = $this->urlService->legacySubdomainFromHost($host);
+        if (is_string($legacySubdomain)) {
+            return $this->resolveBySubdomain($legacySubdomain) + ['isBaseHost' => false, 'isLegacySubdomain' => true];
+        }
+
+        if ($subdomain === false && $legacySubdomain === false) {
             $domain = FactoryLocator::get('Table')->get('Domains')->find()
                 ->select(['site_id'])
                 ->where([
@@ -47,10 +62,10 @@ class PublicSiteResolverService
                 return ['site' => null, 'reason' => self::REASON_NOT_FOUND, 'isBaseHost' => false];
             }
 
-            return $this->resolveQuery($this->baseSiteQuery()->where(['Sites.id' => (int)$domain->site_id]));
+            return $this->resolveQuery($this->baseSiteQuery()->where(['Sites.id' => (int)$domain->site_id])) + ['isLegacySubdomain' => false];
         }
 
-        return $this->resolveBySubdomain($subdomain) + ['isBaseHost' => false];
+        return ['site' => null, 'reason' => self::REASON_NOT_FOUND, 'isBaseHost' => false];
     }
 
     private function resolveQuery(SelectQuery $query): array

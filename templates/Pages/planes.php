@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Service\PlanService;
 
 $this->assign('title', 'Planes mensuales | CatOps');
-$this->assign('metaDescription', 'Compara los planes CatOps para publicar cartas, catálogos y páginas de servicios.');
+$this->assign('metaDescription', 'Compara los planes CatOps para crear vitrinas digitales con carta, catálogo o servicios.');
 $plans = $plans ?? [];
 $planService = new PlanService();
 $trialPlan = null;
@@ -17,7 +17,7 @@ foreach ($plans as $plan) {
 ?>
 <section class="page-hero">
   <div class="container hero-grid">
-    <div><span class="eyebrow">Planes mensuales</span><h1>Una base clara para cada etapa de tu negocio</h1><p class="hero-copy">Parte con una prueba gratuita y elige el nivel de sitios, organización y personalización que necesitas.</p><div class="actions"><a class="button" href="#planes">Comparar planes</a><a class="button secondary" href="/servicio">Conocer el servicio</a></div></div>
+    <div><span class="eyebrow">Planes mensuales</span><h1>Una base clara para cada etapa de tu negocio</h1><p class="hero-copy">Parte con una prueba gratuita y elige el nivel de vitrinas, organización y personalización que necesitas.</p><div class="actions"><a class="button" href="#planes">Comparar planes</a><a class="button secondary" href="/servicio">Conocer el servicio</a></div></div>
     <div class="page-visual" aria-hidden="true"></div>
   </div>
 </section>
@@ -26,7 +26,7 @@ foreach ($plans as $plan) {
     <div class="plans-header">
       <div class="section-head"><span class="section-kicker">Planes claros</span><h2>Elige un plan para partir simple y crecer con orden</h2><p>Renovación mensual o anual mediante pago seguro. Sin cobros automáticos.</p></div>
       <?php if ($trialPlan): ?>
-        <div class="trial-box"><strong>Prueba gratuita</strong><span>7 días del plan Básico al publicar tu primer sitio.</span></div>
+        <div class="trial-box"><strong>Prueba gratuita</strong><span>7 días del plan Básico al publicar tu primera vitrina.</span></div>
       <?php endif; ?>
     </div>
     <?= $this->element('marketing/plan_cards', compact('plans', 'currentUser', 'selectedPlan')) ?>

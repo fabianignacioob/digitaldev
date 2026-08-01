@@ -1,19 +1,19 @@
-<?php $this->assign('title', 'Editar sitio | CatOps'); ?>
+<?php $this->assign('title', 'Editar vitrina | CatOps'); ?>
 <?php $templateSlug = $site->template->slug ?? ''; ?>
 
 <section class="page-head">
   <div>
     <h1><?= h($site->name) ?></h1>
-    <p>Actualiza identidad, contacto, SEO y estado de publicación.</p>
+    <p>Actualiza identidad, contacto, SEO y estado de publicación de tu vitrina.</p>
   </div>
   <div class="toolbar">
-    <a class="button secondary" href="/sitios/preview/<?= (int)$site->id ?>" target="_blank" rel="noopener">Vista previa</a>
+    <a class="button secondary" href="/sitios/preview/<?= (int)$site->id ?>" target="_blank" rel="noopener">Vista previa de la vitrina</a>
     <?php if ($site->status === 'published'): ?>
-      <span class="status" aria-label="Estado del sitio: publicado">Publicado</span>
+      <span class="status" aria-label="Estado de la vitrina: publicada">Publicada</span>
     <?php else: ?>
-      <?= $this->Form->postLink('Publicar', '/sitios/publicar/' . (int)$site->id, [
+      <?= $this->Form->postLink('Publicar vitrina', '/sitios/publicar/' . (int)$site->id, [
           'class' => 'button',
-          'confirm' => '¿Publicar este sitio?',
+          'confirm' => '¿Publicar esta vitrina?',
       ]) ?>
     <?php endif; ?>
   </div>
@@ -24,9 +24,9 @@
     <h2>Configuración general</h2>
     <?= $this->Form->create($site, ['type' => 'file']) ?>
     <?= $this->Form->control('name', ['label' => 'Nombre del negocio']) ?>
-    <?= $this->Form->control('subdomain', ['label' => 'Subdominio']) ?>
+    <?= $this->Form->control('subdomain', ['label' => 'Subdominio de tu vitrina']) ?>
     <?php if (!empty($publicUrl)): ?>
-      <p class="meta">URL pública: <a href="<?= h($publicUrl) ?>" target="_blank" rel="noopener"><?= h($publicUrl) ?></a></p>
+      <p class="meta">Enlace de tu vitrina: <a href="<?= h($publicUrl) ?>" target="_blank" rel="noopener"><?= h($publicUrl) ?></a></p>
     <?php endif; ?>
     <?= $this->Form->control('template_id', ['label' => 'Plantilla', 'options' => $templates]) ?>
     <?= $this->Form->control('theme_id', ['label' => 'Paleta de colores', 'options' => $themes]) ?>
@@ -64,7 +64,7 @@
       <div class="form-actions form-actions-stacked">
         <?= $this->Form->postLink('Eliminar logo', ['controller' => 'Sites', 'action' => 'deleteLogo', $site->id], [
             'class' => 'button danger',
-            'confirm' => '¿Eliminar el logo de este sitio?',
+            'confirm' => '¿Eliminar el logo de esta vitrina?',
         ]) ?>
       </div>
     <?php endif; ?>
@@ -90,7 +90,7 @@
     ]) ?>
     <p class="meta">Solo el usuario, sin https://instagram.com/.</p>
     <fieldset class="contact-visibility-options">
-      <legend>Mostrar en el sitio público</legend>
+      <legend>Mostrar en la vitrina pública</legend>
       <?= $this->Form->control('show_whatsapp', [
           'label' => 'Mostrar acceso a WhatsApp',
           'type' => 'checkbox',
@@ -142,14 +142,14 @@
     <p>El código QR está disponible desde el plan Negocio.</p>
     <a class="button secondary" href="/planes">Ver planes</a>
   <?php elseif ($site->status !== 'published'): ?>
-    <p>Publica el sitio para generar un código QR que dirija a su URL pública.</p>
+    <p>Publica la vitrina para generar un código QR que dirija a su enlace público.</p>
   <?php elseif (!$siteQrCode): ?>
     <p>Genera un código QR permanente para imprimir, descargar o compartir. Seguirá funcionando aunque después cambies el subdominio o conectes un dominio propio.</p>
     <?= $this->Form->postLink('Generar código QR', '/sitios/' . (int)$site->id . '/qr/generar', [
         'class' => 'button',
     ]) ?>
   <?php else: ?>
-    <p>Tu código QR ya está listo. Su enlace es permanente y siempre dirige a la URL pública vigente de tu sitio.</p>
+    <p>Tu código QR ya está listo. Su enlace es permanente y siempre dirige a la URL pública vigente de tu vitrina.</p>
     <div class="qr-management">
       <div class="qr-preview-frame qr-preview-frame--<?= h($siteQrCode->frame_style) ?>">
         <img src="/sitios/<?= (int)$site->id ?>/qr?format=svg" alt="Vista previa del código QR de <?= h($site->name) ?>">
@@ -224,7 +224,7 @@
     <p>Tu plan actual no incluye dominios propios. Puedes seguir usando <strong><?= h($site->subdomain . '.' . $baseDomain) ?></strong> o subir de plan para conectar un dominio registrado.</p>
     <a class="button secondary" href="/planes">Ver planes</a>
   <?php else: ?>
-    <p>Conecta un dominio registrado a este sitio. Uso actual: <strong><?= (int)$customDomainUsage['used'] ?> de <?= (int)$customDomainUsage['limit'] ?></strong>.</p>
+    <p>Conecta un dominio registrado a esta vitrina. Uso actual: <strong><?= (int)$customDomainUsage['used'] ?> de <?= (int)$customDomainUsage['limit'] ?></strong>.</p>
     <?php foreach ($customDomains as $domain): ?>
       <article class="domain-setup">
         <div class="domain-setup-heading">
@@ -249,7 +249,7 @@
         <div class="form-actions form-actions-stacked">
           <?= $this->Form->postLink('Eliminar dominio', '/sitios/' . (int)$site->id . '/dominios/' . (int)$domain->id . '/eliminar', [
               'class' => 'button danger',
-              'confirm' => '¿Eliminar este dominio? El sitio y su contenido seguirán disponibles con el subdominio de CatOps.',
+              'confirm' => '¿Eliminar este dominio? La vitrina y su contenido seguirán disponibles con su enlace de VitrinaHub.',
           ]) ?>
         </div>
       </article>

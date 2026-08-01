@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= h($this->fetch('title') ?: 'CatOps') ?></title>
     <meta name="description" content="<?= h($this->fetch('metaDescription') ?: 'CatOps permite crear cartas, catálogos y páginas de servicios fáciles de administrar.') ?>">
+    <?php if (!empty($canonicalUrl)): ?>
+      <link rel="canonical" href="<?= h($canonicalUrl) ?>">
+      <meta property="og:url" content="<?= h($canonicalUrl) ?>">
+    <?php endif; ?>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/marketing.css">
     <?= $this->fetch('meta') ?>
@@ -24,11 +28,11 @@
             <li><a href="/planes">Planes</a></li>
             <li><a href="/#preguntas">Preguntas frecuentes</a></li>
             <?php if (!empty($currentUser)): ?>
-              <li><a href="/panel">Mis sitios</a></li>
-              <li><a class="nav-cta" href="/sitios/nuevo">Crear mi sitio</a></li>
+              <li><a href="/panel">Mis vitrinas</a></li>
+              <li><a class="nav-cta" href="/sitios/nuevo">Crear mi vitrina</a></li>
             <?php else: ?>
               <li><a href="/login">Ingresar</a></li>
-              <li><a class="nav-cta" href="/registro">Crear mi sitio</a></li>
+              <li><a class="nav-cta" href="/registro">Crear mi vitrina</a></li>
             <?php endif; ?>
           </ul>
         </nav>

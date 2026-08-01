@@ -38,7 +38,7 @@ foreach ($measurementTypes ?? [] as $measurementType) {
     </div>
     <div class="toolbar">
         <a class="button secondary" href="/sitios/preview/<?= (int)$site->id ?>" target="_blank" rel="noopener">Vista previa</a>
-        <a class="button secondary" href="/sitios/editar/<?= (int)$site->id ?>">Volver al sitio</a>
+        <a class="button secondary" href="/sitios/editar/<?= (int)$site->id ?>">Volver a la vitrina</a>
     </div>
 </section>
 
@@ -270,7 +270,7 @@ foreach ($measurementTypes ?? [] as $measurementType) {
             'label' => 'Mostrar botón de pedido o consulta en cada producto',
             'type' => 'checkbox',
         ]) ?>
-        <p class="meta">Esta opción se aplica a todos los productos o preparaciones del sitio.</p>
+        <p class="meta">Esta opción se aplica a todos los productos o preparaciones de la vitrina.</p>
         <?php if ($supportsCategories && $categoryLayoutAvailable): ?>
             <?= $this->Form->control('category_layout', [
                 'label' => 'Diseño de categorías',
@@ -411,7 +411,7 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                     'label' => 'Destacado',
                     'type' => 'checkbox',
                 ]) ?>
-                <p class="meta"><?= $featuredItemsLimit === 0 ? 'Productos destacados ilimitados.' : 'Máximo ' . (int)$featuredItemsLimit . ' producto' . ($featuredItemsLimit === 1 ? '' : 's') . ' destacado' . ($featuredItemsLimit === 1 ? '' : 's') . ' por sitio.' ?></p>
+                <p class="meta"><?= $featuredItemsLimit === 0 ? 'Productos destacados ilimitados.' : 'Máximo ' . (int)$featuredItemsLimit . ' producto' . ($featuredItemsLimit === 1 ? '' : 's') . ' destacado' . ($featuredItemsLimit === 1 ? '' : 's') . ' por vitrina.' ?></p>
             <?php endif; ?>
             <?php if ($advancedProductSeoEnabled): ?>
                 <?= $this->Form->control('seo_description', [

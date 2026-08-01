@@ -180,7 +180,7 @@ class CatalogsController extends AppController
             return $this->redirect(['action' => 'edit', $siteId]);
         }
         if (!$this->planService()->canCreateCategory((int)$this->currentUserId(), $site)) {
-            $this->Flash->error('Tu plan llegó al máximo de categorías permitidas para este sitio.');
+            $this->Flash->error('Tu plan llegó al máximo de categorías permitidas para esta vitrina.');
 
             return $this->redirect(['action' => 'edit', $siteId]);
         }
@@ -286,7 +286,7 @@ class CatalogsController extends AppController
         $submittedIds = $categoryIds;
         sort($submittedIds);
         if ($ownedIds !== $submittedIds) {
-            throw new BadRequestException('El orden debe incluir solo las categorías de este sitio.');
+            throw new BadRequestException('El orden debe incluir solo las categorías de esta vitrina.');
         }
 
         $categoriesById = [];
@@ -313,7 +313,7 @@ class CatalogsController extends AppController
         $this->request->allowMethod(['post']);
         $site = $this->getOwnedSite($siteId);
         if (!$this->planService()->canCreateCatalogItem((int)$this->currentUserId(), $site)) {
-            $this->Flash->error('Tu plan llegó al máximo de elementos permitidos para este sitio.');
+            $this->Flash->error('Tu plan llegó al máximo de elementos permitidos para esta vitrina.');
 
             return $this->redirect(['action' => 'edit', $siteId]);
         }
@@ -516,7 +516,7 @@ class CatalogsController extends AppController
         $submittedIds = $productIds;
         sort($submittedIds);
         if ($ownedIds !== $submittedIds) {
-            throw new BadRequestException('El orden debe incluir solo los productos de este sitio.');
+            throw new BadRequestException('El orden debe incluir solo los productos de esta vitrina.');
         }
 
         $productsById = [];
@@ -650,7 +650,7 @@ class CatalogsController extends AppController
         }
         $requestedFeatured = !empty($data['featured']);
         if ($requestedFeatured && !$this->planService()->canFeatureCatalogItem((int)$this->currentUserId(), $site, $existingProduct)) {
-            throw new BadRequestException('Tu plan llegó al máximo de productos destacados para este sitio.');
+            throw new BadRequestException('Tu plan llegó al máximo de productos destacados para esta vitrina.');
         }
         $data['featured'] = $requestedFeatured;
         if (!$this->planService()->canUseAdvancedProductSeo((int)$this->currentUserId())) {

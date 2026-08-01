@@ -52,10 +52,10 @@
       <div class="card-body">
         <h2 class="h5">Capacidades y límites</h2>
         <?php foreach ([
-            'sites_configured_limit' => 'Sitios configurados',
-            'sites_published_limit' => 'Sitios publicados',
-            'items_limit' => 'Ítems por sitio',
-            'categories_limit' => 'Categorías por sitio',
+            'sites_configured_limit' => 'Vitrinas configuradas',
+            'sites_published_limit' => 'Vitrinas publicadas',
+            'items_limit' => 'Ítems por vitrina',
+            'categories_limit' => 'Categorías por vitrina',
             'featured_items_limit' => 'Productos destacados (0 = ilimitados)',
             'image_storage_limit_mb' => 'Almacenamiento de imágenes (MB)',
             'trial_duration_days' => 'Duración de prueba desde publicación (días)',

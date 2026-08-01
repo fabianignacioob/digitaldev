@@ -40,7 +40,7 @@
       <div class="collapse navbar-collapse" id="adminMenu">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <?php foreach ([
-              '/admin/users' => 'Usuarios', '/admin/sites' => 'Sitios', '/admin/subscriptions' => 'Suscripciones',
+              '/admin/users' => 'Usuarios', '/admin/sites' => 'Vitrinas', '/admin/subscriptions' => 'Suscripciones',
               '/admin/payments' => 'Pagos', '/admin/domains' => 'Dominios', '/admin/plans' => 'Planes',
               '/admin/audit-logs' => 'Auditoría', '/admin/system-status' => 'Sistema',
           ] as $url => $label): ?>

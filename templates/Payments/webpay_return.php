@@ -72,7 +72,7 @@ $isOwner = $payment && $currentUser && (int)$payment->user_id === (int)$currentU
       <div class="payment-result-actions">
         <?php if ($isOwner): ?>
           <a class="button" href="/payments/result/<?= h($payment->internal_reference) ?>">Ver detalle</a>
-          <a class="button secondary" href="/panel">Ir a mis sitios</a>
+          <a class="button secondary" href="/panel">Ir a mis vitrinas</a>
         <?php else: ?>
           <a class="button" href="/login">Ir a mi cuenta</a>
         <?php endif; ?>

@@ -61,7 +61,7 @@ class AdminSitesController extends AdminController
         $site->paused_reason = 'manual_admin';
         $this->fetchTable('Sites')->saveOrFail($site);
         $this->logAdminAction('admin.site.paused', 'sites', $id, ['reason' => $reason]);
-        $this->Flash->success('Sitio pausado manualmente.');
+        $this->Flash->success('Vitrina pausada manualmente.');
 
         return $this->redirect(['action' => 'view', $id]);
     }
@@ -71,7 +71,7 @@ class AdminSitesController extends AdminController
         $this->request->allowMethod(['post']);
         $site = $this->fetchTable('Sites')->get($id);
         if ($site->status !== 'paused' || $site->paused_reason !== 'manual_admin') {
-            throw new BadRequestException('Solo se pueden reactivar sitios pausados manualmente.');
+            throw new BadRequestException('Solo se pueden reactivar vitrinas pausadas manualmente.');
         }
         $reason = $this->adminReason();
         $site->status = 'published';
@@ -79,7 +79,7 @@ class AdminSitesController extends AdminController
         $site->published_at ??= DateTime::now();
         $this->fetchTable('Sites')->saveOrFail($site);
         $this->logAdminAction('admin.site.reactivated', 'sites', $id, ['reason' => $reason]);
-        $this->Flash->success('Sitio reactivado.');
+        $this->Flash->success('Vitrina reactivada.');
 
         return $this->redirect(['action' => 'view', $id]);
     }
@@ -93,7 +93,7 @@ class AdminSitesController extends AdminController
         $site->paused_reason = null;
         $this->fetchTable('Sites')->saveOrFail($site);
         $this->logAdminAction('admin.site.unpublished', 'sites', $id, ['reason' => $reason]);
-        $this->Flash->success('Sitio despublicado.');
+        $this->Flash->success('Vitrina despublicada.');
 
         return $this->redirect(['action' => 'view', $id]);
     }

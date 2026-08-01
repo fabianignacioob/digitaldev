@@ -9,7 +9,7 @@
 <section class="card admin-card mb-4">
   <div class="card-body">
     <form class="row g-2" method="get">
-      <div class="col-12 col-md-4"><input class="form-control" name="q" value="<?= h($filters['q']) ?>" placeholder="Hostname, sitio o propietario"></div>
+      <div class="col-12 col-md-4"><input class="form-control" name="q" value="<?= h($filters['q']) ?>" placeholder="Hostname, vitrina o propietario"></div>
       <div class="col-6 col-md-2"><select class="form-select" name="type"><option value="">Tipo</option><option value="subdomain" <?= $filters['type'] === 'subdomain' ? 'selected' : '' ?>>Subdominio</option><option value="custom" <?= $filters['type'] === 'custom' ? 'selected' : '' ?>>Dominio propio</option></select></div>
       <div class="col-6 col-md-2"><select class="form-select" name="active"><option value="">Estado</option><option value="1" <?= $filters['active'] === '1' ? 'selected' : '' ?>>Activo</option><option value="0" <?= $filters['active'] === '0' ? 'selected' : '' ?>>Inactivo</option></select></div>
       <div class="col-6 col-md-2"><select class="form-select" name="verified"><option value="">Verificación</option><option value="1" <?= $filters['verified'] === '1' ? 'selected' : '' ?>>Verificado</option><option value="0" <?= $filters['verified'] === '0' ? 'selected' : '' ?>>Pendiente</option></select></div>
@@ -21,12 +21,12 @@
 <section class="card admin-card">
   <div class="table-wrap">
     <table class="table align-middle">
-      <thead><tr><th>Hostname</th><th>Sitio</th><th>Propietario</th><th>Tipo</th><th>Estado</th><th>Verificación</th><th>Creado</th><th>Conflictos</th><th></th></tr></thead>
+      <thead><tr><th>Hostname</th><th>Vitrina</th><th>Propietario</th><th>Tipo</th><th>Estado</th><th>Verificación</th><th>Creado</th><th>Conflictos</th><th></th></tr></thead>
       <tbody>
       <?php foreach ($pagination['items'] as $domain): ?>
         <tr>
-          <td><strong><?= h($domain->domain) ?></strong><small class="d-block"><a href="<?= h($domain->admin_public_url) ?>" target="_blank" rel="noopener">URL pública</a></small></td>
-          <td><?= h($domain->site->name ?? 'Sitio eliminado') ?></td>
+          <td><strong><?= h($domain->domain) ?></strong><small class="d-block"><a href="<?= h($domain->admin_public_url) ?>" target="_blank" rel="noopener">Enlace de la vitrina</a></small></td>
+          <td><?= h($domain->site->name ?? 'Vitrina eliminada') ?></td>
           <td><?= h($domain->site->user->email ?? '—') ?></td>
           <td><?= h($domain->type) ?></td>
           <td><span class="badge badge-<?= $domain->active ? 'success' : 'secondary' ?> badge-status"><?= $domain->active ? 'activo' : 'inactivo' ?></span></td>

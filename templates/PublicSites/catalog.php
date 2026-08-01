@@ -298,6 +298,10 @@ $renderMenuItem = static function ($product) use ($formatPrice, $formatMeasure, 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= h($site->seo_title ?: $title) ?></title>
     <meta name="description" content="<?= h($site->seo_description ?: $slogan) ?>">
+    <?php if (!empty($canonicalUrl)): ?>
+        <link rel="canonical" href="<?= h($canonicalUrl) ?>">
+        <meta property="og:url" content="<?= h($canonicalUrl) ?>">
+    <?php endif; ?>
     <?php if ($advancedProductSeo && $activeProducts): ?>
         <?php
         $productSchema = [];

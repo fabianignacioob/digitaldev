@@ -15,6 +15,8 @@ class SitesControllerTest extends TestCase
     use IntegrationTestTrait;
 
     private ?string $previousBaseDomain = null;
+    private ?string $previousPlatformDomain = null;
+    private ?string $previousPublicBaseDomain = null;
     private ?string $previousPublicScheme = null;
     private int $userId;
     private int $templateId;
@@ -27,11 +29,15 @@ class SitesControllerTest extends TestCase
         parent::setUp();
 
         $this->previousBaseDomain = getenv('APP_BASE_DOMAIN') !== false ? (string)getenv('APP_BASE_DOMAIN') : null;
+        $this->previousPlatformDomain = getenv('APP_PLATFORM_DOMAIN') !== false ? (string)getenv('APP_PLATFORM_DOMAIN') : null;
+        $this->previousPublicBaseDomain = getenv('APP_PUBLIC_BASE_DOMAIN') !== false ? (string)getenv('APP_PUBLIC_BASE_DOMAIN') : null;
         $this->previousPublicScheme = getenv('APP_PUBLIC_SCHEME') !== false ? (string)getenv('APP_PUBLIC_SCHEME') : null;
         $this->previousEmailService = Configure::read('EmailService');
         $this->emailService = new FakeEmailService();
         Configure::write('EmailService', $this->emailService);
-        putenv('APP_BASE_DOMAIN=catops.local');
+        putenv('APP_BASE_DOMAIN');
+        putenv('APP_PLATFORM_DOMAIN=catops.local');
+        putenv('APP_PUBLIC_BASE_DOMAIN=vitrinahub.local');
         putenv('APP_PUBLIC_SCHEME=http');
 
         $this->ensurePlan();
@@ -44,6 +50,8 @@ class SitesControllerTest extends TestCase
     protected function tearDown(): void
     {
         $this->previousBaseDomain === null ? putenv('APP_BASE_DOMAIN') : putenv('APP_BASE_DOMAIN=' . $this->previousBaseDomain);
+        $this->previousPlatformDomain === null ? putenv('APP_PLATFORM_DOMAIN') : putenv('APP_PLATFORM_DOMAIN=' . $this->previousPlatformDomain);
+        $this->previousPublicBaseDomain === null ? putenv('APP_PUBLIC_BASE_DOMAIN') : putenv('APP_PUBLIC_BASE_DOMAIN=' . $this->previousPublicBaseDomain);
         $this->previousPublicScheme === null ? putenv('APP_PUBLIC_SCHEME') : putenv('APP_PUBLIC_SCHEME=' . $this->previousPublicScheme);
         $this->previousEmailService === null
             ? Configure::delete('EmailService')
@@ -77,7 +85,7 @@ class SitesControllerTest extends TestCase
         $this->assertSame('draft', $site->status);
         $domain = $this->table('Domains')->find()->where(['site_id' => $site->id, 'type' => 'subdomain'])->first();
         $this->assertNotEmpty($domain);
-        $this->assertSame('cafe-alpha.catops.local', $domain->domain);
+        $this->assertSame('cafe-alpha.vitrinahub.local', $domain->domain);
     }
 
     public function testDuplicateSubdomainIsRejected(): void
@@ -143,7 +151,7 @@ class SitesControllerTest extends TestCase
         $this->assertNotEmpty($site->published_at);
         $this->assertCount(1, $this->emailService->messages);
         $this->assertSame('site_published', $this->emailService->messages[0]['kind']);
-        $this->assertSame('http://sitio-post.catops.local', $this->emailService->messages[0]['publicUrl']);
+        $this->assertSame('http://sitio-post.vitrinahub.local', $this->emailService->messages[0]['publicUrl']);
     }
 
     public function testCannotPublishAnotherUsersSite(): void
@@ -183,7 +191,7 @@ class SitesControllerTest extends TestCase
         $this->assertResponseCode(404);
     }
 
-    public function testBaseHostDisplaysTheProductHomeAndActivePlans(): void
+    public function testPlatformHostDisplaysTheProductHomeAndActivePlans(): void
     {
         $plan = $this->table('Plans')->find()
             ->where(['active' => true])
@@ -194,25 +202,31 @@ class SitesControllerTest extends TestCase
         $this->get('/');
 
         $this->assertResponseOk();
-        $this->assertResponseContains('Tu catálogo, carta o');
+        $this->assertResponseContains('Crea la');
         $this->assertResponseContains($plan->name);
         $this->assertResponseContains(number_format((int)$plan->monthly_price, 0, ',', '.'));
     }
 
-    public function testPublishedSiteIsAccessibleByHostAndLegacyPath(): void
+    public function testPublishedVitrinaIsAccessibleByPublicHostAndLegacyUrlsRedirect(): void
     {
         $siteId = $this->createSite($this->userId, 'pizzeria', 'Pizzería Demo');
         $this->publishSiteDirectly($siteId);
 
-        $this->configRequest(['headers' => ['Host' => 'pizzeria.catops.local']]);
+        $this->configRequest(['headers' => ['Host' => 'pizzeria.vitrinahub.local']]);
         $this->get('/');
         $this->assertResponseOk();
         $this->assertResponseContains('Pizzería Demo');
+        $this->assertResponseContains('<link rel="canonical" href="http://pizzeria.vitrinahub.local">');
 
         $this->configRequest(['headers' => ['Host' => 'catops.local']]);
         $this->get('/s/pizzeria');
-        $this->assertResponseOk();
-        $this->assertResponseContains('Pizzería Demo');
+        $this->assertResponseCode(301);
+        $this->assertHeaderContains('Location', 'http://pizzeria.vitrinahub.local');
+
+        $this->configRequest(['headers' => ['Host' => 'pizzeria.catops.local']]);
+        $this->get('/');
+        $this->assertResponseCode(301);
+        $this->assertHeaderContains('Location', 'http://pizzeria.vitrinahub.local');
     }
 
     public function testEligibleUserCanDownloadPublishedSiteQr(): void
@@ -280,7 +294,7 @@ class SitesControllerTest extends TestCase
         $this->get('/q/' . $qrCode->public_token);
 
         $this->assertResponseCode(302);
-        $this->assertHeaderContains('Location', 'http://qr-publico.catops.local');
+        $this->assertHeaderContains('Location', 'http://qr-publico.vitrinahub.local');
     }
 
     public function testQrRequiresPublishedSite(): void
@@ -302,26 +316,32 @@ class SitesControllerTest extends TestCase
         $previousDebug = Configure::read('debug');
         $previousFullBaseUrl = Configure::read('App.fullBaseUrl');
         $previousBaseDomain = getenv('APP_BASE_DOMAIN') !== false ? (string)getenv('APP_BASE_DOMAIN') : null;
+        $previousPlatformDomain = getenv('APP_PLATFORM_DOMAIN') !== false ? (string)getenv('APP_PLATFORM_DOMAIN') : null;
+        $previousPublicBaseDomain = getenv('APP_PUBLIC_BASE_DOMAIN') !== false ? (string)getenv('APP_PUBLIC_BASE_DOMAIN') : null;
         Configure::write('debug', false);
         Configure::write('App.fullBaseUrl', 'https://staging.catops.cl');
-        putenv('APP_BASE_DOMAIN=staging.catops.cl');
+        putenv('APP_BASE_DOMAIN');
+        putenv('APP_PLATFORM_DOMAIN=staging.catops.cl');
+        putenv('APP_PUBLIC_BASE_DOMAIN=vitrinahub.local');
 
         try {
             $this->configRequest(['headers' => ['Host' => 'staging.catops.cl']]);
             $this->get('/s/prueba');
-            $this->assertResponseOk();
-            $this->assertResponseContains('Sitio de prueba');
+            $this->assertResponseCode(301);
+            $this->assertHeaderContains('Location', 'http://prueba.vitrinahub.local');
         } finally {
             Configure::write('debug', $previousDebug);
             Configure::write('App.fullBaseUrl', $previousFullBaseUrl);
             $previousBaseDomain === null ? putenv('APP_BASE_DOMAIN') : putenv('APP_BASE_DOMAIN=' . $previousBaseDomain);
+            $previousPlatformDomain === null ? putenv('APP_PLATFORM_DOMAIN') : putenv('APP_PLATFORM_DOMAIN=' . $previousPlatformDomain);
+            $previousPublicBaseDomain === null ? putenv('APP_PUBLIC_BASE_DOMAIN') : putenv('APP_PUBLIC_BASE_DOMAIN=' . $previousPublicBaseDomain);
         }
     }
 
     public function testDraftSiteIsNotPublic(): void
     {
         $this->createSite($this->userId, 'borrador', 'Sitio Borrador');
-        $this->configRequest(['headers' => ['Host' => 'borrador.catops.local']]);
+        $this->configRequest(['headers' => ['Host' => 'borrador.vitrinahub.local']]);
 
         $this->get('/');
 
@@ -335,12 +355,12 @@ class SitesControllerTest extends TestCase
         $site = $this->table('Sites')->get($siteId);
         $site->status = 'paused';
         $this->table('Sites')->saveOrFail($site);
-        $this->configRequest(['headers' => ['Host' => 'pausado.catops.local']]);
+        $this->configRequest(['headers' => ['Host' => 'pausado.vitrinahub.local']]);
 
         $this->get('/');
 
         $this->assertResponseCode(503);
-        $this->assertResponseContains('pausado temporalmente');
+        $this->assertResponseContains('pausada temporalmente');
     }
 
     public function testExpiredSubscriptionPublicAccessHasNoSideEffects(): void
@@ -353,7 +373,7 @@ class SitesControllerTest extends TestCase
         $this->table('Payments')->updateAll([
             'period_end' => DateTime::now()->subDays(1),
         ], ['subscription_id' => $subscription->id]);
-        $this->configRequest(['headers' => ['Host' => 'vencido.catops.local']]);
+        $this->configRequest(['headers' => ['Host' => 'vencido.vitrinahub.local']]);
 
         $this->get('/');
 
@@ -370,7 +390,7 @@ class SitesControllerTest extends TestCase
         $siteTwoId = $this->createSite($otherUserId, 'tenant-dos', 'Negocio Dos');
         $this->publishSiteDirectly($siteOneId);
         $this->publishSiteDirectly($siteTwoId);
-        $this->configRequest(['headers' => ['Host' => 'tenant-uno.catops.local']]);
+        $this->configRequest(['headers' => ['Host' => 'tenant-uno.vitrinahub.local']]);
 
         $this->get('/');
 

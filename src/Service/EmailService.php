@@ -90,7 +90,7 @@ class EmailService
     {
         $this->deliver(
             $user,
-            'Tu sitio ya está publicado en CatOps',
+            'Tu vitrina ya está publicada en CatOps',
             [
                 'kind' => 'site_published',
                 'user' => $user,
@@ -190,10 +190,10 @@ class EmailService
         $storage = (int)($capabilities['image_storage_limit_mb'] ?? 0);
 
         if ($sites > 0) {
-            $features[] = $sites . ($sites === 1 ? ' sitio configurable' : ' sitios configurables');
+            $features[] = $sites . ($sites === 1 ? ' vitrina configurable' : ' vitrinas configurables');
         }
         if ($published > 0) {
-            $features[] = $published . ($published === 1 ? ' sitio publicado' : ' sitios publicados');
+            $features[] = $published . ($published === 1 ? ' vitrina publicada' : ' vitrinas publicadas');
         }
         if ($items > 0) {
             $features[] = 'Hasta ' . $items . ' productos o servicios';
@@ -205,7 +205,7 @@ class EmailService
             $features[] = 'Botón de contacto por WhatsApp';
         }
         if ((bool)($capabilities['qr_enabled'] ?? false)) {
-            $features[] = 'Código QR para compartir tu sitio';
+            $features[] = 'Código QR para compartir tu vitrina';
         }
         if ($storage > 0) {
             $features[] = $storage . ' MB para imágenes';
@@ -214,7 +214,7 @@ class EmailService
             $features[] = 'Plantillas premium y personalización avanzada';
         }
         if ((bool)($capabilities['branding_removable'] ?? $capabilities['catops_branding_removable'] ?? false)) {
-            $features[] = 'Sin marca CatOps en tu sitio';
+            $features[] = 'Sin marca CatOps en tu vitrina';
         }
         if ((bool)($capabilities['priority_support'] ?? false)) {
             $features[] = 'Soporte prioritario';

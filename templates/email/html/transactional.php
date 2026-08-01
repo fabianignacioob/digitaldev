@@ -91,7 +91,7 @@ $features = (array)($planSummary['features'] ?? []);
             </table>
             <p style="margin:0 0 14px;color:#102033;font-size:15px;line-height:1.6"><?= $planDescription ?></p>
             <?php if ($isTrial): ?>
-              <p style="margin:0 0 20px;padding:13px 15px;background:#ecfdf3;border-left:4px solid #14804a;border-radius:4px;color:#14532d;font-size:13px;line-height:1.55"><strong>Tu prueba no requiere tarjeta.</strong> Los 7 días comienzan cuando publiques tu primer sitio.</p>
+              <p style="margin:0 0 20px;padding:13px 15px;background:#ecfdf3;border-left:4px solid #14804a;border-radius:4px;color:#14532d;font-size:13px;line-height:1.55"><strong>Tu prueba no requiere tarjeta.</strong> Los 7 días comienzan cuando publiques tu primera vitrina.</p>
             <?php else: ?>
               <p style="margin:0 0 20px;padding:13px 15px;background:#fff3eb;border-left:4px solid #f46a12;border-radius:4px;color:#8a3b0f;font-size:13px;line-height:1.55"><strong>Para activar este plan, ingresa a CatOps y completa el pago seguro.</strong> No realizamos cobros automáticos.</p>
             <?php endif; ?>
@@ -110,7 +110,7 @@ $features = (array)($planSummary['features'] ?? []);
                 <?php endforeach; ?>
               </ul>
             <?php endif; ?>
-            <p style="margin:0;padding:15px 16px;background:#f7f9fc;border-radius:8px;color:#526174;font-size:13px;line-height:1.6"><strong style="color:#102033">Siguiente paso:</strong> ingresa a CatOps, crea tu sitio, personaliza tu contenido y compártelo con tus clientes.</p>
+            <p style="margin:0;padding:15px 16px;background:#f7f9fc;border-radius:8px;color:#526174;font-size:13px;line-height:1.6"><strong style="color:#102033">Siguiente paso:</strong> ingresa a CatOps, crea tu vitrina, personaliza tu contenido y compártela con tus clientes.</p>
           </td>
         </tr>
         <tr>
@@ -176,7 +176,7 @@ $transactionPayment = is_object($payment ?? null) ? $payment : null;
 $paymentPlan = h((string)($transactionPayment->plan_slug ?? ''));
 $paymentAmount = number_format((int)($transactionPayment->amount ?? 0), 0, ',', '.');
 $paymentReference = h((string)($transactionPayment->internal_reference ?? ''));
-$siteName = h((string)($site->name ?? 'Tu sitio'));
+$siteName = h((string)($site->name ?? 'Tu vitrina'));
 $safePublicUrl = h((string)($publicUrl ?? ''));
 $isApproved = $kind === 'payment_approved';
 $isPublished = $kind === 'site_published';
@@ -185,7 +185,7 @@ $heading = match ($kind) {
     'payment_rejected' => 'El pago no fue aprobado',
     'payment_canceled' => 'Pago cancelado',
     'payment_expired' => 'El pago venció',
-    'site_published' => 'Tu sitio ya está publicado',
+    'site_published' => 'Tu vitrina ya está publicada',
     default => 'Actualización de CatOps',
 };
 $message = match ($kind) {
@@ -193,7 +193,7 @@ $message = match ($kind) {
     'payment_rejected' => 'No pudimos aprobar tu pago. Tu suscripción no fue modificada.',
     'payment_canceled' => 'El proceso de pago fue cancelado antes de completarse. Tu suscripción no fue modificada.',
     'payment_expired' => 'El tiempo para completar este pago finalizó. Tu suscripción no fue modificada.',
-    'site_published' => 'Tu sitio está disponible para que lo compartas con tus clientes.',
+    'site_published' => 'Tu vitrina está disponible para que la compartas con tus clientes.',
     default => 'Tenemos una actualización sobre tu cuenta.',
 };
 ?>
@@ -215,11 +215,11 @@ $message = match ($kind) {
             <?php if ($isPublished): ?>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 22px">
                 <tr><td style="padding:20px 22px;background:#ecfdf3;border:1px solid #bbf7d0;border-radius:12px;color:#14532d">
-                  <p style="margin:0 0 8px;font-size:13px;font-weight:bold;text-transform:uppercase;letter-spacing:1px">Sitio publicado</p>
+                  <p style="margin:0 0 8px;font-size:13px;font-weight:bold;text-transform:uppercase;letter-spacing:1px">Vitrina publicada</p>
                   <p style="margin:0;font-size:20px;line-height:1.3;font-weight:bold"><?= $siteName ?></p>
                 </td></tr>
               </table>
-              <p style="margin:0 0 20px;text-align:center"><a href="<?= $safePublicUrl ?>" style="display:inline-block;padding:14px 24px;border-radius:24px;background:#f46a12;color:#ffffff;text-decoration:none;font-size:15px;font-weight:bold">Ver mi sitio</a></p>
+              <p style="margin:0 0 20px;text-align:center"><a href="<?= $safePublicUrl ?>" style="display:inline-block;padding:14px 24px;border-radius:24px;background:#f46a12;color:#ffffff;text-decoration:none;font-size:15px;font-weight:bold">Ver mi vitrina</a></p>
               <p style="margin:0;color:#697789;font-size:12px;line-height:1.55;word-break:break-all;text-align:center"><?= $safePublicUrl ?></p>
             <?php else: ?>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 22px">

@@ -95,7 +95,7 @@ class AdminDomainsController extends AdminController
         $this->request->allowMethod(['post']);
         $targetSiteId = (int)$this->request->getData('site_id');
         if ($targetSiteId <= 0) {
-            throw new BadRequestException('Selecciona un sitio válido.');
+            throw new BadRequestException('Selecciona una vitrina válida.');
         }
         $reason = $this->adminReason();
         $domain = $this->fetchTable('Domains')->get($id);

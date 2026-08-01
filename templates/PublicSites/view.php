@@ -32,6 +32,10 @@ $businessDetails = array_filter([
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= h($title) ?></title>
     <meta name="description" content="<?= h($description) ?>">
+    <?php if (!empty($canonicalUrl)): ?>
+      <link rel="canonical" href="<?= h($canonicalUrl) ?>">
+      <meta property="og:url" content="<?= h($canonicalUrl) ?>">
+    <?php endif; ?>
     <style>
       * { box-sizing: border-box; }
       body {

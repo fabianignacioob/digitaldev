@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
+use App\Service\PublicUrlService;
 use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
@@ -67,9 +68,13 @@ class PagesController extends AppController
                 ->where(['active' => true])
                 ->orderByAsc('sort_order')
                 ->all();
-            $this->set(compact('plans'));
+            $this->set([
+                'plans' => $plans,
+                'canonicalUrl' => (new PublicUrlService())->platformUrl(),
+            ]);
         } elseif (in_array($page, ['servicio', 'planes'], true)) {
             $this->viewBuilder()->setLayout('marketing');
+            $this->set(['canonicalUrl' => (new PublicUrlService())->platformUrl($page)]);
             if ($page === 'planes') {
                 $plans = $this->fetchTable('Plans')->find()
                     ->where(['active' => true])

@@ -8,7 +8,7 @@ $selectedPlanName = $selectedPlanEntity?->name;
 ?>
 
 <h1>Crear cuenta</h1>
-<p>Regístrate para crear una carta o catálogo editable para tu negocio. La prueba gratuita comienza cuando publiques tu primer sitio.</p>
+<p>Regístrate para crear una vitrina con carta, catálogo o servicios para tu negocio. La prueba gratuita comienza cuando publiques tu primera vitrina.</p>
 
 <?php if ($selectedPlanName): ?>
   <p class="message">

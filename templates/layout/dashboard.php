@@ -1629,11 +1629,11 @@
     <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
     <header class="panel-topbar">
         <div class="panel-shell panel-nav" data-panel-nav>
-            <a class="panel-brand" href="/panel" aria-label="Ir a mis sitios"><img src="/img/catops-logo.png" alt="CatOps"></a>
+            <a class="panel-brand" href="/panel" aria-label="Ir a mis vitrinas"><img src="/img/catops-logo.png" alt="CatOps"></a>
             <button class="panel-nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="panel-menu" data-panel-nav-toggle>☰</button>
             <nav class="panel-links" id="panel-menu" aria-label="Navegación principal">
-                <a href="/panel" <?= $path === '/panel' ? ' aria-current="page"' : '' ?>>Mis sitios</a>
-                <a href="/sitios/nuevo" <?= $path === '/sitios/nuevo' ? ' aria-current="page"' : '' ?>>Nuevo sitio</a>
+                <a href="/panel" <?= $path === '/panel' ? ' aria-current="page"' : '' ?>>Mis vitrinas</a>
+                <a href="/sitios/nuevo" <?= $path === '/sitios/nuevo' ? ' aria-current="page"' : '' ?>>Nueva vitrina</a>
                 <a href="/planes" <?= $path === '/planes' ? ' aria-current="page"' : '' ?>>Planes</a>
                 <a class="nav-logout" href="/logout">Salir</a>
             </nav>

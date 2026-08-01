@@ -16,8 +16,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * Middleware to validate Host header and prevent Host Header Injection attacks.
  *
- * In production, this middleware validates the configured application host
- * plus the single-level site subdomains supported by PublicUrlService.
+ * In production, this middleware validates the CatOps platform host, the
+ * VitrinaHub public host and their supported single-level subdomains.
  *
  * @see https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection
  */
@@ -85,8 +85,15 @@ class HostHeaderMiddleware implements MiddlewareInterface
 
     private function isAllowedHost(string $requestHost, string $configuredHost): bool
     {
-        $baseDomain = (new PublicUrlService())->baseDomain();
-        if ($requestHost === $configuredHost || $requestHost === $baseDomain) {
+        $urlService = new PublicUrlService();
+        $platformDomain = $urlService->platformDomain();
+        $publicBaseDomain = $urlService->publicBaseDomain();
+        if (in_array($requestHost, array_unique([
+            $configuredHost,
+            $platformDomain,
+            'www.' . $platformDomain,
+            $publicBaseDomain,
+        ]), true)) {
             return true;
         }
 
@@ -94,13 +101,15 @@ class HostHeaderMiddleware implements MiddlewareInterface
             return Configure::read('debug') || in_array(strtolower((string)env('APP_ENV', '')), ['local', 'development', 'test', 'testing'], true);
         }
 
-        $suffix = '.' . $baseDomain;
-        if (str_ends_with($requestHost, $suffix)) {
-            // The public resolver accepts one subdomain label only; do not allow
-            // hosts that it cannot resolve or wildcard suffix bypasses.
-            $subdomain = substr($requestHost, 0, -strlen($suffix));
+        foreach (array_unique([$publicBaseDomain, $platformDomain]) as $baseDomain) {
+            $suffix = '.' . $baseDomain;
+            if (str_ends_with($requestHost, $suffix)) {
+                // The public resolver accepts one subdomain label only; do not allow
+                // hosts that it cannot resolve or wildcard suffix bypasses.
+                $subdomain = substr($requestHost, 0, -strlen($suffix));
 
-            return self::isValidLabel($subdomain);
+                return self::isValidLabel($subdomain);
+            }
         }
 
         // Domains outside the CatOps zone are never accepted merely because they

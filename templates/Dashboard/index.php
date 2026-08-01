@@ -20,34 +20,34 @@ $subscriptionStatusClass = $subscriptionIsActive ? 'status-active' : 'status-exp
 $daysLabel = $daysRemaining === null ? 'Sin vigencia' : ((int)$daysRemaining . ' día' . ((int)$daysRemaining === 1 ? '' : 's'));
 $statusMeta = [
     'draft' => ['Borrador', 'status-draft'],
-    'published' => ['Publicado', 'status-published'],
-    'paused' => ['Pausado', 'status-paused'],
+    'published' => ['Publicada', 'status-published'],
+    'paused' => ['Pausada', 'status-paused'],
 ];
 ?>
-<?php $this->assign('title', 'Mis sitios | CatOps'); ?>
+<?php $this->assign('title', 'Mis vitrinas | CatOps'); ?>
 
 <section class="page-head">
   <div>
-    <h1>Mis sitios</h1>
+    <h1>Mis vitrinas</h1>
     <p>Administra tus cartas, catálogos, estados de publicación y accesos rápidos.</p>
   </div>
-  <a class="button" href="<?= $hasActivePlan ? '/sitios/nuevo' : '/planes' ?>"><?= $hasActivePlan ? 'Crear sitio' : 'Activar plan' ?></a>
+  <a class="button" href="<?= $hasActivePlan ? '/sitios/nuevo' : '/planes' ?>"><?= $hasActivePlan ? 'Crear vitrina' : 'Activar plan' ?></a>
 </section>
 
 <?php if ($subscription && $plan): ?>
   <?php if ($overLimit): ?>
     <article class="message" role="status">
-      Mantendremos tus sitios actuales sin cambios. Tu uso supera el límite actual del plan, por lo que no podrás crear ni publicar sitios nuevos hasta reducirlo o subir de plan.
+      Mantendremos tus vitrinas actuales sin cambios. Tu uso supera el límite actual del plan, por lo que no podrás crear ni publicar vitrinas nuevas hasta reducirlo o subir de plan.
     </article>
   <?php endif; ?>
   <section class="dashboard-kpis" aria-label="Resumen de uso">
     <article class="card metric-card">
-      <div class="metric-label"><span class="metric-icon" aria-hidden="true">◈</span>Sitios configurados</div>
+      <div class="metric-label"><span class="metric-icon" aria-hidden="true">◈</span>Vitrinas configuradas</div>
       <div class="metric-value"><?= (int)$siteUsage['configured'] ?></div>
       <p class="metric-support">de <?= $configuredLimit ?> disponible<?= $configuredLimit === 1 ? '' : 's' ?></p>
     </article>
     <article class="card metric-card">
-      <div class="metric-label"><span class="metric-icon" aria-hidden="true">↗</span>Sitios publicados</div>
+      <div class="metric-label"><span class="metric-icon" aria-hidden="true">↗</span>Vitrinas publicadas</div>
       <div class="metric-value"><?= (int)$siteUsage['published'] ?></div>
       <p class="metric-support">listos para el público</p>
     </article>
@@ -65,11 +65,11 @@ $statusMeta = [
         <span class="status <?= $subscriptionStatusClass ?>"><?= h($subscriptionStatusLabel) ?></span>
       </div>
       <div class="plan-price"><?= $trialPending || $trialActive ? 'Gratis' : '$' . number_format((int)$plan->monthly_price, 0, ',', '.') ?> <small><?= $trialPending ? 'hasta publicar' : ($trialActive ? 'prueba activa' : '/ mes') ?></small></div>
-      <div class="usage-row"><span><?= $trialPending ? 'Inicio de la prueba' : 'Vigencia del plan' ?></span><span><?= $trialPending ? 'Publica tu primer sitio para iniciar 7 días' : h($daysLabel) . ' restante' . ($daysRemaining === 1 ? '' : 's') ?></span></div>
+      <div class="usage-row"><span><?= $trialPending ? 'Inicio de la prueba' : 'Vigencia del plan' ?></span><span><?= $trialPending ? 'Publica tu primera vitrina para iniciar 7 días' : h($daysLabel) . ' restante' . ($daysRemaining === 1 ? '' : 's') ?></span></div>
       <div class="usage-track" aria-label="Días restantes del plan"><span class="usage-bar navy" style="width: <?= $planDurationPercent ?>%"></span></div>
       <div class="subscription-actions">
         <?php if ($trialPending): ?>
-          <a class="button" href="/sitios/nuevo">Crear mi primer sitio</a>
+          <a class="button" href="/sitios/nuevo">Crear mi primera vitrina</a>
         <?php elseif ($trialActive): ?>
           <a class="button" href="/planes">Elegir un plan</a>
         <?php else: ?>
@@ -91,9 +91,9 @@ $statusMeta = [
     </div>
     <div class="subscription-usage">
       <p class="usage-label">Uso actual</p>
-      <div class="usage-row"><span>Sitios configurados</span><span><?= (int)$siteUsage['configured'] ?> / <?= $configuredLimit ?></span></div>
+      <div class="usage-row"><span>Vitrinas configuradas</span><span><?= (int)$siteUsage['configured'] ?> / <?= $configuredLimit ?></span></div>
       <div class="usage-track"><span class="usage-bar" style="width: <?= $configuredPercent ?>%"></span></div>
-      <div class="usage-row"><span>Sitios publicados</span><span><?= (int)$siteUsage['published'] ?> / <?= $publishedLimit ?></span></div>
+      <div class="usage-row"><span>Vitrinas publicadas</span><span><?= (int)$siteUsage['published'] ?> / <?= $publishedLimit ?></span></div>
       <div class="usage-track"><span class="usage-bar navy" style="width: <?= $publishedPercent ?>%"></span></div>
     </div>
   </section>
@@ -101,7 +101,7 @@ $statusMeta = [
   <section class="plan-change-card">
     <div class="plan-change-header">
       <h2>Cambiar de plan</h2>
-      <p>Escala cuando necesites más sitios y publicaciones.</p>
+      <p>Escala cuando necesites más vitrinas y publicaciones.</p>
     </div>
     <?php if ($upgradePlans): ?>
       <div class="upgrade-grid">
@@ -111,8 +111,8 @@ $statusMeta = [
             <?php if ($index === 0): ?><span class="plan-badge">Siguiente nivel</span><?php endif; ?>
             <strong>Plan <?= h($upgradePlan->name) ?></strong>
             <span class="upgrade-price">$<?= number_format((int)$upgradePlan->monthly_price, 0, ',', '.') ?> <small>/ mes</small></span>
-            <small>Hasta <?= (int)($upgradeCapabilities['sites_configured_limit'] ?? $upgradePlan->max_sites) ?> sitios configurados.</small>
-            <small>Hasta <?= (int)($upgradeCapabilities['sites_published_limit'] ?? $upgradePlan->max_published) ?> sitios publicados.</small>
+            <small>Hasta <?= (int)($upgradeCapabilities['sites_configured_limit'] ?? $upgradePlan->max_sites) ?> vitrinas configuradas.</small>
+            <small>Hasta <?= (int)($upgradeCapabilities['sites_published_limit'] ?? $upgradePlan->max_published) ?> vitrinas publicadas.</small>
             <?= $this->Form->create(null, ['url' => '/payments/create']) ?>
             <?= $this->Form->hidden('plan', ['value' => $upgradePlan->slug]) ?>
             <?= $this->Form->button('Subir a ' . $upgradePlan->name, ['class' => $index === 0 ? 'button' : 'button dark']) ?>
@@ -128,8 +128,8 @@ $statusMeta = [
 
 <?php if (!$hasActivePlan): ?>
   <article class="card" style="margin-bottom:28px">
-    <h2>Activa un plan para crear una web</h2>
-    <p>Para crear y publicar sitios necesitas una suscripción activa con un pago vigente de 30 días.</p>
+    <h2>Activa un plan para crear tu vitrina</h2>
+    <p>Para crear y publicar vitrinas necesitas una suscripción activa con un pago vigente de 30 días.</p>
     <a class="button" href="/planes">Ver planes</a>
   </article>
 <?php endif; ?>
@@ -137,16 +137,16 @@ $statusMeta = [
 <section>
   <div class="sites-section-header">
     <div>
-      <h2>Tus sitios</h2>
+      <h2>Tus vitrinas</h2>
       <p>Edita, previsualiza o publica tus cartas y catálogos.</p>
     </div>
   </div>
 
   <?php if ($sites->isEmpty()): ?>
     <article class="card">
-      <h3>Aún no tienes sitios</h3>
-      <p>Crea el primero, elige carta o catálogo y empieza a cargar textos, logo y productos.</p>
-      <a class="button" href="<?= $hasActivePlan ? '/sitios/nuevo' : '/planes' ?>"><?= $hasActivePlan ? 'Crear mi primer sitio' : 'Elegir plan' ?></a>
+      <h3>Aún no tienes vitrinas</h3>
+      <p>Crea la primera, elige carta o catálogo y empieza a cargar textos, logo y productos.</p>
+      <a class="button" href="<?= $hasActivePlan ? '/sitios/nuevo' : '/planes' ?>"><?= $hasActivePlan ? 'Crear mi primera vitrina' : 'Elegir plan' ?></a>
     </article>
   <?php else: ?>
     <div class="site-list">
@@ -155,7 +155,7 @@ $statusMeta = [
         <article class="card site-card">
           <div>
             <div class="site-card-heading"><h3><?= h($site->name) ?></h3><span class="status <?= h($statusClass) ?>"><?= h($statusLabel) ?></span></div>
-            <span class="site-url"><?= h($site->subdomain) ?>.<?= h($baseDomain ?? 'catops.cl') ?></span>
+            <span class="site-url"><?= h($site->subdomain) ?>.<?= h($baseDomain ?? 'vitrinahub.cl') ?></span>
             <div class="site-meta">
               <span>Plantilla: <strong><?= h($site->template->name ?? 'Sin plantilla') ?></strong></span>
               <span>Actualizado <?= $site->modified ? h($site->modified->i18nFormat('d MMM yyyy')) : 'recientemente' ?></span>
@@ -165,7 +165,7 @@ $statusMeta = [
               <a class="button" href="/sitios/editar/<?= (int)$site->id ?>">Editar</a>
               <a class="button secondary" href="/sitios/preview/<?= (int)$site->id ?>" target="_blank" rel="noopener">Vista previa</a>
               <?php if ($site->status === 'published' && !empty($publicUrlService)): ?>
-                <a class="button secondary" href="<?= h($publicUrlService->publicUrl($site)) ?>" target="_blank" rel="noopener">Abrir sitio</a>
+              <a class="button secondary" href="<?= h($publicUrlService->publicUrl($site)) ?>" target="_blank" rel="noopener">Abrir vitrina</a>
               <?php endif; ?>
             </div>
           </div>

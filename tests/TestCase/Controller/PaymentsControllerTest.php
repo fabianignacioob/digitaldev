@@ -140,7 +140,7 @@ class PaymentsControllerTest extends TestCase
 
         $this->assertResponseOk();
         $this->assertResponseContains('Resultado del pago');
-        $this->assertResponseContains('Mis sitios');
+        $this->assertResponseContains('Mis vitrinas');
     }
 
     public function testMockConfirmWorksInDebug(): void

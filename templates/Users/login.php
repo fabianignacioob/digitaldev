@@ -1,7 +1,7 @@
 <?php $this->assign('title', 'Login | CatOps'); ?>
 
 <h1>Iniciar sesión</h1>
-<p>Accede para administrar tus sitios, textos, logos y secciones publicadas.</p>
+<p>Accede para administrar tus vitrinas, textos, logos y secciones publicadas.</p>
 
 <?= $this->Form->create() ?>
 <?= $this->Form->control('email', ['label' => 'Correo', 'autocomplete' => 'email']) ?>

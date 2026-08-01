@@ -151,8 +151,8 @@ class UsersController extends AppController
             $this->sendWelcomeEmail($user, $welcomePlan);
 
             $this->Flash->success($trialCreated
-                ? 'Correo verificado. Puedes crear tu sitio; la prueba de 7 días comienza al publicarlo.'
-                : 'Correo verificado. Elige un plan para activar tu primer sitio.');
+                ? 'Correo verificado. Puedes crear tu vitrina; la prueba de 7 días comienza al publicarla.'
+                : 'Correo verificado. Elige un plan para activar tu primera vitrina.');
 
             if ($trialCreated) {
                 return $this->redirect('/panel');
@@ -273,7 +273,7 @@ class UsersController extends AppController
         if ($selectedPlan && $this->planService()->isTrialPlan($selectedPlan)) {
             try {
                 (new SubscriptionService())->createTrialForUser((int)$this->currentUserId());
-                $this->Flash->success('Prueba gratuita activada. Crea y publica tu primer sitio para iniciar los 7 días.');
+                $this->Flash->success('Prueba gratuita activada. Crea y publica tu primera vitrina para iniciar los 7 días.');
 
                 return $this->redirect('/panel');
             } catch (\RuntimeException $exception) {

@@ -35,15 +35,15 @@ class SitesController extends AppController
         }
 
         if (!$this->hasActivePlan()) {
-            $this->Flash->warning('Para crear una web necesitas activar una suscripción.');
+            $this->Flash->warning('Para crear una vitrina necesitas activar una suscripción.');
 
             return $this->redirect('/planes');
         }
         if (!$this->planService()->canCreateSite((int)$this->currentUserId())) {
             $usage = $this->planService()->siteUsage((int)$this->currentUserId());
             $this->Flash->warning($usage['over_limit']
-                ? 'Conservamos tus sitios actuales, pero tu uso supera el límite del plan. Reduce sitios o sube de plan antes de crear otro.'
-                : 'Tu plan llegó al máximo de sitios configurados.');
+                ? 'Conservamos tus vitrinas actuales, pero tu uso supera el límite del plan. Reduce vitrinas o sube de plan antes de crear otra.'
+                : 'Tu plan llegó al máximo de vitrinas configuradas.');
 
             return $this->redirect(['controller' => 'Dashboard', 'action' => 'index']);
         }
@@ -80,12 +80,12 @@ class SitesController extends AppController
             if ($sites->save($site)) {
                 $this->createDefaultCatalogSetting((int)$site->id);
                 $this->createDefaultDomain((int)$site->id, (string)$site->subdomain);
-                $this->Flash->success('Sitio creado. Ahora puedes editar su diseño, productos y datos de contacto.');
+                $this->Flash->success('Vitrina creada. Ahora puedes editar su diseño, productos y datos de contacto.');
 
                 return $this->redirect(['action' => 'edit', $site->id]);
             }
 
-            $this->Flash->error('No pudimos crear el sitio. Revisa los datos.');
+            $this->Flash->error('No pudimos crear la vitrina. Revisa los datos.');
         }
 
         $templates = $this->availableTemplates();
@@ -121,8 +121,8 @@ class SitesController extends AppController
             if (($data['status'] ?? $site->status) === 'published' && !$this->planService()->canPublishSite((int)$this->currentUserId(), $site)) {
                 $usage = $this->planService()->siteUsage((int)$this->currentUserId());
                 $this->Flash->error($usage['over_limit']
-                    ? 'Conservamos tus sitios actuales, pero tu uso supera el límite del plan. Reduce sitios o sube de plan antes de publicar otro.'
-                    : 'Tu plan llegó al máximo de sitios publicados.');
+                    ? 'Conservamos tus vitrinas actuales, pero tu uso supera el límite del plan. Reduce vitrinas o sube de plan antes de publicar otra.'
+                    : 'Tu plan llegó al máximo de vitrinas publicadas.');
 
                 return $this->redirect(['action' => 'edit', $site->id]);
             }
@@ -251,7 +251,7 @@ class SitesController extends AppController
             ->firstOrFail();
 
         if (!$this->hasActivePlan()) {
-            $this->Flash->warning('Renueva tu suscripción para publicar sitios.');
+            $this->Flash->warning('Renueva tu suscripción para publicar vitrinas.');
 
             return $this->redirect(['action' => 'edit', $site->id]);
         }
@@ -259,8 +259,8 @@ class SitesController extends AppController
         if (!$this->planService()->canPublishSite((int)$this->currentUserId(), $site)) {
             $usage = $this->planService()->siteUsage((int)$this->currentUserId());
             $this->Flash->error($usage['over_limit']
-                ? 'Conservamos tus sitios actuales, pero tu uso supera el límite del plan. Reduce sitios o sube de plan antes de publicar otro.'
-                : 'Tu plan llegó al máximo de sitios publicados.');
+                ? 'Conservamos tus vitrinas actuales, pero tu uso supera el límite del plan. Reduce vitrinas o sube de plan antes de publicar otra.'
+                : 'Tu plan llegó al máximo de vitrinas publicadas.');
 
             return $this->redirect(['action' => 'edit', $site->id]);
         }
@@ -276,12 +276,12 @@ class SitesController extends AppController
                 $sites->saveOrFail($site);
             });
         } catch (\Throwable $exception) {
-            $this->Flash->error($exception->getMessage() ?: 'No pudimos publicar el sitio.');
+            $this->Flash->error($exception->getMessage() ?: 'No pudimos publicar la vitrina.');
 
             return $this->redirect(['action' => 'edit', $site->id]);
         }
         $this->notifySitePublished($site);
-        $this->Flash->success('Sitio publicado.');
+        $this->Flash->success('Vitrina publicada.');
 
         return $this->redirect(['action' => 'edit', $site->id]);
     }
@@ -417,19 +417,19 @@ class SitesController extends AppController
         $site = $result['site'] ?? null;
         $reason = $result['reason'] ?? null;
         if (!$site || in_array($reason, [PublicSiteResolverService::REASON_NOT_FOUND, PublicSiteResolverService::REASON_DRAFT], true)) {
-            throw new NotFoundException('Sitio no encontrado.');
+            throw new NotFoundException('Vitrina no encontrada.');
         }
         if ($reason === PublicSiteResolverService::REASON_PAUSED) {
             return $this->response
                 ->withStatus(503)
                 ->withType('text')
-                ->withStringBody('Este sitio está pausado temporalmente.');
+                ->withStringBody('Esta vitrina está pausada temporalmente.');
         }
         if ($reason === PublicSiteResolverService::REASON_EXPIRED) {
             return $this->response
                 ->withStatus(503)
                 ->withType('text')
-                ->withStringBody('Este sitio no está disponible porque la suscripción venció.');
+                ->withStringBody('Esta vitrina no está disponible porque la suscripción venció.');
         }
 
         return $this->redirect($this->publicUrlService()->publicUrl($site));
@@ -491,7 +491,7 @@ class SitesController extends AppController
             ->firstOrFail();
         try {
             $this->domainService()->removeCustomDomain($domain, (int)$this->currentUserId());
-            $this->Flash->success('Dominio eliminado. El contenido de tu sitio no fue modificado.');
+            $this->Flash->success('Dominio eliminado. El contenido de tu vitrina no fue modificado.');
         } catch (InvalidArgumentException $exception) {
             $this->Flash->error($exception->getMessage());
         }
@@ -698,7 +698,7 @@ class SitesController extends AppController
             throw new ForbiddenException('Tu plan no incluye código QR.');
         }
         if ((string)$site->status !== 'published') {
-            throw new BadRequestException('Publica el sitio antes de generar o descargar su código QR.');
+            throw new BadRequestException('Publica la vitrina antes de generar o descargar su código QR.');
         }
     }
 

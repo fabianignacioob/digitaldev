@@ -15,16 +15,31 @@ class CatalogsControllerTest extends TestCase
 
     private int $userId;
     private int $themeId;
+    private ?string $previousPlatformDomain = null;
+    private ?string $previousPublicBaseDomain = null;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->previousPlatformDomain = getenv('APP_PLATFORM_DOMAIN') !== false ? (string)getenv('APP_PLATFORM_DOMAIN') : null;
+        $this->previousPublicBaseDomain = getenv('APP_PUBLIC_BASE_DOMAIN') !== false ? (string)getenv('APP_PUBLIC_BASE_DOMAIN') : null;
+        putenv('APP_PLATFORM_DOMAIN=catops.local');
+        putenv('APP_PUBLIC_BASE_DOMAIN=vitrinahub.local');
 
         $this->ensurePlans();
         $this->ensureTemplates();
         $this->themeId = $this->ensureTheme();
         $this->userId = $this->createUser('catalogo-' . uniqid() . '@example.test');
         $this->createActiveSubscription($this->userId, 'full');
+    }
+
+    protected function tearDown(): void
+    {
+        $this->previousPlatformDomain === null ? putenv('APP_PLATFORM_DOMAIN') : putenv('APP_PLATFORM_DOMAIN=' . $this->previousPlatformDomain);
+        $this->previousPublicBaseDomain === null ? putenv('APP_PUBLIC_BASE_DOMAIN') : putenv('APP_PUBLIC_BASE_DOMAIN=' . $this->previousPublicBaseDomain);
+
+        parent::tearDown();
     }
 
     public function testCategoryCrudAndOwnership(): void
@@ -123,7 +138,7 @@ class CatalogsControllerTest extends TestCase
         $this->assertSame(1, (int)$product->sort_order);
 
         $this->post('/sitios/publicar/' . $siteId);
-        $this->get('/s/' . $this->table('Sites')->get($siteId)->subdomain);
+        $this->getPublicVitrina((string)$this->table('Sites')->get($siteId)->subdomain);
         $this->assertResponseOk();
         $this->assertResponseContains('Consultar');
         $this->assertResponseContains('60 min');
@@ -140,7 +155,7 @@ class CatalogsControllerTest extends TestCase
             'active' => '0',
             'sort_order' => 4,
         ]);
-        $this->get('/s/' . $this->table('Sites')->get($siteId)->subdomain);
+        $this->getPublicVitrina((string)$this->table('Sites')->get($siteId)->subdomain);
         $this->assertResponseOk();
         $this->assertResponseNotContains('Servicio oculto');
     }
@@ -225,7 +240,7 @@ class CatalogsControllerTest extends TestCase
         $this->table('Sites')->saveOrFail($siteToPublish);
         $site = $this->table('Sites')->get($siteId);
 
-        $this->get('/s/' . $site->subdomain);
+        $this->getPublicVitrina((string)$site->subdomain);
         $this->assertResponseOk();
         $this->assertResponseContains('class="category-blocks"');
         $this->assertResponseContains('Descripción preparada para buscadores.');
@@ -268,7 +283,7 @@ class CatalogsControllerTest extends TestCase
         $menuSite->status = 'published';
         $this->table('Sites')->saveOrFail($menuSite);
 
-        $this->get('/s/' . $menuSite->subdomain);
+        $this->getPublicVitrina((string)$menuSite->subdomain);
         $this->assertResponseOk();
         $this->assertResponseContains('class="menu-list"');
         $this->assertResponseContains('Empanada de queso');
@@ -293,7 +308,7 @@ class CatalogsControllerTest extends TestCase
         $catalogSite->status = 'published';
         $this->table('Sites')->saveOrFail($catalogSite);
 
-        $this->get('/s/' . $catalogSite->subdomain);
+        $this->getPublicVitrina((string)$catalogSite->subdomain);
         $this->assertResponseOk();
         $this->assertResponseContains('class="products"');
         $this->assertResponseContains('class="product-image"');
@@ -336,7 +351,7 @@ class CatalogsControllerTest extends TestCase
             'sort_order' => 1,
         ]));
 
-        $this->get('/s/' . $subdomain);
+        $this->getPublicVitrina((string)$subdomain);
         $this->assertResponseOk();
         $this->assertResponseContains('class="products"');
         $this->assertResponseContains('Producto histórico');
@@ -362,7 +377,7 @@ class CatalogsControllerTest extends TestCase
             'sort_order' => 1,
         ]));
 
-        $this->get('/s/' . $site->subdomain);
+        $this->getPublicVitrina((string)$site->subdomain);
         $this->assertResponseOk();
         $this->assertResponseContains('https://instagram.com/tienda_contacto');
         $this->assertResponseNotContains('https://wa.me/56912345678');
@@ -370,13 +385,13 @@ class CatalogsControllerTest extends TestCase
 
         $settings->show_product_action = true;
         $this->table('CatalogSettings')->saveOrFail($settings);
-        $this->get('/s/' . $site->subdomain);
+        $this->getPublicVitrina((string)$site->subdomain);
         $this->assertResponseContains('class="product-action"');
         $this->assertResponseContains('https://wa.me/56912345678');
 
         $site->show_instagram = false;
         $this->table('Sites')->saveOrFail($site);
-        $this->get('/s/' . $site->subdomain);
+        $this->getPublicVitrina((string)$site->subdomain);
         $this->assertResponseNotContains('https://instagram.com/tienda_contacto');
     }
 
@@ -459,7 +474,7 @@ class CatalogsControllerTest extends TestCase
         $this->assertResponseContains('40 cm');
 
         $this->post('/sitios/publicar/' . $siteId);
-        $this->get('/s/' . $this->table('Sites')->get($siteId)->subdomain);
+        $this->getPublicVitrina((string)$this->table('Sites')->get($siteId)->subdomain);
         $this->assertResponseOk();
         $this->assertResponseContains('Desde $14.990');
         $this->assertResponseContains('Familiar');
@@ -480,7 +495,7 @@ class CatalogsControllerTest extends TestCase
         $product = $this->table('CatalogProducts')->get($product->id);
         $this->assertSame('unavailable', $product->availability);
 
-        $this->get('/s/' . $this->table('Sites')->get($siteId)->subdomain);
+        $this->getPublicVitrina((string)$this->table('Sites')->get($siteId)->subdomain);
         $this->assertResponseContains('Agotado');
         $this->assertResponseNotContains('Pizza%20napolitana%20en');
     }
@@ -537,7 +552,7 @@ class CatalogsControllerTest extends TestCase
         $this->post('/sitios/publicar/' . $siteId);
 
         $subdomain = $this->table('Sites')->get($siteId)->subdomain;
-        $this->get('/s/' . $subdomain);
+        $this->getPublicVitrina((string)$subdomain);
         $this->assertResponseOk();
         $this->assertResponseContains('Producto público');
 
@@ -548,7 +563,7 @@ class CatalogsControllerTest extends TestCase
             'period_end' => DateTime::now()->subDays(1),
         ], ['subscription_id' => $subscription->id]);
 
-        $this->get('/s/' . $subdomain);
+        $this->getPublicVitrina((string)$subdomain);
         $this->assertResponseCode(503);
         $this->assertResponseContains('suscripción venció');
     }
@@ -679,7 +694,7 @@ class CatalogsControllerTest extends TestCase
         $this->assertSame('Verdana, Arial, sans-serif', $settings->slogan_font);
 
         $this->post('/sitios/publicar/' . $siteId);
-        $this->get('/s/' . $this->table('Sites')->get($siteId)->subdomain);
+        $this->getPublicVitrina((string)$this->table('Sites')->get($siteId)->subdomain);
         $this->assertResponseOk();
         $this->assertResponseContains('font-family: Georgia, serif');
         $this->assertResponseContains('font-family: Verdana, Arial, sans-serif');
@@ -746,7 +761,7 @@ class CatalogsControllerTest extends TestCase
         $this->enableCsrfToken();
         $this->post('/sitios/publicar/' . $siteId);
 
-        $this->get('/s/' . $this->table('Sites')->get($siteId)->subdomain);
+        $this->getPublicVitrina((string)$this->table('Sites')->get($siteId)->subdomain);
 
         $this->assertResponseOk();
         $this->assertResponseContains('/img/placeholder.png');
@@ -969,6 +984,12 @@ class CatalogsControllerTest extends TestCase
                 'role' => 'customer',
             ],
         ]);
+    }
+
+    private function getPublicVitrina(string $subdomain): void
+    {
+        $this->configRequest(['headers' => ['Host' => $subdomain . '.vitrinahub.local']]);
+        $this->get('/');
     }
 
     private function table(string $name): object

@@ -28,6 +28,8 @@ class SystemStatusService
             'payments.reconcile',
         ]);
 
+        $urlService = new PublicUrlService();
+
         return [
             'application' => [
                 'environment' => (string)env('APP_ENV', Configure::read('debug') ? 'development' : 'production'),
@@ -35,8 +37,9 @@ class SystemStatusService
                 'version' => (string)env('APP_VERSION', 'local'),
                 'php_version' => PHP_VERSION,
                 'cakephp_version' => Configure::version(),
-                'base_domain' => (new PublicUrlService())->baseDomain(),
-                'scheme' => (new PublicUrlService())->scheme(),
+                'platform_domain' => $urlService->platformDomain(),
+                'public_base_domain' => $urlService->publicBaseDomain(),
+                'scheme' => $urlService->scheme(),
                 'webpay_environment' => (string)env('WEBPAY_ENV', 'integration'),
             ],
             'database' => $database,

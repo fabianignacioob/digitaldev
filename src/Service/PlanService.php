@@ -125,15 +125,23 @@ class PlanService
         'assets',
         'catops',
         'dashboard',
+        'dev',
+        'ftp',
         'help',
         'login',
         'mail',
         'panel',
+        'pagos',
+        'payments',
         'registro',
         'root',
         'servicio',
+        'smtp',
         'static',
+        'staging',
+        'status',
         'support',
+        'test',
         'www',
     ];
 
@@ -561,8 +569,8 @@ class PlanService
 
         if ($customization === 'advanced' && $configured >= 5) {
             return [
-                $row('Sitios configurados', 'Hasta 5 sitios configurados'),
-                $row('Sitios publicados', 'Hasta 5 sitios publicados'),
+                $row('Vitrinas configuradas', 'Hasta 5 vitrinas configuradas'),
+                $row('Vitrinas publicadas', 'Hasta 5 vitrinas publicadas'),
                 $row('Incluye', 'Todo lo incluido en Negocio'),
                 $row('SEO', 'SEO avanzado'),
                 $row('Dominio propio', 'Conexión de dominios propios'),
@@ -576,8 +584,8 @@ class PlanService
 
         if ($categories || $customization === 'extended' || $configured >= 3) {
             return [
-                $row('Sitios configurados', 'Hasta 3 sitios configurados'),
-                $row('Sitios publicados', 'Hasta 2 sitios publicados'),
+                $row('Vitrinas configuradas', 'Hasta 3 vitrinas configuradas'),
+                $row('Vitrinas publicadas', 'Hasta 2 vitrinas publicadas'),
                 $row('Incluye', 'Todo lo incluido en Básico'),
                 $row('Categorías', 'Carta, catálogo o servicios organizados por categorías'),
                 $row('SEO', 'SEO estándar'),
@@ -590,13 +598,13 @@ class PlanService
         }
 
         return [
-            $row('Sitios configurados', '1 sitio configurado'),
-            $row('Sitios publicados', '1 sitio publicado'),
+            $row('Vitrinas configuradas', '1 vitrina configurada'),
+            $row('Vitrinas publicadas', '1 vitrina publicada'),
             $row('WhatsApp', 'WhatsApp incluido'),
             $row('Instagram', 'Instagram incluido'),
             $row('Formato', 'Carta, catálogo o página de servicios'),
             $row('SEO', 'SEO básico'),
-            $row('Subdominio', 'Sub dominio CatOps'),
+            $row('Subdominio', 'Subdominio VitrinaHub'),
             $row('Tema', 'Tema visual simple'),
             $row('Destacados', 'Hasta 3 productos destacados'),
         ];

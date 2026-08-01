@@ -1,8 +1,8 @@
-<?php $this->assign('title', 'Nuevo sitio | CatOps'); ?>
+<?php $this->assign('title', 'Nueva vitrina | CatOps'); ?>
 
 <section class="page-head">
   <div>
-    <h1>Nuevo sitio</h1>
+    <h1>Nueva vitrina</h1>
     <p>Parte desde una carta o catálogo simple. Después podrás editar diseño, productos y datos de contacto.</p>
   </div>
 </section>
@@ -16,7 +16,7 @@
           'label' => 'Subdominio gratuito',
           'placeholder' => 'market',
       ]) ?>
-      <p class="meta">Tu dirección será, por ejemplo, market.<?= h($baseDomain ?? 'catops.cl') ?>.</p>
+      <p class="meta">Este será el enlace público de tu vitrina: por ejemplo, market.<?= h($baseDomain ?? 'vitrinahub.cl') ?>.</p>
       <?= $this->Form->control('template_id', ['label' => 'Plantilla', 'options' => $templates]) ?>
       <?= $this->Form->control('theme_id', ['label' => 'Tema visual', 'options' => $themes]) ?>
     </div>
@@ -66,6 +66,6 @@
       <p class="meta">Resumen breve para buscadores; ayuda a explicar qué ofrece el negocio.</p>
     </div>
   </div>
-  <?= $this->Form->button('Crear sitio') ?>
+  <?= $this->Form->button('Crear vitrina') ?>
   <?= $this->Form->end() ?>
 </article>

@@ -3,13 +3,54 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Cake\Core\Configure;
 use Cake\Datasource\FactoryLocator;
 
 class PublicUrlService
 {
+    /**
+     * Institutional domain for CatOps: authentication, panel, payments and QR redirects.
+     */
+    public function platformDomain(): string
+    {
+        $configured = trim((string)env('APP_PLATFORM_DOMAIN', ''));
+        if ($configured !== '') {
+            return $this->normalizeHost($configured);
+        }
+
+        $fullBaseUrl = (string)Configure::read('App.fullBaseUrl', '');
+        $host = parse_url($fullBaseUrl, PHP_URL_HOST);
+        if (is_string($host) && $host !== '') {
+            return $this->normalizeHost($host);
+        }
+
+        $legacy = trim((string)env('APP_BASE_DOMAIN', ''));
+
+        return $legacy !== '' ? $this->normalizeHost($legacy) : 'catops.cl';
+    }
+
+    /**
+     * Public domain for customer vitrinas. APP_BASE_DOMAIN remains a backwards-compatible
+     * fallback for existing local and staging environments during the transition.
+     */
+    public function publicBaseDomain(): string
+    {
+        $configured = trim((string)env('APP_PUBLIC_BASE_DOMAIN', ''));
+        if ($configured !== '') {
+            return $this->normalizeHost($configured);
+        }
+
+        $legacy = trim((string)env('APP_BASE_DOMAIN', ''));
+
+        return $legacy !== '' ? $this->normalizeHost($legacy) : 'vitrinahub.cl';
+    }
+
+    /**
+     * @deprecated Use publicBaseDomain(). Kept for existing services during the transition.
+     */
     public function baseDomain(): string
     {
-        return $this->normalizeHost((string)env('APP_BASE_DOMAIN', 'catops.cl'));
+        return $this->publicBaseDomain();
     }
 
     public function scheme(): string
@@ -28,7 +69,7 @@ class PublicUrlService
     public function subdomainFromHost(string $host): string|false|null
     {
         $host = $this->normalizeHost($host);
-        $baseDomain = $this->baseDomain();
+        $baseDomain = $this->publicBaseDomain();
         if ($host === $baseDomain || $host === 'localhost' || $host === '127.0.0.1') {
             return null;
         }
@@ -46,9 +87,32 @@ class PublicUrlService
         return $subdomain;
     }
 
+    public function legacySubdomainFromHost(string $host): string|false|null
+    {
+        return $this->subdomainForBaseDomain($host, $this->platformDomain());
+    }
+
+    public function isPlatformHost(string $host): bool
+    {
+        $host = $this->normalizeHost($host);
+        $platform = $this->platformDomain();
+
+        return $host === $platform || $host === 'www.' . $platform;
+    }
+
+    public function isPublicBaseHost(string $host): bool
+    {
+        return $this->normalizeHost($host) === $this->publicBaseDomain();
+    }
+
     public function hostForSubdomain(string $subdomain): string
     {
-        return strtolower($subdomain) . '.' . $this->baseDomain();
+        return strtolower($subdomain) . '.' . $this->publicBaseDomain();
+    }
+
+    public function legacyHostForSubdomain(string $subdomain): string
+    {
+        return strtolower($subdomain) . '.' . $this->platformDomain();
     }
 
     public function publicUrl(object $site): string
@@ -62,7 +126,12 @@ class PublicUrlService
             throw new \InvalidArgumentException('El identificador público del código QR no es válido.');
         }
 
-        return $this->scheme() . '://' . $this->baseDomain() . '/q/' . $token;
+        return $this->platformUrl('/q/' . $token);
+    }
+
+    public function platformUrl(string $path = ''): string
+    {
+        return $this->scheme() . '://' . $this->platformDomain() . '/' . ltrim($path, '/');
     }
 
     public function preferredHostForSite(object $site): string
@@ -87,5 +156,25 @@ class PublicUrlService
         return $customDomain
             ? $this->normalizeHost((string)$customDomain->domain)
             : $this->hostForSubdomain((string)$site->subdomain);
+    }
+
+    private function subdomainForBaseDomain(string $host, string $baseDomain): string|false|null
+    {
+        $host = $this->normalizeHost($host);
+        if ($host === $baseDomain || $host === 'localhost' || $host === '127.0.0.1') {
+            return null;
+        }
+
+        $suffix = '.' . $baseDomain;
+        if (!str_ends_with($host, $suffix)) {
+            return false;
+        }
+
+        $subdomain = substr($host, 0, -strlen($suffix));
+        if ($subdomain === '' || str_contains($subdomain, '.')) {
+            return false;
+        }
+
+        return $subdomain;
     }
 }

@@ -19,7 +19,7 @@ switch ($kind) {
         echo "Tu correo fue verificado correctamente y tu cuenta ya está activa.\n\n";
         echo "PLAN: " . (string)($plan['name'] ?? 'CatOps') . "\n";
         echo (bool)($plan['isTrial'] ?? false)
-            ? "Prueba gratuita por " . (int)($plan['trialDays'] ?? 0) . " días. No necesitas tarjeta. Los días comienzan cuando publiques tu primer sitio.\n"
+            ? "Prueba gratuita por " . (int)($plan['trialDays'] ?? 0) . " días. No necesitas tarjeta. Los días comienzan cuando publiques tu primera vitrina.\n"
             : "Plan seleccionado, pendiente de activación. Ingresa a CatOps y completa el pago seguro. No realizamos cobros automáticos.\n";
         if (!empty($plan['description'])) {
             echo "\n" . (string)$plan['description'] . "\n";
@@ -36,7 +36,7 @@ switch ($kind) {
                 echo "- " . (string)$feature . "\n";
             }
         }
-        echo "\nSiguiente paso: ingresa a CatOps, crea tu sitio, personaliza tu contenido y compártelo con tus clientes.\n";
+        echo "\nSiguiente paso: ingresa a CatOps, crea tu vitrina, personaliza tu contenido y compártela con tus clientes.\n";
         echo "\nMensaje automático: no respondas a este correo; esta bandeja no es monitoreada.\n";
         break;
     case 'password_reset':
@@ -70,8 +70,8 @@ switch ($kind) {
         echo "Puedes iniciar un nuevo pago desde CatOps cuando estés listo.\n";
         break;
     case 'site_published':
-        echo "Tu sitio ya está disponible para que lo compartas con tus clientes.\n\n";
-        echo "Sitio: " . (string)$site->name . "\n";
+        echo "Tu vitrina ya está disponible para que la compartas con tus clientes.\n\n";
+        echo "Vitrina: " . (string)$site->name . "\n";
         echo "Enlace: " . (string)$publicUrl . "\n";
         break;
 }
