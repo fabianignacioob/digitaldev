@@ -416,6 +416,7 @@ class PaymentService
         $payment->canceled_at = DateTime::now();
         $this->payments()->saveOrFail($payment);
         $this->auditLogService->log((int)$payment->user_id, 'payment.canceled', 'payments', (int)$payment->id);
+        $this->notifyPaymentCanceled($payment);
 
         return $payment;
     }
@@ -465,6 +466,7 @@ class PaymentService
         $payment->confirmed_at = DateTime::now();
         $this->payments()->saveOrFail($payment);
         $this->auditLogService->log((int)$payment->user_id, 'payment.expired', 'payments', (int)$payment->id);
+        $this->notifyPaymentExpired($payment);
 
         return $payment;
     }
@@ -618,6 +620,24 @@ class PaymentService
             $this->emailService->sendPaymentRejected($this->users()->get($payment->user_id), $payment);
         } catch (Throwable $exception) {
             Log::warning('No se pudo enviar el rechazo de pago: ' . $exception->getMessage());
+        }
+    }
+
+    private function notifyPaymentCanceled(object $payment): void
+    {
+        try {
+            $this->emailService->sendPaymentCanceled($this->users()->get($payment->user_id), $payment);
+        } catch (Throwable $exception) {
+            Log::warning('No se pudo enviar la cancelación de pago: ' . $exception->getMessage());
+        }
+    }
+
+    private function notifyPaymentExpired(object $payment): void
+    {
+        try {
+            $this->emailService->sendPaymentExpired($this->users()->get($payment->user_id), $payment);
+        } catch (Throwable $exception) {
+            Log::warning('No se pudo enviar el vencimiento de pago: ' . $exception->getMessage());
         }
     }
 

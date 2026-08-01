@@ -271,6 +271,17 @@ foreach ($measurementTypes ?? [] as $measurementType) {
             'type' => 'checkbox',
         ]) ?>
         <p class="meta">Esta opción se aplica a todos los productos o preparaciones del sitio.</p>
+        <?php if ($supportsCategories && $categoryLayoutAvailable): ?>
+            <?= $this->Form->control('category_layout', [
+                'label' => 'Diseño de categorías',
+                'options' => [
+                    'normal' => 'Normal: una categoría por fila',
+                    'blocks' => 'Por bloques: dos categorías por fila',
+                ],
+                'value' => $catalogSetting->category_layout ?? 'normal',
+            ]) ?>
+            <p class="meta">Por bloques usa dos categorías por fila en escritorio y tablet; en teléfono mantiene una por fila.</p>
+        <?php endif; ?>
         <div class="form-actions form-actions-stacked">
             <?= $this->Form->button('Guardar diseño') ?>
         </div>
@@ -400,6 +411,22 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                     'label' => 'Destacado',
                     'type' => 'checkbox',
                 ]) ?>
+                <p class="meta"><?= $featuredItemsLimit === 0 ? 'Productos destacados ilimitados.' : 'Máximo ' . (int)$featuredItemsLimit . ' producto' . ($featuredItemsLimit === 1 ? '' : 's') . ' destacado' . ($featuredItemsLimit === 1 ? '' : 's') . ' por sitio.' ?></p>
+            <?php endif; ?>
+            <?php if ($advancedProductSeoEnabled): ?>
+                <?= $this->Form->control('seo_description', [
+                    'id' => 'product-create-seo-description',
+                    'label' => 'Descripción SEO del producto',
+                    'maxlength' => 180,
+                    'required' => false,
+                ]) ?>
+                <?= $this->Form->control('seo_keywords', [
+                    'id' => 'product-create-seo-keywords',
+                    'label' => 'Palabras clave SEO',
+                    'placeholder' => 'Ej: pizza napolitana, pizza artesanal',
+                    'maxlength' => 255,
+                    'required' => false,
+                ]) ?>
             <?php endif; ?>
             <div class="toolbar">
                 <?= $this->Form->button('Agregar elemento') ?>
@@ -517,6 +544,26 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                                     <div class="field-wide">
                                         <?= $this->Form->control('description', ['id' => 'product-' . (int)$product->id . '-description', 'label' => 'Descripción corta', 'value' => $product->description]) ?>
                                     </div>
+                                    <?php if ($advancedProductSeoEnabled): ?>
+                                        <div class="field-wide">
+                                            <?= $this->Form->control('seo_description', [
+                                                'id' => 'product-' . (int)$product->id . '-seo-description',
+                                                'label' => 'Descripción SEO del producto',
+                                                'value' => $product->seo_description,
+                                                'maxlength' => 180,
+                                                'required' => false,
+                                            ]) ?>
+                                        </div>
+                                        <div class="field-wide">
+                                            <?= $this->Form->control('seo_keywords', [
+                                                'id' => 'product-' . (int)$product->id . '-seo-keywords',
+                                                'label' => 'Palabras clave SEO',
+                                                'value' => $product->seo_keywords,
+                                                'maxlength' => 255,
+                                                'required' => false,
+                                            ]) ?>
+                                        </div>
+                                    <?php endif; ?>
                                     <div>
                                         <?= $this->Form->control('price', ['id' => 'product-' . (int)$product->id . '-price', 'label' => 'Valor', 'type' => 'number', 'step' => '0.01', 'value' => $product->price]) ?>
                                     </div>

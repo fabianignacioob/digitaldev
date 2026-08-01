@@ -19,7 +19,7 @@ foreach ($plans as $plan) {
       $isRecommended = trim((string)($plan->commercial_badge ?? '')) !== '';
       $isSelected = (string)$selectedPlan === (string)$plan->slug;
       $annualPrice = $planService->annualPrice($plan);
-      $benefits = array_slice($planService->commercialBenefitRows($plan), 0, 8);
+      $benefits = $planService->commercialBenefitRows($plan);
     ?>
     <article class="card plan-card<?= $isRecommended ? ' featured' : '' ?><?= $isSelected ? ' is-selected' : '' ?>">
       <?php if ($isRecommended): ?><span class="badge"><?= h((string)$plan->commercial_badge) ?></span><?php endif; ?>
@@ -29,7 +29,7 @@ foreach ($plans as $plan) {
       <?php if ($annualPrice): ?><div class="plan-note">Anual: $<?= number_format($annualPrice, 0, ',', '.') ?></div><?php endif; ?>
       <ul class="plan-list">
         <?php foreach ($benefits as $benefit): ?>
-          <li><strong><?= h($benefit['label']) ?>:</strong> <?= h($benefit['value']) ?><?= $benefit['status'] === 'coming_soon' ? ' (Beta)' : '' ?></li>
+          <li><?= h($benefit['copy'] ?? $benefit['value']) ?></li>
         <?php endforeach; ?>
       </ul>
       <?php if (!empty($currentUser)): ?>

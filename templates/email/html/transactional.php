@@ -171,30 +171,71 @@ $features = (array)($planSummary['features'] ?? []);
   </tr>
 </table>
 <?php else: ?>
-<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;color:#102033;line-height:1.6">
-  <h1 style="color:#041f55;font-size:24px">Hola <?= $name ?></h1>
-  <?php if ($kind === 'verification_code'): ?>
-    <p>Tu código de verificación para CatOps es:</p>
-    <p style="font-size:32px;font-weight:700;letter-spacing:8px;color:#f46a12"><?= h((string)$code) ?></p>
-    <p>Este código vence en 15 minutos. Si no solicitaste esta cuenta, puedes ignorar este mensaje.</p>
-  <?php elseif ($kind === 'welcome'): ?>
-    <p>Tu correo fue verificado y tu cuenta ya está activa.</p>
-    <p>Ya puedes ingresar a CatOps y crear tu carta o catálogo digital.</p>
-  <?php elseif ($kind === 'password_reset'): ?>
-    <p>Recibimos una solicitud para cambiar tu contraseña.</p>
-    <p><a href="<?= h((string)$resetUrl) ?>" style="display:inline-block;padding:12px 20px;border-radius:24px;background:#f46a12;color:#fff;text-decoration:none;font-weight:700">Cambiar contraseña</a></p>
-    <p>El enlace vence en 30 minutos. Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
-  <?php elseif ($kind === 'payment_approved'): ?>
-    <p>Tu pago fue confirmado correctamente.</p>
-    <p><strong>Plan:</strong> <?= h((string)$payment->plan_slug) ?><br>
-    <strong>Monto:</strong> $<?= number_format((int)$payment->amount, 0, ',', '.') ?> CLP<br>
-    <strong>Referencia:</strong> <?= h((string)$payment->internal_reference) ?></p>
-  <?php elseif ($kind === 'payment_rejected'): ?>
-    <p>No pudimos aprobar tu pago. Tu suscripción no fue modificada.</p>
-    <p><strong>Plan:</strong> <?= h((string)$payment->plan_slug) ?><br>
-    <strong>Referencia:</strong> <?= h((string)$payment->internal_reference) ?></p>
-    <p>Puedes intentarlo nuevamente desde CatOps.</p>
-  <?php endif; ?>
-  <p style="margin-top:32px">Saludos,<br>El equipo de CatOps</p>
-</div>
+<?php
+$transactionPayment = is_object($payment ?? null) ? $payment : null;
+$paymentPlan = h((string)($transactionPayment->plan_slug ?? ''));
+$paymentAmount = number_format((int)($transactionPayment->amount ?? 0), 0, ',', '.');
+$paymentReference = h((string)($transactionPayment->internal_reference ?? ''));
+$siteName = h((string)($site->name ?? 'Tu sitio'));
+$safePublicUrl = h((string)($publicUrl ?? ''));
+$isApproved = $kind === 'payment_approved';
+$isPublished = $kind === 'site_published';
+$heading = match ($kind) {
+    'payment_approved' => 'Pago confirmado',
+    'payment_rejected' => 'El pago no fue aprobado',
+    'payment_canceled' => 'Pago cancelado',
+    'payment_expired' => 'El pago venció',
+    'site_published' => 'Tu sitio ya está publicado',
+    default => 'Actualización de CatOps',
+};
+$message = match ($kind) {
+    'payment_approved' => 'Tu pago fue confirmado correctamente y tu suscripción ya fue actualizada.',
+    'payment_rejected' => 'No pudimos aprobar tu pago. Tu suscripción no fue modificada.',
+    'payment_canceled' => 'El proceso de pago fue cancelado antes de completarse. Tu suscripción no fue modificada.',
+    'payment_expired' => 'El tiempo para completar este pago finalizó. Tu suscripción no fue modificada.',
+    'site_published' => 'Tu sitio está disponible para que lo compartas con tus clientes.',
+    default => 'Tenemos una actualización sobre tu cuenta.',
+};
+?>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;margin:0;padding:0;background:#f3f6fa;font-family:Arial,Helvetica,sans-serif;color:#102033">
+  <tr>
+    <td align="center" style="padding:28px 14px">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden">
+        <tr><td style="height:6px;background:<?= $isApproved || $isPublished ? '#14804a' : '#f46a12' ?>;font-size:0;line-height:0">&nbsp;</td></tr>
+        <tr>
+          <td align="center" style="padding:28px 32px 16px;background:#ffffff">
+            <img src="cid:catops-logo" width="72" height="72" alt="CatOps" style="display:block;width:72px;height:72px;object-fit:contain;border:0;margin:0 auto 12px">
+            <p style="margin:0;color:#041f55;font-size:13px;letter-spacing:1.8px;text-transform:uppercase;font-weight:bold">CatOps</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:8px 42px 38px">
+            <h1 style="margin:0 0 12px;color:#041f55;font-size:26px;line-height:1.2;text-align:center"><?= $heading ?></h1>
+            <p style="margin:0 0 22px;color:#526174;font-size:16px;line-height:1.6;text-align:center">Hola <?= $name ?>, <?= $message ?></p>
+            <?php if ($isPublished): ?>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 22px">
+                <tr><td style="padding:20px 22px;background:#ecfdf3;border:1px solid #bbf7d0;border-radius:12px;color:#14532d">
+                  <p style="margin:0 0 8px;font-size:13px;font-weight:bold;text-transform:uppercase;letter-spacing:1px">Sitio publicado</p>
+                  <p style="margin:0;font-size:20px;line-height:1.3;font-weight:bold"><?= $siteName ?></p>
+                </td></tr>
+              </table>
+              <p style="margin:0 0 20px;text-align:center"><a href="<?= $safePublicUrl ?>" style="display:inline-block;padding:14px 24px;border-radius:24px;background:#f46a12;color:#ffffff;text-decoration:none;font-size:15px;font-weight:bold">Ver mi sitio</a></p>
+              <p style="margin:0;color:#697789;font-size:12px;line-height:1.55;word-break:break-all;text-align:center"><?= $safePublicUrl ?></p>
+            <?php else: ?>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 22px">
+                <tr><td style="padding:18px 20px;background:#f7f9fc;border-radius:12px;color:#526174;font-size:14px;line-height:1.65">
+                  <strong style="color:#102033">Plan:</strong> <?= $paymentPlan ?><br>
+                  <?php if ($kind === 'payment_approved'): ?><strong style="color:#102033">Monto:</strong> $<?= $paymentAmount ?> CLP<br><?php endif; ?>
+                  <strong style="color:#102033">Referencia:</strong> <?= $paymentReference ?>
+                </td></tr>
+              </table>
+              <?php if (!$isApproved): ?><p style="margin:0;color:#526174;font-size:14px;line-height:1.6;text-align:center">Puedes iniciar un nuevo pago desde tu panel cuando estés listo.</p><?php endif; ?>
+            <?php endif; ?>
+          </td>
+        </tr>
+        <tr><td style="padding:20px 30px;background:#041f55;color:#dbe7f5;text-align:center;font-size:12px;line-height:1.6"><strong style="color:#ffffff">Mensaje automático</strong><br>No respondas a este correo; esta bandeja no es monitoreada.<br>© <?= date('Y') ?> CatOps · catops.cl</td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
 <?php endif; ?>

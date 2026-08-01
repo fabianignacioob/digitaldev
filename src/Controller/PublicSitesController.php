@@ -48,7 +48,8 @@ class PublicSitesController extends AppController
 
         $this->viewBuilder()->disableAutoLayout();
         $productPresentation = $this->planService()->publicProductPresentation($site);
-        $this->set(compact('site', 'productPresentation'));
+        $siteCapabilities = $this->planService()->getCapabilitiesForUser((int)$site->user_id);
+        $this->set(compact('site', 'productPresentation', 'siteCapabilities'));
 
         if ($this->planService()->templateKind($site) !== 'landing') {
             return $this->render('/PublicSites/catalog');

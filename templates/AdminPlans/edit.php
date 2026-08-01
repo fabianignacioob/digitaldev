@@ -56,6 +56,7 @@
             'sites_published_limit' => 'Sitios publicados',
             'items_limit' => 'Ítems por sitio',
             'categories_limit' => 'Categorías por sitio',
+            'featured_items_limit' => 'Productos destacados (0 = ilimitados)',
             'image_storage_limit_mb' => 'Almacenamiento de imágenes (MB)',
             'trial_duration_days' => 'Duración de prueba desde publicación (días)',
             'trial_expire_after_registration_days' => 'Vencimiento de prueba sin publicar (días)',

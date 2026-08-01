@@ -37,6 +37,9 @@ class CatalogsController extends AppController
         $catalogSetting = $this->ensureCatalogSetting($siteId);
         $supportsCategories = $this->planService()->canUseCategories((int)$this->currentUserId(), $site);
         $featuredItemsEnabled = $this->planService()->hasFeature((int)$this->currentUserId(), 'featured_items_enabled');
+        $featuredItemsLimit = $this->planService()->getLimit((int)$this->currentUserId(), 'featured_items_limit');
+        $advancedProductSeoEnabled = $this->planService()->canUseAdvancedProductSeo((int)$this->currentUserId());
+        $categoryLayoutAvailable = $this->planService()->canUseCategoryBlocks((int)$this->currentUserId(), $site);
         $templateKind = $this->planService()->templateKind($site);
         $itemTypeOptions = $this->itemTypeOptions($site);
         $catalogCategories = $this->fetchTable('CatalogCategories')->find()
@@ -68,6 +71,9 @@ class CatalogsController extends AppController
             'backgroundPresets',
             'supportsCategories',
             'featuredItemsEnabled',
+            'featuredItemsLimit',
+            'advancedProductSeoEnabled',
+            'categoryLayoutAvailable',
             'templateKind',
             'itemTypeOptions',
             'measurementTypes',
@@ -84,7 +90,7 @@ class CatalogsController extends AppController
         }
 
         $this->request->allowMethod(['post', 'put', 'patch']);
-        $this->getOwnedSite($siteId);
+        $site = $this->getOwnedSite($siteId);
 
         $settingsTable = $this->fetchTable('CatalogSettings');
         $catalogSetting = $this->ensureCatalogSetting($siteId);
@@ -119,6 +125,10 @@ class CatalogsController extends AppController
         $data['title_font'] = CatalogTypography::normalize($data['title_font'] ?? null);
         $data['heading_font'] = $data['title_font'];
         $data['slogan_font'] = CatalogTypography::normalize($data['slogan_font'] ?? null);
+        $data['category_layout'] = $this->planService()->canUseCategoryBlocks((int)$this->currentUserId(), $site)
+            && ($data['category_layout'] ?? 'normal') === 'blocks'
+            ? 'blocks'
+            : 'normal';
 
         $catalogSetting = $settingsTable->patchEntity($catalogSetting, $data);
         if ($settingsTable->save($catalogSetting)) {
@@ -569,6 +579,7 @@ class CatalogsController extends AppController
             'title' => 'Nuestra carta',
             'slogan' => 'Sabores simples, bien presentados.',
             'intro_text' => 'Revisa nuestras opciones y consulta disponibilidad por WhatsApp.',
+            'category_layout' => 'normal',
         ]);
         $settings->saveOrFail($catalogSetting);
 
@@ -637,8 +648,14 @@ class CatalogsController extends AppController
         ])) {
             throw new BadRequestException('El tipo de medida seleccionado no está disponible.');
         }
-        $data['featured'] = $this->planService()->hasFeature((int)$this->currentUserId(), 'featured_items_enabled')
-            && !empty($data['featured']);
+        $requestedFeatured = !empty($data['featured']);
+        if ($requestedFeatured && !$this->planService()->canFeatureCatalogItem((int)$this->currentUserId(), $site, $existingProduct)) {
+            throw new BadRequestException('Tu plan llegó al máximo de productos destacados para este sitio.');
+        }
+        $data['featured'] = $requestedFeatured;
+        if (!$this->planService()->canUseAdvancedProductSeo((int)$this->currentUserId())) {
+            unset($data['seo_description'], $data['seo_keywords']);
+        }
         $data['active'] = $creating ? true : !empty($data['active']);
         $data['availability'] = array_key_exists((string)($data['availability'] ?? ''), self::AVAILABILITY_OPTIONS)
             ? (string)$data['availability']

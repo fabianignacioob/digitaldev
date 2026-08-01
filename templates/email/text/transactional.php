@@ -57,6 +57,23 @@ switch ($kind) {
         echo "Referencia: " . (string)$payment->internal_reference . "\n\n";
         echo "Puedes intentarlo nuevamente desde CatOps.\n";
         break;
+    case 'payment_canceled':
+        echo "El proceso de pago fue cancelado antes de completarse. Tu suscripción no fue modificada.\n\n";
+        echo "Plan: " . (string)$payment->plan_slug . "\n";
+        echo "Referencia: " . (string)$payment->internal_reference . "\n\n";
+        echo "Puedes iniciar un nuevo pago desde CatOps cuando estés listo.\n";
+        break;
+    case 'payment_expired':
+        echo "El tiempo para completar este pago finalizó. Tu suscripción no fue modificada.\n\n";
+        echo "Plan: " . (string)$payment->plan_slug . "\n";
+        echo "Referencia: " . (string)$payment->internal_reference . "\n\n";
+        echo "Puedes iniciar un nuevo pago desde CatOps cuando estés listo.\n";
+        break;
+    case 'site_published':
+        echo "Tu sitio ya está disponible para que lo compartas con tus clientes.\n\n";
+        echo "Sitio: " . (string)$site->name . "\n";
+        echo "Enlace: " . (string)$publicUrl . "\n";
+        break;
 }
 
 echo "\nSaludos,\nEl equipo de CatOps\n";

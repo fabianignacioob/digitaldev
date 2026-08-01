@@ -29,7 +29,22 @@
       <p class="meta">URL pública: <a href="<?= h($publicUrl) ?>" target="_blank" rel="noopener"><?= h($publicUrl) ?></a></p>
     <?php endif; ?>
     <?= $this->Form->control('template_id', ['label' => 'Plantilla', 'options' => $templates]) ?>
-    <?= $this->Form->control('theme_id', ['label' => 'Tema visual', 'options' => $themes]) ?>
+    <?= $this->Form->control('theme_id', ['label' => 'Paleta de colores', 'options' => $themes]) ?>
+    <?php if (str_ends_with($templateSlug, '-categorias')): ?>
+      <?php if ($categoryLayoutAvailable): ?>
+        <?= $this->Form->control('category_layout', [
+            'label' => 'Diseño de categorías',
+            'options' => [
+                'normal' => 'Normal: una categoría por fila',
+                'blocks' => 'Por bloques: dos categorías por fila',
+            ],
+            'value' => $site->catalog_setting->category_layout ?? 'normal',
+        ]) ?>
+        <p class="meta">En teléfono las categorías se muestran una debajo de otra para conservar la lectura.</p>
+      <?php else: ?>
+        <p class="meta">El diseño por bloques está disponible en los planes Negocio y Full con plantillas por categorías.</p>
+      <?php endif; ?>
+    <?php endif; ?>
     <?= $this->Form->control('status', [
         'label' => 'Estado',
         'options' => ['draft' => 'Borrador', 'published' => 'Publicado', 'paused' => 'Pausado'],
@@ -119,6 +134,19 @@
   <h2><?= str_starts_with($templateSlug, 'catalogo-') ? 'Catálogo' : 'Carta' ?></h2>
   <p>Configura fondo, títulos, productos<?= str_ends_with($templateSlug, '-categorias') ? ' y categorías' : '' ?>.</p>
   <a class="button" href="/sitios/<?= (int)$site->id ?>/carta">Administrar contenido</a>
+</section>
+
+<section class="card site-followup-card">
+  <h2>Código QR</h2>
+  <?php if (!$qrEnabled): ?>
+    <p>El código QR está disponible desde el plan Negocio.</p>
+    <a class="button secondary" href="/planes">Ver planes</a>
+  <?php elseif ($site->status !== 'published'): ?>
+    <p>Publica el sitio para generar un código QR que dirija a su URL pública.</p>
+  <?php else: ?>
+    <p>Descarga un código QR en formato SVG para imprimirlo o compartirlo.</p>
+    <a class="button secondary" href="/sitios/<?= (int)$site->id ?>/qr">Descargar código QR</a>
+  <?php endif; ?>
 </section>
 
 <section class="card site-followup-card">

@@ -3,6 +3,11 @@
 $categorizedIds = [];
 
 if ($usesCategories):
+    if (($categoryLayout ?? 'normal') === 'blocks'):
+        ?>
+        <div class="category-blocks">
+        <?php
+    endif;
     foreach ($site->catalog_categories ?? [] as $category):
         $categoryProducts = [];
         foreach ($category->catalog_products ?? [] as $product) {
@@ -39,6 +44,9 @@ if ($usesCategories):
                 <?php endforeach; ?>
             </div>
         </section>
+    <?php endif; ?>
+    <?php if (($categoryLayout ?? 'normal') === 'blocks'): ?>
+        </div>
     <?php endif; ?>
 <?php elseif ($activeProducts): ?>
     <section class="category menu-category">

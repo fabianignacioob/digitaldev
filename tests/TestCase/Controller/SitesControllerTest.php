@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller;
 
+use App\Test\Double\FakeEmailService;
 use Cake\Core\Configure;
 use Cake\Datasource\FactoryLocator;
 use Cake\I18n\DateTime;
@@ -18,6 +19,8 @@ class SitesControllerTest extends TestCase
     private int $userId;
     private int $templateId;
     private int $themeId;
+    private FakeEmailService $emailService;
+    private mixed $previousEmailService;
 
     protected function setUp(): void
     {
@@ -25,6 +28,9 @@ class SitesControllerTest extends TestCase
 
         $this->previousBaseDomain = getenv('APP_BASE_DOMAIN') !== false ? (string)getenv('APP_BASE_DOMAIN') : null;
         $this->previousPublicScheme = getenv('APP_PUBLIC_SCHEME') !== false ? (string)getenv('APP_PUBLIC_SCHEME') : null;
+        $this->previousEmailService = Configure::read('EmailService');
+        $this->emailService = new FakeEmailService();
+        Configure::write('EmailService', $this->emailService);
         putenv('APP_BASE_DOMAIN=catops.local');
         putenv('APP_PUBLIC_SCHEME=http');
 
@@ -39,6 +45,9 @@ class SitesControllerTest extends TestCase
     {
         $this->previousBaseDomain === null ? putenv('APP_BASE_DOMAIN') : putenv('APP_BASE_DOMAIN=' . $this->previousBaseDomain);
         $this->previousPublicScheme === null ? putenv('APP_PUBLIC_SCHEME') : putenv('APP_PUBLIC_SCHEME=' . $this->previousPublicScheme);
+        $this->previousEmailService === null
+            ? Configure::delete('EmailService')
+            : Configure::write('EmailService', $this->previousEmailService);
 
         parent::tearDown();
     }
@@ -132,6 +141,9 @@ class SitesControllerTest extends TestCase
         $site = $this->table('Sites')->get($siteId);
         $this->assertSame('published', $site->status);
         $this->assertNotEmpty($site->published_at);
+        $this->assertCount(1, $this->emailService->messages);
+        $this->assertSame('site_published', $this->emailService->messages[0]['kind']);
+        $this->assertSame('http://sitio-post.catops.local', $this->emailService->messages[0]['publicUrl']);
     }
 
     public function testCannotPublishAnotherUsersSite(): void
@@ -201,6 +213,40 @@ class SitesControllerTest extends TestCase
         $this->get('/s/pizzeria');
         $this->assertResponseOk();
         $this->assertResponseContains('Pizzería Demo');
+    }
+
+    public function testEligibleUserCanDownloadPublishedSiteQr(): void
+    {
+        $plan = $this->table('Plans')->find()->where(['slug' => 'basica'])->firstOrFail();
+        $capabilities = json_decode((string)$plan->capabilities, true);
+        $capabilities['qr_enabled'] = true;
+        $plan->capabilities = json_encode($capabilities, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $this->table('Plans')->saveOrFail($plan);
+        $siteId = $this->createSite($this->userId, 'qr-demo');
+        $this->publishSiteDirectly($siteId);
+        $this->loginAs($this->userId);
+
+        $this->get('/sitios/' . $siteId . '/qr');
+
+        $this->assertResponseOk();
+        $this->assertHeaderContains('Content-Type', 'image/svg+xml');
+        $this->assertHeaderContains('Content-Disposition', 'catops-qr-demo.svg');
+        $this->assertResponseContains('<svg');
+    }
+
+    public function testQrRequiresPublishedSite(): void
+    {
+        $plan = $this->table('Plans')->find()->where(['slug' => 'basica'])->firstOrFail();
+        $capabilities = json_decode((string)$plan->capabilities, true);
+        $capabilities['qr_enabled'] = true;
+        $plan->capabilities = json_encode($capabilities, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $this->table('Plans')->saveOrFail($plan);
+        $siteId = $this->createSite($this->userId, 'qr-borrador');
+        $this->loginAs($this->userId);
+
+        $this->get('/sitios/' . $siteId . '/qr');
+
+        $this->assertResponseCode(400);
     }
 
     public function testLegacyPublicPathWorksWithProductionHostValidation(): void

@@ -65,6 +65,41 @@ class EmailService
         );
     }
 
+    /** Sends a notification when a payment is cancelled before confirmation. */
+    public function sendPaymentCanceled(object $user, object $payment): void
+    {
+        $this->deliver(
+            $user,
+            'Pago cancelado en CatOps',
+            ['kind' => 'payment_canceled', 'user' => $user, 'payment' => $payment],
+        );
+    }
+
+    /** Sends a notification when a pending payment expires. */
+    public function sendPaymentExpired(object $user, object $payment): void
+    {
+        $this->deliver(
+            $user,
+            'Pago vencido en CatOps',
+            ['kind' => 'payment_expired', 'user' => $user, 'payment' => $payment],
+        );
+    }
+
+    /** Sends the public address after a site becomes available. */
+    public function sendSitePublished(object $user, object $site, string $publicUrl): void
+    {
+        $this->deliver(
+            $user,
+            'Tu sitio ya está publicado en CatOps',
+            [
+                'kind' => 'site_published',
+                'user' => $user,
+                'site' => $site,
+                'publicUrl' => $publicUrl,
+            ],
+        );
+    }
+
     /** Delivers a transactional message through the configured SMTP transport. */
     private function deliver(object $user, string $subject, array $viewVars): void
     {
@@ -96,7 +131,16 @@ class EmailService
             ->viewBuilder()
             ->setTemplate('transactional');
 
-        if (in_array($viewVars['kind'] ?? null, ['verification_code', 'welcome', 'password_reset'], true)) {
+        if (in_array($viewVars['kind'] ?? null, [
+            'verification_code',
+            'welcome',
+            'password_reset',
+            'payment_approved',
+            'payment_rejected',
+            'payment_canceled',
+            'payment_expired',
+            'site_published',
+        ], true)) {
             $logoPath = ROOT . DS . 'webroot' . DS . 'img' . DS . 'catops-logo.png';
             if (is_file($logoPath)) {
                 $mailer->setAttachments([

@@ -4,12 +4,18 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\DomainAdministrationService;
+use App\Service\EmailService;
 use App\Service\LocalImageStorageService;
 use App\Service\PublicUrlService;
+use App\Service\SiteQrCodeService;
 use App\Service\SubscriptionService;
+use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\I18n\DateTime;
+use Cake\Log\Log;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -103,6 +109,8 @@ class SitesController extends AppController
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
+            $requestedCategoryLayout = (string)($data['category_layout'] ?? 'normal');
+            unset($data['category_layout']);
             if (!empty($data['template_id']) && !$this->templateIsAllowed((int)$data['template_id'])) {
                 $this->Flash->error('La plantilla seleccionada no está disponible en tu plan.');
 
@@ -153,6 +161,10 @@ class SitesController extends AppController
                 }
                 $this->syncSubdomainDomain($site);
                 $this->createDefaultCatalogSetting((int)$site->id);
+                $this->saveCategoryLayout($site, $requestedCategoryLayout);
+                if ($site->status === 'published' && $previousStatus !== 'published') {
+                    $this->notifySitePublished($site);
+                }
                 $this->Flash->success('Cambios guardados.');
 
                 return $this->redirect(['action' => 'edit', $site->id]);
@@ -165,6 +177,8 @@ class SitesController extends AppController
         $themes = $this->fetchTable('Themes')->find('list')->where(['active' => true])->all();
         $baseDomain = $this->publicUrlService()->baseDomain();
         $publicUrl = $this->publicUrlService()->publicUrl($site);
+        $categoryLayoutAvailable = $this->planService()->canUseCategoryBlocks((int)$this->currentUserId(), $site);
+        $qrEnabled = $this->planService()->hasFeature((int)$this->currentUserId(), 'qr_enabled');
         $domainService = $this->domainService();
         $customDomainAvailable = $domainService->canManageCustomDomains((int)$this->currentUserId());
         $customDomainUsage = $domainService->usageForUser((int)$this->currentUserId());
@@ -179,6 +193,8 @@ class SitesController extends AppController
             'customDomainAvailable',
             'customDomainUsage',
             'customDomains',
+            'categoryLayoutAvailable',
+            'qrEnabled',
         ));
 
         return null;
@@ -206,7 +222,8 @@ class SitesController extends AppController
 
         $this->viewBuilder()->disableAutoLayout();
         $productPresentation = $this->planService()->publicProductPresentation($site);
-        $this->set(compact('site', 'productPresentation'));
+        $siteCapabilities = $this->planService()->getCapabilitiesForUser((int)$site->user_id);
+        $this->set(compact('site', 'productPresentation', 'siteCapabilities'));
 
         if ($this->planService()->templateKind($site) !== 'landing') {
             return $this->render('/PublicSites/catalog');
@@ -257,6 +274,7 @@ class SitesController extends AppController
 
             return $this->redirect(['action' => 'edit', $site->id]);
         }
+        $this->notifySitePublished($site);
         $this->Flash->success('Sitio publicado.');
 
         return $this->redirect(['action' => 'edit', $site->id]);
@@ -281,6 +299,32 @@ class SitesController extends AppController
         $this->Flash->success('Logo eliminado.');
 
         return $this->redirect(['action' => 'edit', $site->id]);
+    }
+
+    public function downloadQr(int $id): Response
+    {
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $this->request->allowMethod(['get']);
+        $site = $this->fetchTable('Sites')->find()
+            ->where(['Sites.id' => $id, 'Sites.user_id' => $this->currentUserId()])
+            ->firstOrFail();
+        if (!$this->planService()->hasFeature((int)$this->currentUserId(), 'qr_enabled')) {
+            throw new ForbiddenException('Tu plan no incluye código QR.');
+        }
+        if ((string)$site->status !== 'published') {
+            throw new BadRequestException('Publica el sitio antes de descargar su código QR.');
+        }
+
+        $filename = preg_replace('/[^a-z0-9-]/', '-', strtolower((string)$site->subdomain)) ?: 'sitio';
+        $svg = (new SiteQrCodeService())->svg($this->publicUrlService()->publicUrl($site));
+
+        return $this->response
+            ->withType('image/svg+xml')
+            ->withHeader('Content-Disposition', 'attachment; filename="catops-' . $filename . '.svg"')
+            ->withStringBody($svg);
     }
 
     public function addDomain(int $id): Response
@@ -416,6 +460,25 @@ class SitesController extends AppController
         ]));
     }
 
+    private function saveCategoryLayout(object $site, string $requestedLayout): void
+    {
+        $settings = $this->fetchTable('CatalogSettings');
+        $setting = $settings->find()->where(['site_id' => (int)$site->id])->first();
+        if (!$setting) {
+            return;
+        }
+
+        $templateSlug = $this->templateSlugFor((int)$site->template_id);
+        $layout = $this->planService()->canUseCategoryBlocks((int)$this->currentUserId(), $templateSlug)
+            && $requestedLayout === 'blocks'
+            ? 'blocks'
+            : 'normal';
+        if ((string)$setting->category_layout !== $layout) {
+            $setting->category_layout = $layout;
+            $settings->saveOrFail($setting);
+        }
+    }
+
     private function availableTemplates(): iterable
     {
         return $this->fetchTable('Templates')->find('list')
@@ -486,6 +549,27 @@ class SitesController extends AppController
     private function publicUrlService(): PublicUrlService
     {
         return new PublicUrlService();
+    }
+
+    private function emailService(): EmailService
+    {
+        $service = Configure::read('EmailService');
+
+        return $service instanceof EmailService ? $service : new EmailService();
+    }
+
+    private function notifySitePublished(object $site): void
+    {
+        try {
+            $user = $this->fetchTable('Users')->get((int)$site->user_id);
+            $this->emailService()->sendSitePublished(
+                $user,
+                $site,
+                $this->publicUrlService()->publicUrl($site),
+            );
+        } catch (\Throwable $exception) {
+            Log::warning('No se pudo enviar la publicación del sitio: ' . $exception->getMessage());
+        }
     }
 
     private function domainService(): DomainAdministrationService

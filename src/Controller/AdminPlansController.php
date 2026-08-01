@@ -81,7 +81,7 @@ class AdminPlansController extends AdminController
         foreach (self::BOOLEAN_CAPABILITIES as $key) {
             $capabilities[$key] = $submitted[$key] ?? false;
         }
-        foreach (['sites_configured_limit', 'sites_published_limit', 'items_limit', 'categories_limit', 'image_storage_limit_mb', 'trial_duration_days', 'trial_expire_after_registration_days', 'custom_domains_limit', 'annual_price'] as $key) {
+        foreach (['sites_configured_limit', 'sites_published_limit', 'items_limit', 'categories_limit', 'featured_items_limit', 'image_storage_limit_mb', 'trial_duration_days', 'trial_expire_after_registration_days', 'custom_domains_limit', 'annual_price'] as $key) {
             $capabilities[$key] = $submitted[$key] ?? 0;
         }
         $capabilities['enabled_templates'] = array_values(array_filter(

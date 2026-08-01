@@ -145,6 +145,93 @@ class CatalogsControllerTest extends TestCase
         $this->assertResponseNotContains('Servicio oculto');
     }
 
+    public function testFeaturedItemsRespectThePlanLimit(): void
+    {
+        $plan = $this->table('Plans')->find()->where(['slug' => 'limitado'])->firstOrFail();
+        $capabilities = json_decode((string)$plan->capabilities, true);
+        $capabilities['featured_items_enabled'] = true;
+        $capabilities['featured_items_limit'] = 1;
+        $capabilities['items_limit'] = 10;
+        $plan->capabilities = json_encode($capabilities, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $this->table('Plans')->saveOrFail($plan);
+        $subscription = $this->table('Subscriptions')->find()->where(['user_id' => $this->userId])->firstOrFail();
+        $subscription->plan_slug = 'limitado';
+        $this->table('Subscriptions')->saveOrFail($subscription);
+
+        $siteId = $this->createSite($this->userId, 'catalogo-simple', 'destacados-' . uniqid());
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+        $this->post('/sitios/' . $siteId . '/carta/productos', [
+            'item_type' => 'product',
+            'name' => 'Primer destacado',
+            'featured' => '1',
+        ]);
+        $this->assertRedirect('/sitios/' . $siteId . '/carta');
+
+        $this->post('/sitios/' . $siteId . '/carta/productos', [
+            'item_type' => 'product',
+            'name' => 'Segundo destacado',
+            'featured' => '1',
+        ]);
+        $this->assertResponseCode(400);
+        $this->assertSame(1, $this->table('CatalogProducts')->find()->where(['site_id' => $siteId, 'featured' => true])->count());
+    }
+
+    public function testFullPlanAppliesCategoryBlocksAndProductSeoPublicly(): void
+    {
+        $plan = $this->table('Plans')->find()->where(['slug' => 'full'])->firstOrFail();
+        $capabilities = json_decode((string)$plan->capabilities, true);
+        $capabilities['seo_level'] = 'advanced';
+        $capabilities['customization_level'] = 'advanced';
+        $plan->capabilities = json_encode($capabilities, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $this->table('Plans')->saveOrFail($plan);
+
+        $siteId = $this->createSite($this->userId, 'catalogo-categorias', 'bloques-' . uniqid(), 'Tienda SEO');
+        $category = $this->table('CatalogCategories')->newEntity([
+            'site_id' => $siteId,
+            'name' => 'Destacados',
+            'sort_order' => 1,
+        ]);
+        $this->table('CatalogCategories')->saveOrFail($category);
+        $this->table('CatalogProducts')->saveOrFail($this->table('CatalogProducts')->newEntity([
+            'site_id' => $siteId,
+            'catalog_category_id' => $category->id,
+            'item_type' => 'product',
+            'name' => 'Producto SEO',
+            'description' => 'Descripción visible',
+            'seo_description' => 'Descripción preparada para buscadores.',
+            'seo_keywords' => 'producto seo, tienda demo',
+            'active' => true,
+            'sort_order' => 1,
+        ]));
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+        $this->post('/sitios/' . $siteId . '/carta/configuracion', [
+            'background_type' => 'color',
+            'background_color' => '#fbfaf7',
+            'title' => 'Tienda SEO',
+            'title_color' => '#17202a',
+            'title_font' => 'Inter, Arial, sans-serif',
+            'slogan' => 'Productos organizados',
+            'slogan_color' => '#17202a',
+            'slogan_font' => 'Inter, Arial, sans-serif',
+            'category_layout' => 'blocks',
+            'show_product_action' => '1',
+        ]);
+        $this->assertRedirect('/sitios/' . $siteId . '/carta');
+        $siteToPublish = $this->table('Sites')->get($siteId);
+        $siteToPublish->status = 'published';
+        $siteToPublish->published_at = DateTime::now();
+        $this->table('Sites')->saveOrFail($siteToPublish);
+        $site = $this->table('Sites')->get($siteId);
+
+        $this->get('/s/' . $site->subdomain);
+        $this->assertResponseOk();
+        $this->assertResponseContains('class="category-blocks"');
+        $this->assertResponseContains('Descripción preparada para buscadores.');
+        $this->assertResponseContains('producto seo, tienda demo');
+    }
+
     public function testPublicProductPresentationMatchesSelectedTemplateAndPreview(): void
     {
         $menuSiteId = $this->createSite($this->userId, 'carta-categorias', 'menu-' . uniqid(), 'Bistró Demo');

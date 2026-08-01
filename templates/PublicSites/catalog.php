@@ -73,7 +73,14 @@ $slogan = $setting->slogan ?? 'Nuestra carta';
 $intro = $setting->intro_text ?? null;
 $templateSlug = $site->template->slug ?? 'carta-simple';
 $productPresentation = ($productPresentation ?? 'catalog') === 'menu' ? 'menu' : 'catalog';
-$usesCategories = in_array($templateSlug, ['carta-categorias', 'catalogo-categorias'], true);
+$usesCategories = in_array($templateSlug, ['carta-categorias', 'catalogo-categorias'], true)
+    && (bool)($siteCapabilities['categories_enabled'] ?? false);
+$categoryLayout = $usesCategories
+    && in_array((string)($siteCapabilities['customization_level'] ?? 'none'), ['extended', 'advanced'], true)
+    && ($setting->category_layout ?? 'normal') === 'blocks'
+    ? 'blocks'
+    : 'normal';
+$advancedProductSeo = (string)($siteCapabilities['seo_level'] ?? 'none') === 'advanced';
 $isCatalog = $productPresentation === 'catalog';
 $kindLabel = $isCatalog ? 'Catálogo' : 'Carta';
 $elementLabel = $isCatalog ? 'productos' : 'preparaciones';
@@ -291,6 +298,28 @@ $renderMenuItem = static function ($product) use ($formatPrice, $formatMeasure, 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= h($site->seo_title ?: $title) ?></title>
     <meta name="description" content="<?= h($site->seo_description ?: $slogan) ?>">
+    <?php if ($advancedProductSeo && $activeProducts): ?>
+        <?php
+        $productSchema = [];
+        foreach ($activeProducts as $position => $product) {
+            $item = [
+                '@type' => 'Product',
+                'name' => (string)$product->name,
+                'description' => (string)($product->seo_description ?: $product->description ?: $product->name),
+            ];
+            if (!empty($product->seo_keywords)) {
+                $item['keywords'] = (string)$product->seo_keywords;
+            }
+            $productSchema[] = ['@type' => 'ListItem', 'position' => $position + 1, 'item' => $item];
+        }
+        ?>
+        <script type="application/ld+json"><?= json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'ItemList',
+            'name' => $title,
+            'itemListElement' => $productSchema,
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+    <?php endif; ?>
     <style>
         * {
             box-sizing: border-box;
@@ -604,6 +633,17 @@ $renderMenuItem = static function ($product) use ($formatPrice, $formatMeasure, 
 
         .category {
             margin-bottom: 52px;
+        }
+
+        .category-blocks {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: start;
+            gap: 36px 28px;
+        }
+
+        .category-blocks .category {
+            margin-bottom: 0;
         }
 
         .category-title {
@@ -1029,6 +1069,11 @@ $renderMenuItem = static function ($product) use ($formatPrice, $formatMeasure, 
                 grid-template-columns: 1fr;
             }
 
+            .category-blocks {
+                grid-template-columns: 1fr;
+                gap: 42px;
+            }
+
             .menu-item {
                 display: grid;
                 grid-template-columns: minmax(0, 1fr) auto;
@@ -1147,6 +1192,7 @@ $renderMenuItem = static function ($product) use ($formatPrice, $formatMeasure, 
                     'site' => $site,
                     'activeProducts' => $activeProducts,
                     'usesCategories' => $usesCategories,
+                    'categoryLayout' => $categoryLayout,
                     'isCatalog' => $isCatalog,
                     'renderProduct' => $renderProduct,
                     'renderMenuItem' => $renderMenuItem,

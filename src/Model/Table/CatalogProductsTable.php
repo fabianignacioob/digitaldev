@@ -38,6 +38,8 @@ class CatalogProductsTable extends Table
             ->scalar('item_type')->maxLength('item_type', 30)->notEmptyString('item_type')
             ->scalar('name')->maxLength('name', 140)->requirePresence('name', 'create')->notEmptyString('name')
             ->scalar('description')->maxLength('description', 260)->allowEmptyString('description')
+            ->scalar('seo_description')->maxLength('seo_description', 180)->allowEmptyString('seo_description')
+            ->scalar('seo_keywords')->maxLength('seo_keywords', 255)->allowEmptyString('seo_keywords')
             ->decimal('price')->allowEmptyString('price')
             ->scalar('price_prefix')->maxLength('price_prefix', 40)->allowEmptyString('price_prefix')
             ->decimal('discount')->allowEmptyString('discount')

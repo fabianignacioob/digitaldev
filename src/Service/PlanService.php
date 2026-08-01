@@ -43,6 +43,8 @@ class PlanService
         'sites_published_limit' => 0,
         'items_limit' => 0,
         'categories_limit' => 0,
+        // Zero means unlimited when featured_items_enabled is true.
+        'featured_items_limit' => 0,
         'image_storage_limit_mb' => 0,
         'trial_duration_days' => 0,
         'trial_expire_after_registration_days' => 0,
@@ -102,6 +104,7 @@ class PlanService
         'sites_published_limit',
         'items_limit',
         'categories_limit',
+        'featured_items_limit',
         'image_storage_limit_mb',
         'trial_duration_days',
         'trial_expire_after_registration_days',
@@ -330,6 +333,43 @@ class PlanService
         return $limit > 0 && $count < $limit;
     }
 
+    public function canFeatureCatalogItem(int|array|object $user, int|object $site, ?object $item = null): bool
+    {
+        $userId = $this->userId($user);
+        if (!$this->hasFeature($userId, 'featured_items_enabled')) {
+            return false;
+        }
+        if ($item && (bool)($item->featured ?? false)) {
+            return true;
+        }
+
+        $siteId = is_object($site) ? (int)$site->id : (int)$site;
+        $limit = $this->getLimit($userId, 'featured_items_limit');
+        if ($limit === 0) {
+            return true;
+        }
+
+        $count = $this->table('CatalogProducts')->find()
+            ->where(['site_id' => $siteId, 'featured' => true])
+            ->count();
+
+        return $count < $limit;
+    }
+
+    public function canUseCategoryBlocks(int|array|object $user, string|object|null $template): bool
+    {
+        if (!$this->canUseCategories($user, $template)) {
+            return false;
+        }
+
+        return in_array((string)$this->getCapabilitiesForUser($this->userId($user))['customization_level'], ['extended', 'advanced'], true);
+    }
+
+    public function canUseAdvancedProductSeo(int|array|object $user): bool
+    {
+        return (string)$this->getCapabilitiesForUser($this->userId($user))['seo_level'] === 'advanced';
+    }
+
     public function allowedTemplateSlugs(int|array|object $user): array
     {
         $capabilities = $this->getCapabilitiesForUser($this->userId($user));
@@ -504,49 +544,62 @@ class PlanService
         return $this->normalizeCapabilities($capabilities);
     }
 
-    /**
-     * Commercial rows are intentionally explicit about capabilities that are
-     * stored for a future module but are not available in the product yet.
-     *
-     * @return list<array{label:string,value:string,status:string}>
-     */
+    /** @return list<array{label:string,value:string,copy:string,status:string}> */
     public function commercialBenefitRows(object $plan): array
     {
         $capabilities = $this->capabilities($plan);
         $configured = (int)$capabilities['sites_configured_limit'];
-        $published = (int)$capabilities['sites_published_limit'];
         $categories = (bool)$capabilities['categories_enabled'];
         $customization = (string)$capabilities['customization_level'];
-        $analytics = (string)$capabilities['analytics_level'];
-        $seo = (string)$capabilities['seo_level'];
-        $trial = (bool)$capabilities['trial_enabled'];
-        $annual = $this->annualBenefits($plan);
 
-        $rows = [
-            ['label' => 'Sitios', 'value' => $configured . ' configurado' . ($configured === 1 ? '' : 's') . ' · ' . $published . ' publicado' . ($published === 1 ? '' : 's'), 'status' => 'available'],
-            ['label' => 'Carta y catálogo', 'value' => $categories ? 'Simples y por categorías' : 'Formato simple', 'status' => 'available'],
-            ['label' => 'WhatsApp', 'value' => $capabilities['whatsapp_enabled'] ? 'Incluido' : 'No incluido', 'status' => 'available'],
-            ['label' => 'Logo y colores', 'value' => 'Configuración básica', 'status' => 'available'],
-            ['label' => 'Diseño responsive', 'value' => 'Incluido', 'status' => 'available'],
-            ['label' => 'Categorías', 'value' => $categories ? 'Incluidas' : 'No incluidas', 'status' => 'available'],
-            ['label' => 'Productos destacados', 'value' => $capabilities['featured_items_enabled'] ? 'Incluidos' : 'No incluidos', 'status' => 'available'],
-            ['label' => 'Personalización', 'value' => $this->levelLabel($customization), 'status' => $customization === 'basic' ? 'available' : 'coming_soon'],
-            ['label' => 'Estadísticas', 'value' => $analytics === 'none' ? 'No incluidas' : $this->levelLabel($analytics), 'status' => $analytics === 'none' ? 'available' : 'coming_soon'],
-            ['label' => 'SEO', 'value' => $this->levelLabel($seo), 'status' => $seo === 'basic' ? 'available' : 'coming_soon'],
-            ['label' => 'Código QR', 'value' => $capabilities['qr_enabled'] ? 'Incluido' : 'No incluido', 'status' => $capabilities['qr_enabled'] ? 'coming_soon' : 'available'],
-            ['label' => 'Dominio propio', 'value' => $capabilities['custom_domain_enabled'] ? ((int)$capabilities['custom_domains_limit'] . ' incluido' . ((int)$capabilities['custom_domains_limit'] === 1 ? '' : 's')) : 'No incluido', 'status' => 'available'],
-            ['label' => 'Temas premium', 'value' => $capabilities['premium_themes_enabled'] ? 'Incluidos' : 'No incluidos', 'status' => $capabilities['premium_themes_enabled'] ? 'coming_soon' : 'available'],
-            ['label' => 'Marca CatOps', 'value' => $capabilities['branding_removable'] ? 'Removible' : 'Incluida', 'status' => $capabilities['branding_removable'] ? 'coming_soon' : 'available'],
-            ['label' => 'Soporte', 'value' => $capabilities['priority_support'] ? 'Prioritario' : 'Estándar', 'status' => $capabilities['priority_support'] ? 'coming_soon' : 'available'],
+        $row = static fn (string $label, string $copy): array => [
+            'label' => $label,
+            'value' => $copy,
+            'copy' => $copy,
+            'status' => 'available',
         ];
-        if ($trial) {
-            $rows[] = ['label' => 'Duración', 'value' => (int)$capabilities['trial_duration_days'] . ' días desde tu primera publicación', 'status' => 'available'];
-        }
-        if ($annual['domain_credit']) {
-            $rows[] = ['label' => 'Plan anual', 'value' => 'Crédito de dominio', 'status' => 'coming_soon'];
+
+        if ($customization === 'advanced' && $configured >= 5) {
+            return [
+                $row('Sitios configurados', 'Hasta 5 sitios configurados'),
+                $row('Sitios publicados', 'Hasta 5 sitios publicados'),
+                $row('Incluye', 'Todo lo incluido en Negocio'),
+                $row('SEO', 'SEO avanzado'),
+                $row('Dominio propio', 'Conexión de dominios propios'),
+                $row('Personalización', 'Personalización avanzada por bloques'),
+                $row('Destacados', 'Productos destacados ilimitados'),
+                $row('Código QR', 'Código QR'),
+                $row('Soporte', 'Soporte prioritario'),
+                $row('Estadísticas', 'Estadística avanzada + Analytics'),
+            ];
         }
 
-        return $rows;
+        if ($categories || $customization === 'extended' || $configured >= 3) {
+            return [
+                $row('Sitios configurados', 'Hasta 3 sitios configurados'),
+                $row('Sitios publicados', 'Hasta 2 sitios publicados'),
+                $row('Incluye', 'Todo lo incluido en Básico'),
+                $row('Categorías', 'Carta, catálogo o servicios organizados por categorías'),
+                $row('SEO', 'SEO estándar'),
+                $row('Dominio propio', 'Conexión de dominio propio'),
+                $row('Personalización', 'Personalización visual por bloques'),
+                $row('Destacados', 'Hasta 10 productos destacados'),
+                $row('Código QR', 'Código QR'),
+                $row('Estadísticas', 'Estadística avanzada'),
+            ];
+        }
+
+        return [
+            $row('Sitios configurados', '1 sitio configurado'),
+            $row('Sitios publicados', '1 sitio publicado'),
+            $row('WhatsApp', 'WhatsApp incluido'),
+            $row('Instagram', 'Instagram incluido'),
+            $row('Formato', 'Carta, catálogo o página de servicios'),
+            $row('SEO', 'SEO básico'),
+            $row('Subdominio', 'Sub dominio CatOps'),
+            $row('Tema', 'Tema visual simple'),
+            $row('Destacados', 'Hasta 3 productos destacados'),
+        ];
     }
 
     private function levelLabel(string $level): string

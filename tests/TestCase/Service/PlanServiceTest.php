@@ -113,7 +113,7 @@ class PlanServiceTest extends TestCase
         ]);
     }
 
-    public function testCommercialRowsDoNotPresentFutureCapabilitiesAsAvailable(): void
+    public function testCommercialRowsMatchTheFullPlanMarketingCopy(): void
     {
         $plan = (object)[
             'max_sites' => 5,
@@ -143,11 +143,11 @@ class PlanServiceTest extends TestCase
         foreach ($rows as $row) {
             $byLabel[$row['label']] = $row;
         }
-        $this->assertSame('coming_soon', $byLabel['Estadísticas']['status']);
-        $this->assertSame('coming_soon', $byLabel['Código QR']['status']);
-        $this->assertSame('coming_soon', $byLabel['Marca CatOps']['status']);
-        $this->assertSame('available', $byLabel['Categorías']['status']);
-        $this->assertSame('No incluido', $byLabel['Dominio propio']['value']);
+        $this->assertSame('Estadística avanzada + Analytics', $byLabel['Estadísticas']['copy']);
+        $this->assertSame('available', $byLabel['Código QR']['status']);
+        $this->assertSame('SEO avanzado', $byLabel['SEO']['copy']);
+        $this->assertSame('Personalización avanzada por bloques', $byLabel['Personalización']['copy']);
+        $this->assertSame('Conexión de dominios propios', $byLabel['Dominio propio']['copy']);
     }
 
     public function testCommercialRowsPresentEnabledCustomDomainsAsAvailable(): void
@@ -167,7 +167,7 @@ class PlanServiceTest extends TestCase
         foreach ($rows as $row) {
             $byLabel[$row['label']] = $row;
         }
-        $this->assertSame('1 incluido', $byLabel['Dominio propio']['value']);
+        $this->assertSame('Conexión de dominio propio', $byLabel['Dominio propio']['copy']);
         $this->assertSame('available', $byLabel['Dominio propio']['status']);
     }
 

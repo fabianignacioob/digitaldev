@@ -35,6 +35,7 @@ class CatalogSettingsTable extends Table
             ->scalar('slogan_color')->maxLength('slogan_color', 20)->notEmptyString('slogan_color')
             ->scalar('slogan_font')->maxLength('slogan_font', 120)->allowEmptyString('slogan_font')
             ->scalar('slogan')->maxLength('slogan', 220)->allowEmptyString('slogan')
+            ->scalar('category_layout')->inList('category_layout', ['normal', 'blocks'])->notEmptyString('category_layout')
             ->boolean('show_product_action')
             ->allowEmptyString('intro_text');
     }

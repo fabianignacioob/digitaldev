@@ -148,6 +148,9 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/sitios/preview/{id}', ['controller' => 'Sites', 'action' => 'preview'])
             ->setPass(['id'])
             ->setPatterns(['id' => '\d+']);
+        $builder->connect('/sitios/{id}/qr', ['controller' => 'Sites', 'action' => 'downloadQr'])
+            ->setPass(['id'])
+            ->setPatterns(['id' => '\d+']);
         $builder->connect('/sitios/publicar/{id}', ['controller' => 'Sites', 'action' => 'publish'])
             ->setPass(['id'])
             ->setPatterns(['id' => '\d+']);

@@ -15,6 +15,8 @@ class CatalogProduct extends Entity
         'item_type' => true,
         'name' => true,
         'description' => true,
+        'seo_description' => true,
+        'seo_keywords' => true,
         'price' => true,
         'price_prefix' => true,
         'discount' => true,

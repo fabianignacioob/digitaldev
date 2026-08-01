@@ -5,6 +5,7 @@ namespace App\Test\TestCase\Service;
 
 use App\Service\PaymentService;
 use App\Service\SubscriptionService;
+use App\Test\Double\FakeEmailService;
 use Cake\Core\Configure;
 use Cake\Datasource\FactoryLocator;
 use Cake\I18n\DateTime;
@@ -316,6 +317,42 @@ class PaymentServiceTest extends TestCase
 
         $this->assertSame('rejected', $payment->status);
         $this->assertSame(0, $this->table('Subscriptions')->find()->where(['user_id' => $userId])->count());
+    }
+
+    public function testPaymentOutcomeNotificationsAreSentOnce(): void
+    {
+        $emailService = new FakeEmailService();
+        $service = new PaymentService(null, null, $emailService);
+        $userId = $this->createUser();
+
+        $approved = $service->createPendingOrder($userId, 'basica');
+        $service->confirm($approved, [
+            'amount' => 6990,
+            'currency' => 'CLP',
+            'buy_order' => $approved->buy_order,
+            'session_id' => $approved->session_id,
+            'provider_reference' => 'tx-email-approved',
+        ]);
+
+        $rejected = $service->createPendingOrder($userId, 'basica');
+        $service->reject($rejected, ['error_code' => 'REJECTED']);
+
+        $canceled = $service->createPendingOrder($userId, 'basica');
+        $service->cancel($canceled);
+
+        $expired = $service->createPendingOrder($userId, 'basica');
+        $service->expirePendingPayment($expired);
+
+        $this->assertSame([
+            'payment_approved',
+            'payment_rejected',
+            'payment_canceled',
+            'payment_expired',
+        ], array_column($emailService->messages, 'kind'));
+
+        $service->cancel($this->table('Payments')->get($canceled->id));
+        $service->expirePendingPayment($this->table('Payments')->get($expired->id));
+        $this->assertCount(4, $emailService->messages);
     }
 
     public function testDuplicateConfirmationDoesNotRenewTwice(): void
