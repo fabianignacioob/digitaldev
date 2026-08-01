@@ -264,7 +264,7 @@ class SitesControllerTest extends TestCase
         $this->loginAs($this->userId);
         $this->enableCsrfToken();
 
-        $this->post('/sitios/' . $siteId . '/qr/estilo', ['frame_style' => 'rounded']);
+        $this->put('/sitios/' . $siteId . '/qr/estilo', ['frame_style' => 'rounded']);
 
         $this->assertRedirect('/sitios/editar/' . $siteId);
         $this->assertSame('rounded', (string)$this->table('SiteQrCodes')->find()->where(['site_id' => $siteId])->firstOrFail()->frame_style);

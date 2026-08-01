@@ -343,7 +343,7 @@ class SitesController extends AppController
 
     public function updateQrStyle(int $id): Response
     {
-        $this->request->allowMethod(['post', 'patch']);
+        $this->request->allowMethod(['post', 'put', 'patch']);
         if ($redirect = $this->requireLogin()) {
             return $redirect;
         }
