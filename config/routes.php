@@ -148,6 +148,12 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/sitios/preview/{id}', ['controller' => 'Sites', 'action' => 'preview'])
             ->setPass(['id'])
             ->setPatterns(['id' => '\d+']);
+        $builder->connect('/sitios/{id}/qr/generar', ['controller' => 'Sites', 'action' => 'generateQr'])
+            ->setPass(['id'])
+            ->setPatterns(['id' => '\d+']);
+        $builder->connect('/sitios/{id}/qr/estilo', ['controller' => 'Sites', 'action' => 'updateQrStyle'])
+            ->setPass(['id'])
+            ->setPatterns(['id' => '\d+']);
         $builder->connect('/sitios/{id}/qr', ['controller' => 'Sites', 'action' => 'downloadQr'])
             ->setPass(['id'])
             ->setPatterns(['id' => '\d+']);
@@ -220,6 +226,9 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/s/{subdomain}', ['controller' => 'PublicSites', 'action' => 'view'])
             ->setPass(['subdomain'])
             ->setPatterns(['subdomain' => '[a-z0-9-]+']);
+        $builder->connect('/q/{token}', ['controller' => 'Sites', 'action' => 'publicQrRedirect'])
+            ->setPass(['token'])
+            ->setPatterns(['token' => '[a-z0-9]{24,64}']);
 
         /*
          * ...and connect the rest of 'Pages' controller's URLs.

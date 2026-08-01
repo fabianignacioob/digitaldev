@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Service\DomainAdministrationService;
 use App\Service\EmailService;
 use App\Service\LocalImageStorageService;
+use App\Service\PublicSiteResolverService;
 use App\Service\PublicUrlService;
 use App\Service\SiteQrCodeService;
 use App\Service\SubscriptionService;
@@ -13,6 +14,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\I18n\DateTime;
 use Cake\Log\Log;
@@ -103,7 +105,7 @@ class SitesController extends AppController
         $this->viewBuilder()->setLayout('dashboard');
         $sites = $this->fetchTable('Sites');
         $site = $sites->find()
-            ->contain(['SiteSections', 'Templates', 'Themes', 'Domains', 'CatalogSettings'])
+            ->contain(['SiteSections', 'Templates', 'Themes', 'Domains', 'CatalogSettings', 'SiteQrCodes'])
             ->where(['Sites.id' => $id, 'Sites.user_id' => $this->currentUserId()])
             ->firstOrFail();
 
@@ -179,6 +181,8 @@ class SitesController extends AppController
         $publicUrl = $this->publicUrlService()->publicUrl($site);
         $categoryLayoutAvailable = $this->planService()->canUseCategoryBlocks((int)$this->currentUserId(), $site);
         $qrEnabled = $this->planService()->hasFeature((int)$this->currentUserId(), 'qr_enabled');
+        $siteQrCode = $site->site_qr_code ?? null;
+        $qrPublicUrl = $siteQrCode ? $this->publicUrlService()->qrUrl((string)$siteQrCode->public_token) : null;
         $domainService = $this->domainService();
         $customDomainAvailable = $domainService->canManageCustomDomains((int)$this->currentUserId());
         $customDomainUsage = $domainService->usageForUser((int)$this->currentUserId());
@@ -195,6 +199,8 @@ class SitesController extends AppController
             'customDomains',
             'categoryLayoutAvailable',
             'qrEnabled',
+            'siteQrCode',
+            'qrPublicUrl',
         ));
 
         return null;
@@ -301,6 +307,65 @@ class SitesController extends AppController
         return $this->redirect(['action' => 'edit', $site->id]);
     }
 
+    public function generateQr(int $id): Response
+    {
+        $this->request->allowMethod(['post']);
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $site = $this->ownedSite($id);
+        $this->assertQrIsAvailable($site);
+        $qrCodes = $this->fetchTable('SiteQrCodes');
+        $existing = $qrCodes->find()->where(['site_id' => $site->id])->first();
+        if ($existing) {
+            $this->Flash->success('El código QR ya fue generado y conserva su enlace permanente.');
+
+            return $this->redirect(['action' => 'edit', $site->id]);
+        }
+
+        for ($attempt = 0; $attempt < 3; $attempt++) {
+            $qrCode = $qrCodes->newEntity([
+                'site_id' => (int)$site->id,
+                'public_token' => bin2hex(random_bytes(16)),
+                'frame_style' => 'square',
+                'generated_at' => DateTime::now(),
+            ]);
+            if ($qrCodes->save($qrCode)) {
+                $this->Flash->success('Código QR generado. Puedes descargarlo o compartir su enlace permanente.');
+
+                return $this->redirect(['action' => 'edit', $site->id]);
+            }
+        }
+
+        throw new BadRequestException('No fue posible generar el código QR. Intenta nuevamente.');
+    }
+
+    public function updateQrStyle(int $id): Response
+    {
+        $this->request->allowMethod(['post', 'patch']);
+        if ($redirect = $this->requireLogin()) {
+            return $redirect;
+        }
+
+        $site = $this->ownedSite($id);
+        $this->assertQrIsAvailable($site);
+        $qrCodes = $this->fetchTable('SiteQrCodes');
+        $qrCode = $qrCodes->find()->where(['site_id' => $site->id])->firstOrFail();
+        $qrCode = $qrCodes->patchEntity($qrCode, [
+            'frame_style' => (string)$this->request->getData('frame_style'),
+        ]);
+        if (!$qrCodes->save($qrCode)) {
+            $this->Flash->error('No pudimos guardar el estilo del código QR.');
+
+            return $this->redirect(['action' => 'edit', $site->id]);
+        }
+
+        $this->Flash->success('Estilo del código QR actualizado.');
+
+        return $this->redirect(['action' => 'edit', $site->id]);
+    }
+
     public function downloadQr(int $id): Response
     {
         if ($redirect = $this->requireLogin()) {
@@ -308,23 +373,66 @@ class SitesController extends AppController
         }
 
         $this->request->allowMethod(['get']);
-        $site = $this->fetchTable('Sites')->find()
-            ->where(['Sites.id' => $id, 'Sites.user_id' => $this->currentUserId()])
-            ->firstOrFail();
-        if (!$this->planService()->hasFeature((int)$this->currentUserId(), 'qr_enabled')) {
-            throw new ForbiddenException('Tu plan no incluye código QR.');
-        }
-        if ((string)$site->status !== 'published') {
-            throw new BadRequestException('Publica el sitio antes de descargar su código QR.');
+        $site = $this->ownedSite($id);
+        $this->assertQrIsAvailable($site);
+        $qrCode = $this->fetchTable('SiteQrCodes')->find()->where(['site_id' => $site->id])->first();
+        if (!$qrCode) {
+            throw new BadRequestException('Genera el código QR antes de descargarlo.');
         }
 
         $filename = preg_replace('/[^a-z0-9-]/', '-', strtolower((string)$site->subdomain)) ?: 'sitio';
-        $svg = (new SiteQrCodeService())->svg($this->publicUrlService()->publicUrl($site));
+        $format = strtolower((string)$this->request->getQuery('format', 'svg'));
+        if (!in_array($format, ['svg', 'png'], true)) {
+            throw new BadRequestException('El formato solicitado para el código QR no es válido.');
+        }
 
-        return $this->response
-            ->withType('image/svg+xml')
-            ->withHeader('Content-Disposition', 'attachment; filename="catops-' . $filename . '.svg"')
-            ->withStringBody($svg);
+        $qrService = new SiteQrCodeService();
+        $payload = $this->publicUrlService()->qrUrl((string)$qrCode->public_token);
+        $body = $format === 'png' ? $qrService->png($payload) : $qrService->svg($payload);
+        $contentType = $format === 'png' ? 'image/png' : 'image/svg+xml';
+        $response = $this->response->withType($contentType)->withStringBody($body);
+        if ((string)$this->request->getQuery('download') === '1') {
+            $response = $response->withHeader('Content-Disposition', 'attachment; filename="catops-' . $filename . '-qr.' . $format . '"');
+        }
+
+        return $response;
+    }
+
+    public function publicQrRedirect(string $token): Response
+    {
+        $this->request->allowMethod(['get']);
+        if (!preg_match('/^[a-z0-9]{24,64}$/', $token)) {
+            throw new NotFoundException('Código QR no encontrado.');
+        }
+
+        $qrCode = $this->fetchTable('SiteQrCodes')->find()
+            ->contain(['Sites'])
+            ->where(['SiteQrCodes.public_token' => $token])
+            ->first();
+        if (!$qrCode || !$qrCode->site) {
+            throw new NotFoundException('Código QR no encontrado.');
+        }
+
+        $result = (new PublicSiteResolverService())->resolveBySubdomain((string)$qrCode->site->subdomain);
+        $site = $result['site'] ?? null;
+        $reason = $result['reason'] ?? null;
+        if (!$site || in_array($reason, [PublicSiteResolverService::REASON_NOT_FOUND, PublicSiteResolverService::REASON_DRAFT], true)) {
+            throw new NotFoundException('Sitio no encontrado.');
+        }
+        if ($reason === PublicSiteResolverService::REASON_PAUSED) {
+            return $this->response
+                ->withStatus(503)
+                ->withType('text')
+                ->withStringBody('Este sitio está pausado temporalmente.');
+        }
+        if ($reason === PublicSiteResolverService::REASON_EXPIRED) {
+            return $this->response
+                ->withStatus(503)
+                ->withType('text')
+                ->withStringBody('Este sitio no está disponible porque la suscripción venció.');
+        }
+
+        return $this->redirect($this->publicUrlService()->publicUrl($site));
     }
 
     public function addDomain(int $id): Response
@@ -582,6 +690,16 @@ class SitesController extends AppController
         return $this->fetchTable('Sites')->find()
             ->where(['Sites.id' => $id, 'Sites.user_id' => $this->currentUserId()])
             ->firstOrFail();
+    }
+
+    private function assertQrIsAvailable(object $site): void
+    {
+        if (!$this->planService()->hasFeature((int)$this->currentUserId(), 'qr_enabled')) {
+            throw new ForbiddenException('Tu plan no incluye código QR.');
+        }
+        if ((string)$site->status !== 'published') {
+            throw new BadRequestException('Publica el sitio antes de generar o descargar su código QR.');
+        }
     }
 
     private function subscriptionService(): SubscriptionService

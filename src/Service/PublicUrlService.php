@@ -56,6 +56,15 @@ class PublicUrlService
         return $this->scheme() . '://' . $this->preferredHostForSite($site);
     }
 
+    public function qrUrl(string $token): string
+    {
+        if (!preg_match('/^[a-z0-9]{24,64}$/', $token)) {
+            throw new \InvalidArgumentException('El identificador público del código QR no es válido.');
+        }
+
+        return $this->scheme() . '://' . $this->baseDomain() . '/q/' . $token;
+    }
+
     public function preferredHostForSite(object $site): string
     {
         foreach ((array)($site->domains ?? []) as $domain) {

@@ -41,6 +41,7 @@ class Site extends Entity
         'media_assets' => true,
         'leads' => true,
         'catalog_setting' => true,
+        'site_qr_code' => true,
         'catalog_categories' => true,
         'catalog_products' => true,
     ];

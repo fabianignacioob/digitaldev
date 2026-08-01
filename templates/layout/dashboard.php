@@ -999,6 +999,69 @@
             margin-top: 18px;
         }
 
+        .qr-management {
+            display: grid;
+            grid-template-columns: minmax(150px, 190px) minmax(0, 1fr);
+            gap: 22px;
+            align-items: start;
+            margin-top: 18px;
+        }
+
+        .qr-preview-frame {
+            display: grid;
+            place-items: center;
+            padding: 12px;
+            border: 1px solid var(--catops-line);
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(34, 43, 55, 0.05);
+        }
+
+        .qr-preview-frame--square {
+            border-radius: 4px;
+        }
+
+        .qr-preview-frame--rounded {
+            border-radius: 28px;
+        }
+
+        .qr-preview-frame img {
+            display: block;
+            width: 100%;
+            max-width: 166px;
+            aspect-ratio: 1;
+        }
+
+        .qr-management-content form {
+            display: grid;
+            grid-template-columns: minmax(160px, 250px) auto;
+            gap: 10px 12px;
+            align-items: end;
+        }
+
+        .qr-management-content form .input {
+            margin: 0;
+        }
+
+        .qr-management-content form .meta {
+            grid-column: 1 / -1;
+            margin: -2px 0 0;
+        }
+
+        .qr-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .qr-share-status {
+            min-height: 20px;
+            margin: 10px 0 0;
+            color: var(--catops-success);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
         .domain-setup {
             margin: 18px 0;
             padding: 16px;
@@ -1456,6 +1519,27 @@
             .product-editor-grid .field-wide,
             .product-editor-grid .field-full {
                 grid-column: auto;
+            }
+
+            .qr-management {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-preview-frame {
+                width: min(100%, 190px);
+            }
+
+            .qr-management-content form {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-management-content form .meta {
+                grid-column: auto;
+            }
+
+            .qr-actions .button,
+            .qr-actions button {
+                flex: 1 1 140px;
             }
 
             .site-preview-art {

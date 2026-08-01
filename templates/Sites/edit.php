@@ -143,9 +143,36 @@
     <a class="button secondary" href="/planes">Ver planes</a>
   <?php elseif ($site->status !== 'published'): ?>
     <p>Publica el sitio para generar un código QR que dirija a su URL pública.</p>
+  <?php elseif (!$siteQrCode): ?>
+    <p>Genera un código QR permanente para imprimir, descargar o compartir. Seguirá funcionando aunque después cambies el subdominio o conectes un dominio propio.</p>
+    <?= $this->Form->postLink('Generar código QR', '/sitios/' . (int)$site->id . '/qr/generar', [
+        'class' => 'button',
+    ]) ?>
   <?php else: ?>
-    <p>Descarga un código QR en formato SVG para imprimirlo o compartirlo.</p>
-    <a class="button secondary" href="/sitios/<?= (int)$site->id ?>/qr">Descargar código QR</a>
+    <p>Tu código QR ya está listo. Su enlace es permanente y siempre dirige a la URL pública vigente de tu sitio.</p>
+    <div class="qr-management">
+      <div class="qr-preview-frame qr-preview-frame--<?= h($siteQrCode->frame_style) ?>">
+        <img src="/sitios/<?= (int)$site->id ?>/qr?format=svg" alt="Vista previa del código QR de <?= h($site->name) ?>">
+      </div>
+      <div class="qr-management-content">
+        <?= $this->Form->create($siteQrCode, ['url' => '/sitios/' . (int)$site->id . '/qr/estilo']) ?>
+        <?= $this->Form->control('frame_style', [
+            'label' => 'Forma del marco',
+            'options' => ['square' => 'Cuadrado', 'rounded' => 'Redondeado'],
+            'value' => $siteQrCode->frame_style,
+        ]) ?>
+        <p class="meta">La forma cambia el marco visual; el patrón se mantiene cuadrado para que cualquier cámara lo lea bien.</p>
+        <?= $this->Form->button('Guardar forma', ['class' => 'button secondary']) ?>
+        <?= $this->Form->end() ?>
+        <div class="qr-actions">
+          <a class="button secondary" href="/sitios/<?= (int)$site->id ?>/qr?format=svg&amp;download=1">Descargar SVG</a>
+          <a class="button secondary" href="/sitios/<?= (int)$site->id ?>/qr?format=png&amp;download=1">Descargar PNG</a>
+          <button class="button secondary" type="button" data-qr-copy data-qr-url="<?= h($qrPublicUrl) ?>">Copiar enlace</button>
+          <button class="button" type="button" data-qr-share data-qr-url="<?= h($qrPublicUrl) ?>" data-qr-title="<?= h($site->name) ?>">Compartir</button>
+        </div>
+        <p class="qr-share-status" data-qr-share-status aria-live="polite"></p>
+      </div>
+    </div>
   <?php endif; ?>
 </section>
 
@@ -154,6 +181,42 @@
   <p>Plantilla seleccionada: <strong><?= h($site->template->name ?? 'Sin plantilla') ?></strong>. Si cambias la plantilla, guarda la configuración para ver las opciones correspondientes.</p>
   <a class="button secondary" href="/sitios/preview/<?= (int)$site->id ?>" target="_blank" rel="noopener">Abrir vista previa</a>
 </section>
+
+<?php if ($siteQrCode): ?>
+<script>
+    (() => {
+        const copyButton = document.querySelector('[data-qr-copy]');
+        const shareButton = document.querySelector('[data-qr-share]');
+        const status = document.querySelector('[data-qr-share-status]');
+        const setStatus = (message) => {
+            if (status) status.textContent = message;
+        };
+        const copyUrl = async (url) => {
+            try {
+                await navigator.clipboard.writeText(url);
+                setStatus('Enlace copiado.');
+            } catch (error) {
+                setStatus('No pudimos copiar el enlace. Puedes copiarlo desde la barra del navegador.');
+            }
+        };
+
+        copyButton?.addEventListener('click', () => copyUrl(copyButton.dataset.qrUrl));
+        shareButton?.addEventListener('click', async () => {
+            const url = shareButton.dataset.qrUrl;
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: shareButton.dataset.qrTitle, url });
+                    setStatus('Enlace compartido.');
+                } catch (error) {
+                    if (error.name !== 'AbortError') setStatus('No pudimos abrir las opciones para compartir.');
+                }
+                return;
+            }
+            await copyUrl(url);
+        });
+    })();
+</script>
+<?php endif; ?>
 
 <section class="card site-followup-card">
   <h2>Dominio propio</h2>

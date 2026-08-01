@@ -217,34 +217,80 @@ class SitesControllerTest extends TestCase
 
     public function testEligibleUserCanDownloadPublishedSiteQr(): void
     {
-        $plan = $this->table('Plans')->find()->where(['slug' => 'basica'])->firstOrFail();
-        $capabilities = json_decode((string)$plan->capabilities, true);
-        $capabilities['qr_enabled'] = true;
-        $plan->capabilities = json_encode($capabilities, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $this->table('Plans')->saveOrFail($plan);
+        $this->enableQrFeature();
         $siteId = $this->createSite($this->userId, 'qr-demo');
         $this->publishSiteDirectly($siteId);
         $this->loginAs($this->userId);
+        $this->enableCsrfToken();
 
-        $this->get('/sitios/' . $siteId . '/qr');
+        $this->post('/sitios/' . $siteId . '/qr/generar');
+
+        $this->assertRedirect('/sitios/editar/' . $siteId);
+        $qrCode = $this->table('SiteQrCodes')->find()->where(['site_id' => $siteId])->firstOrFail();
+        $this->assertMatchesRegularExpression('/^[a-z0-9]{32}$/', (string)$qrCode->public_token);
+
+        $this->get('/sitios/' . $siteId . '/qr?format=svg&download=1');
 
         $this->assertResponseOk();
         $this->assertHeaderContains('Content-Type', 'image/svg+xml');
-        $this->assertHeaderContains('Content-Disposition', 'catops-qr-demo.svg');
+        $this->assertHeaderContains('Content-Disposition', 'catops-qr-demo-qr.svg');
         $this->assertResponseContains('<svg');
+    }
+
+    public function testGeneratingQrAgainKeepsTheSamePermanentToken(): void
+    {
+        $this->enableQrFeature();
+        $siteId = $this->createSite($this->userId, 'qr-permanente');
+        $this->publishSiteDirectly($siteId);
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/' . $siteId . '/qr/generar');
+        $first = $this->table('SiteQrCodes')->find()->where(['site_id' => $siteId])->firstOrFail();
+
+        $this->post('/sitios/' . $siteId . '/qr/generar');
+        $second = $this->table('SiteQrCodes')->find()->where(['site_id' => $siteId])->firstOrFail();
+
+        $this->assertSame((string)$first->public_token, (string)$second->public_token);
+        $this->assertSame(1, $this->table('SiteQrCodes')->find()->where(['site_id' => $siteId])->count());
+    }
+
+    public function testQrStyleBelongsToTheOwnerAndCanBeUpdated(): void
+    {
+        $this->enableQrFeature();
+        $siteId = $this->createSite($this->userId, 'qr-estilo');
+        $this->publishSiteDirectly($siteId);
+        $this->createQrCode($siteId);
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+
+        $this->post('/sitios/' . $siteId . '/qr/estilo', ['frame_style' => 'rounded']);
+
+        $this->assertRedirect('/sitios/editar/' . $siteId);
+        $this->assertSame('rounded', (string)$this->table('SiteQrCodes')->find()->where(['site_id' => $siteId])->firstOrFail()->frame_style);
+    }
+
+    public function testPublicQrRedirectsToTheCurrentSiteUrl(): void
+    {
+        $siteId = $this->createSite($this->userId, 'qr-publico');
+        $this->publishSiteDirectly($siteId);
+        $qrCode = $this->createQrCode($siteId);
+        $this->configRequest(['headers' => ['Host' => 'catops.local']]);
+
+        $this->get('/q/' . $qrCode->public_token);
+
+        $this->assertResponseCode(302);
+        $this->assertHeaderContains('Location', 'http://qr-publico.catops.local');
     }
 
     public function testQrRequiresPublishedSite(): void
     {
-        $plan = $this->table('Plans')->find()->where(['slug' => 'basica'])->firstOrFail();
-        $capabilities = json_decode((string)$plan->capabilities, true);
-        $capabilities['qr_enabled'] = true;
-        $plan->capabilities = json_encode($capabilities, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        $this->table('Plans')->saveOrFail($plan);
+        $this->enableQrFeature();
         $siteId = $this->createSite($this->userId, 'qr-borrador');
         $this->loginAs($this->userId);
+        $this->enableCsrfToken();
 
-        $this->get('/sitios/' . $siteId . '/qr');
+        $this->post('/sitios/' . $siteId . '/qr/generar');
 
         $this->assertResponseCode(400);
     }
@@ -554,6 +600,30 @@ class SitesControllerTest extends TestCase
         $site->status = 'published';
         $site->published_at = DateTime::now();
         $this->table('Sites')->saveOrFail($site);
+    }
+
+    private function enableQrFeature(): void
+    {
+        $plans = $this->table('Plans');
+        $plan = $plans->find()->where(['slug' => 'basica'])->firstOrFail();
+        $capabilities = json_decode((string)$plan->capabilities, true) ?: [];
+        $capabilities['qr_enabled'] = true;
+        $plan->capabilities = json_encode($capabilities, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $plans->saveOrFail($plan);
+    }
+
+    private function createQrCode(int $siteId): object
+    {
+        $qrCodes = $this->table('SiteQrCodes');
+        $qrCode = $qrCodes->newEntity([
+            'site_id' => $siteId,
+            'public_token' => bin2hex(random_bytes(16)),
+            'frame_style' => 'square',
+            'generated_at' => DateTime::now(),
+        ]);
+        $qrCodes->saveOrFail($qrCode);
+
+        return $qrCode;
     }
 
     private function loginAs(int $userId): void

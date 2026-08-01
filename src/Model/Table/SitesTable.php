@@ -28,6 +28,7 @@ class SitesTable extends Table
         $this->hasMany('MediaAssets');
         $this->hasMany('Leads');
         $this->hasOne('CatalogSettings', ['dependent' => true]);
+        $this->hasOne('SiteQrCodes', ['dependent' => true]);
         $this->hasMany('CatalogCategories', ['dependent' => true, 'sort' => ['CatalogCategories.sort_order' => 'ASC']]);
         $this->hasMany('CatalogProducts', ['dependent' => true, 'sort' => ['CatalogProducts.sort_order' => 'ASC', 'CatalogProducts.name' => 'ASC']]);
     }
