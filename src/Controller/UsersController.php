@@ -147,7 +147,8 @@ class UsersController extends AppController
                 'email' => $user->email,
                 'role' => $user->role,
             ]);
-            $this->sendWelcomeEmail($user);
+            $welcomePlan = $selectedPlan !== '' ? $this->planService()->getPlanBySlug($selectedPlan) : null;
+            $this->sendWelcomeEmail($user, $welcomePlan);
 
             $this->Flash->success($trialCreated
                 ? 'Correo verificado. Puedes crear tu sitio; la prueba de 7 días comienza al publicarlo.'
@@ -349,10 +350,10 @@ class UsersController extends AppController
         }
     }
 
-    private function sendWelcomeEmail(object $user): void
+    private function sendWelcomeEmail(object $user, ?object $plan = null): void
     {
         try {
-            (new EmailService())->sendWelcome($user);
+            (new EmailService())->sendWelcome($user, $plan);
         } catch (Throwable $exception) {
             Log::warning('No se pudo enviar el correo de bienvenida: ' . $exception->getMessage());
         }
