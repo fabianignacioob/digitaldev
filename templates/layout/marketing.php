@@ -11,6 +11,7 @@
     <?php endif; ?>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/marketing.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
   </head>
@@ -18,57 +19,90 @@
     <header class="topbar">
       <div class="container nav" data-marketing-nav>
         <a class="brand" href="/" aria-label="Ir al inicio de CatOps"><img src="/img/catops-logo.png" alt="CatOps"></a>
-        <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="marketing-menu" data-marketing-toggle>☰</button>
+        <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="marketing-menu" data-marketing-toggle>
+          <span class="nav-toggle-icon" aria-hidden="true">☰</span>
+        </button>
         <nav aria-label="Navegación principal">
           <ul class="nav-links" id="marketing-menu">
-            <li><a href="/#solucion">Solución</a></li>
-            <li><a href="/#para-quien">Para quién es</a></li>
-            <li><a href="/#como-funciona">Cómo funciona</a></li>
-            <li><a href="/#ejemplos">Ejemplos</a></li>
-            <li><a href="/planes">Planes</a></li>
-            <li><a href="/#preguntas">Preguntas frecuentes</a></li>
+            <li><a href="/#solucion"><i class="fa fa-lightbulb-o" aria-hidden="true"></i><span>Solución</span></a></li>
+            <li><a href="/#para-quien"><i class="fa fa-users" aria-hidden="true"></i><span>Para quién es</span></a></li>
+            <li><a href="/#como-funciona"><i class="fa fa-list-ol" aria-hidden="true"></i><span>Cómo funciona</span></a></li>
+            <li><a href="/#ejemplos"><i class="fa fa-th-large" aria-hidden="true"></i><span>Ejemplos</span></a></li>
+            <li><a href="/planes"><i class="fa fa-tag" aria-hidden="true"></i><span>Planes</span></a></li>
+            <li><a href="/#preguntas"><i class="fa fa-question-circle" aria-hidden="true"></i><span>Preguntas frecuentes</span></a></li>
             <?php if (!empty($currentUser)): ?>
-              <li><a href="/panel">Mis vitrinas</a></li>
-              <li><a class="nav-cta" href="/sitios/nuevo">Crear mi vitrina</a></li>
+              <li><a href="/panel"><i class="fa fa-columns" aria-hidden="true"></i><span>Mis vitrinas</span></a></li>
+              <li><a class="nav-cta" href="/sitios/nuevo"><i class="fa fa-plus-circle" aria-hidden="true"></i><span>Crear mi vitrina</span></a></li>
             <?php else: ?>
-              <li><a href="/login">Ingresar</a></li>
-              <li><a class="nav-cta" href="/registro">Crear mi vitrina</a></li>
+              <li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i><span>Ingresar</span></a></li>
+              <li><a class="nav-cta" href="/registro"><i class="fa fa-plus-circle" aria-hidden="true"></i><span>Crear mi vitrina</span></a></li>
             <?php endif; ?>
+            <li class="mobile-nav-brand" aria-hidden="true"><img src="/img/catops-logo-white.png" alt=""></li>
           </ul>
         </nav>
       </div>
     </header>
+    <div class="nav-backdrop" data-marketing-backdrop aria-hidden="true"></div>
     <main><?= $this->Flash->render() ?><?= $this->fetch('content') ?></main>
     <footer class="marketing-footer">
       <div class="container footer-layout">
-        <a href="/" aria-label="Ir al inicio de CatOps"><img src="/img/catops-logo.png" alt="CatOps"></a>
-        <nav class="footer-links" aria-label="Enlaces secundarios">
+        <section class="footer-brand" style="padding: 0;" aria-label="CatOps">
+          <a href="/" aria-label="Ir al inicio de CatOps"><img src="/img/catops-logo-white.png" alt="CatOps"></a>
+          <!-- <p>Vitrinas digitales simples para que los pequeños negocios muestren, actualicen y compartan lo que hacen.</p> -->
+          <a class="footer-instagram" href="https://www.instagram.com/catops.cl" target="_blank" rel="noopener">
+            <i class="fa fa-instagram" aria-hidden="true"></i><span>Instagram</span>
+          </a>
+        </section>
+        <nav class="footer-links" aria-label="CatOps">
+          <h2>CatOps</h2>
+          <a href="/#solucion">Solución</a>
           <a href="/#como-funciona">Cómo funciona</a>
           <a href="/planes">Planes</a>
-          <a href="/#preguntas">Preguntas frecuentes</a>
           <a href="/servicio">Servicio</a>
-          <a href="https://www.instagram.com/catops.cl" target="_blank" rel="noopener">Instagram</a>
         </nav>
-        <span>CatOps · Simple · Rápido · Efectivo</span>
+        <nav class="footer-links" aria-label="Ayuda">
+          <h2>Ayuda</h2>
+          <a href="/#preguntas">Preguntas frecuentes</a>
+          <a href="/login">Ingresar</a>
+          <a href="/registro">Crear mi vitrina</a>
+        </nav>
+        <section class="footer-trust" style="padding: 0;" aria-label="Pagos y seguridad">
+          <h2>Pagos y seguridad</h2>
+          <div class="trust-item trust-item-webpay" aria-label="Webpay Plus de Transbank">
+            <img src="/img/logo-webpay-plus/webpay-transbank.png" alt="Webpay Plus de Transbank">
+          </div>
+          <div class="trust-item trust-item-ssl" aria-label="Conexión segura SSL/TLS">
+            <span class="ssl-mark" aria-hidden="true"><i class="fa fa-lock"></i><b>SSL</b></span>
+          </div>
+        </section>
+      </div>
+      <div class="container footer-bottom">
+        <span>&copy; <?= date('Y') ?> CatOps. Todos los derechos reservados.</span>
+        <span>Vitrinas digitales para negocios en Chile.</span>
       </div>
     </footer>
     <script>
       (() => {
         const nav = document.querySelector('[data-marketing-nav]');
         const toggle = document.querySelector('[data-marketing-toggle]');
+        const toggleIcon = toggle?.querySelector('.nav-toggle-icon');
+        const backdrop = document.querySelector('[data-marketing-backdrop]');
         if (!nav || !toggle) return;
-        toggle.addEventListener('click', () => {
-          const open = nav.classList.toggle('is-open');
+        const setOpen = (open) => {
+          nav.classList.toggle('is-open', open);
+          document.body.classList.toggle('marketing-nav-open', open);
           toggle.setAttribute('aria-expanded', String(open));
           toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
-          toggle.textContent = open ? '×' : '☰';
-        });
+          if (toggleIcon) toggleIcon.textContent = open ? '×' : '☰';
+        };
+        toggle.addEventListener('click', () => setOpen(!nav.classList.contains('is-open')));
+        backdrop?.addEventListener('click', () => setOpen(false));
         nav.querySelectorAll('.nav-links a').forEach((link) => link.addEventListener('click', () => {
-          nav.classList.remove('is-open');
-          toggle.setAttribute('aria-expanded', 'false');
-          toggle.setAttribute('aria-label', 'Abrir menú');
-          toggle.textContent = '☰';
+          setOpen(false);
         }));
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && nav.classList.contains('is-open')) setOpen(false);
+        });
       })();
     </script>
     <?= $this->fetch('script') ?>
