@@ -1,3 +1,11 @@
+<?php
+$versionedAsset = static function (string $path): string {
+    $normalized = '/' . ltrim($path, '/');
+    $file = WWW_ROOT . str_replace('/', DS, ltrim($normalized, '/'));
+
+    return is_file($file) ? $normalized . '?v=' . filemtime($file) : $normalized;
+};
+?>
 <!doctype html>
 <html lang="es">
   <head>
@@ -9,16 +17,16 @@
       <link rel="canonical" href="<?= h($canonicalUrl) ?>">
       <meta property="og:url" content="<?= h($canonicalUrl) ?>">
     <?php endif; ?>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/marketing.css">
-    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="icon" type="image/x-icon" href="<?= h($versionedAsset('/favicon.ico')) ?>">
+    <link rel="stylesheet" href="<?= h($versionedAsset('/css/marketing.css')) ?>">
+    <link rel="stylesheet" href="<?= h($versionedAsset('/css/font-awesome.min.css')) ?>">
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
   </head>
   <body class="marketing-page">
     <header class="topbar">
       <div class="container nav" data-marketing-nav>
-        <a class="brand" href="/" aria-label="Ir al inicio de CatOps"><img src="/img/catops-logo.png" alt="CatOps"></a>
+        <a class="brand" href="/" aria-label="Ir al inicio de CatOps"><img src="<?= h($versionedAsset('/img/catops-logo.png')) ?>" alt="CatOps"></a>
         <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="marketing-menu" data-marketing-toggle>
           <span class="nav-toggle-icon" aria-hidden="true">☰</span>
         </button>
@@ -37,7 +45,7 @@
               <li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i><span>Ingresar</span></a></li>
               <li><a class="nav-cta" href="/registro"><i class="fa fa-plus-circle" aria-hidden="true"></i><span>Crear mi vitrina</span></a></li>
             <?php endif; ?>
-            <li class="mobile-nav-brand" aria-hidden="true"><img src="/img/catops-logo-white.png" alt=""></li>
+            <li class="mobile-nav-brand" aria-hidden="true"><img src="<?= h($versionedAsset('/img/catops-logo-white.png')) ?>" alt=""></li>
           </ul>
         </nav>
       </div>
@@ -47,7 +55,7 @@
     <footer class="marketing-footer">
       <div class="container footer-layout">
         <section class="footer-brand" style="padding: 0;" aria-label="CatOps">
-          <a href="/" aria-label="Ir al inicio de CatOps"><img src="/img/catops-logo-white.png" alt="CatOps"></a>
+          <a href="/" aria-label="Ir al inicio de CatOps"><img src="<?= h($versionedAsset('/img/catops-logo-white.png')) ?>" alt="CatOps"></a>
           <!-- <p>Vitrinas digitales simples para que los pequeños negocios muestren, actualicen y compartan lo que hacen.</p> -->
           <a class="footer-instagram" href="https://www.instagram.com/catops.cl" target="_blank" rel="noopener">
             <i class="fa fa-instagram" aria-hidden="true"></i><span>Instagram</span>
@@ -69,7 +77,7 @@
         <section class="footer-trust" style="padding: 0;" aria-label="Pagos y seguridad">
           <h2>Pagos y seguridad</h2>
           <div class="trust-item trust-item-webpay" aria-label="Webpay Plus de Transbank">
-            <img src="/img/logo-webpay-plus/webpay-transbank.png" alt="Webpay Plus de Transbank">
+            <img src="<?= h($versionedAsset('/img/logo-webpay-plus/webpay-transbank.png')) ?>" alt="Webpay Plus de Transbank">
           </div>
           <div class="trust-item trust-item-ssl" aria-label="Conexión segura SSL/TLS">
             <span class="ssl-mark" aria-hidden="true"><i class="fa fa-lock"></i><b>SSL</b></span>
