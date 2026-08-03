@@ -23,7 +23,10 @@
     </title>
     <?= $this->Html->meta('icon') ?>
 
-    <?= $this->Html->css(['normalize.min', 'milligram.min', 'fonts', 'cake']) ?>
+    <link rel="stylesheet" href="<?= h($this->versionedAsset('/css/normalize.min.css')) ?>">
+    <link rel="stylesheet" href="<?= h($this->versionedAsset('/css/milligram.min.css')) ?>">
+    <link rel="stylesheet" href="<?= h($this->versionedAsset('/css/fonts.min.css')) ?>">
+    <link rel="stylesheet" href="<?= h($this->versionedAsset('/css/cake.min.css')) ?>">
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>

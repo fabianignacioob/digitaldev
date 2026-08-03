@@ -1,0 +1,11 @@
+{
+  "name": "catops",
+  "private": true,
+  "scripts": {
+    "build:css": "sass --no-source-map --style=compressed webroot/scss:webroot/css",
+    "watch:css": "sass --watch --no-source-map --style=compressed webroot/scss:webroot/css"
+  },
+  "devDependencies": {
+    "sass": "^1.102.0"
+  }
+}

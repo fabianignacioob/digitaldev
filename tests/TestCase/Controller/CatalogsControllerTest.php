@@ -696,8 +696,8 @@ class CatalogsControllerTest extends TestCase
         $this->post('/sitios/publicar/' . $siteId);
         $this->getPublicVitrina((string)$this->table('Sites')->get($siteId)->subdomain);
         $this->assertResponseOk();
-        $this->assertResponseContains('font-family: Georgia, serif');
-        $this->assertResponseContains('font-family: Verdana, Arial, sans-serif');
+        $this->assertResponseContains('--catalog-title-font: Georgia, serif');
+        $this->assertResponseContains('--catalog-slogan-font: Verdana, Arial, sans-serif');
         $this->assertResponseNotContains('menu-wood.png');
     }
 

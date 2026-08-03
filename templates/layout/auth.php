@@ -4,30 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= h($this->fetch('title') ?: 'CatOps') ?></title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <style>
-      :root { --blue-950:#031235; --blue-900:#041f55; --orange-600:#f46a12; --orange-500:#ff812f; --orange-100:#fff1e8; --ink:#102033; --muted:#657386; --line:#dfe8f2; }
-      * { box-sizing: border-box; }
-      body { min-height:100vh; margin:0; display:grid; place-items:center; padding:32px 16px; color:var(--ink); background:linear-gradient(135deg, rgba(244,106,18,.10), transparent 35%), linear-gradient(180deg,#fff,#eef7ff); font-family:Montserrat,Poppins,Inter,Arial,Helvetica,sans-serif; }
-      .auth-card { width:min(460px,100%); padding:36px; border:1px solid var(--line); border-radius:8px; background:rgba(255,255,255,.95); box-shadow:0 22px 55px rgba(3,18,53,.14); }
-      .auth-logo { width:116px; height:auto; margin:0 0 28px; }
-      h1 { margin:0 0 10px; color:var(--blue-950); font-size:32px; line-height:1.05; }
-      p { color:var(--muted); line-height:1.65; }
-      form { display:grid; gap:16px; margin-top:24px; }
-      label { display:block; margin-bottom:7px; color:var(--blue-950); font-size:14px; font-weight:800; }
-      input, select, textarea { width:100%; min-height:46px; padding:0 13px; border:1px solid var(--line); border-radius:7px; color:var(--ink); background:#fff; font:inherit; }
-      textarea { min-height:110px; padding-top:11px; }
-      input:focus, select:focus, textarea:focus { border-color:var(--orange-600); outline:3px solid rgba(244,106,18,.14); outline-offset:1px; }
-      button, .button { display:inline-flex; width:100%; min-height:46px; align-items:center; justify-content:center; border:1px solid transparent; border-radius:999px; padding:0 18px; color:#fff; background:linear-gradient(135deg,var(--orange-500),var(--orange-600)); box-shadow:0 12px 24px rgba(244,106,18,.24); font:inherit; font-weight:800; text-decoration:none; cursor:pointer; }
-      button.secondary, .button.secondary { color:var(--blue-900); border-color:rgba(3,18,53,.22); background:#fff; box-shadow:none; }
-      .muted-link { color:var(--blue-900); font-weight:800; }
-      .message { margin:18px 0 0; padding:13px 15px; border-left:3px solid var(--orange-600); border-radius:0 7px 7px 0; color:#5d412e; background:var(--orange-100); }
-      .error-message { display:block; margin-top:6px; color:#b64012; font-size:13px; font-weight:700; }
-      .message.success, .success.message { border-left-color:#14804a; background:#ecfdf3; color:#14532d; }
-      .message.error, .error.message { border-left-color:#b64012; background:#fff1ed; color:#8f2e0d; }
-      a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline:3px solid var(--blue-900); outline-offset:3px; }
-      @media (max-width:520px) { body { place-items:start center; padding-top:20px; } .auth-card { padding:26px 22px; } h1 { font-size:29px; } }
-    </style>
+    <link rel="icon" type="image/x-icon" href="<?= h($this->versionedAsset('/favicon.ico')) ?>">
+    <link rel="stylesheet" href="<?= h($this->versionedAsset('/css/auth.min.css')) ?>">
   </head>
   <body>
     <main class="auth-card">

@@ -28,6 +28,20 @@ use Cake\View\View;
 class AppView extends View
 {
     /**
+     * Returns a local public asset with a modification-time version query.
+     *
+     * Compiled Sass assets can therefore be cached aggressively without
+     * leaving a visitor on an outdated stylesheet after a deployment.
+     */
+    public function versionedAsset(string $path): string
+    {
+        $normalized = '/' . ltrim($path, '/');
+        $file = WWW_ROOT . str_replace('/', DS, ltrim($normalized, '/'));
+
+        return is_file($file) ? $normalized . '?v=' . filemtime($file) : $normalized;
+    }
+
+    /**
      * Initialization hook method.
      *
      * Use this method to add common initialization code like adding helpers.
