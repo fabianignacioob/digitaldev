@@ -9,7 +9,7 @@ Una vitrina publicada recibe por defecto la URL `subdominio.vitrinahub.cl` y, cu
 3. Crea el registro de enrutamiento indicado en la misma pantalla:
    - `www`: CNAME hacia el valor de `APP_CUSTOM_DOMAIN_CNAME_TARGET`.
    - dominio raíz (`@`): A hacia `APP_CUSTOM_DOMAIN_IPV4`.
-4. Espera la propagación y pulsa **Verificar DNS**. Cuando el TXT coincide, el dominio pasa a verificado y activo.
+4. Espera la propagación y pulsa **Verificar DNS**. Cuando el TXT y el registro de enrutamiento coinciden, el dominio queda verificado; el cron operativo emite el certificado, crea el vhost y lo deja activo.
 
 NIC Chile registra dominios `.cl`, pero no entrega servicio DNS: el titular debe usar los DNS configurados para el dominio o el proveedor que administra su zona. Consulta la [FAQ de NIC sobre DNS](https://www.nic.cl/ayuda/faq/ins-06.html). Los cambios pueden demorar al menos unos minutos y también dependen del caché DNS, según la [FAQ técnica de NIC](https://www.nic.cl/ayuda/faq/tec-01.html).
 
@@ -19,10 +19,12 @@ NIC Chile registra dominios `.cl`, pero no entrega servicio DNS: el titular debe
 APP_PLATFORM_DOMAIN=catops.cl
 APP_PUBLIC_BASE_DOMAIN=vitrinahub.cl
 APP_PUBLIC_SCHEME=https
-APP_CUSTOM_DOMAIN_CNAME_TARGET=vitrinahub.cl
-APP_CUSTOM_DOMAIN_IPV4=203.0.113.10
+APP_CUSTOM_DOMAIN_CNAME_TARGET=srv93.catops.cl
+APP_CUSTOM_DOMAIN_IPV4=200.35.159.93
 DOMAIN_VERIFICATION_PREFIX=_catops-verify
-DOMAIN_TLS_ASK_TOKEN=un-secreto-largo-y-aleatorio
+DOMAIN_PROVISIONING_ENABLED=true
+DOMAIN_PROVISIONER_PATH=/usr/local/sbin/provision-catops-domain
+DOMAIN_PROVISIONING_LEASE_MINUTES=15
 ```
 
 `APP_CUSTOM_DOMAIN_IPV4` es obligatoria si se ofrecerán dominios raíz. No debe apuntar a una IP privada. Las variables solo se configuran en el entorno de despliegue y nunca en Git.
@@ -53,7 +55,7 @@ La aplicación debe recibir tanto los hosts institucionales como el wildcard pú
 server {
     listen 443 ssl http2;
     server_name catops.cl www.catops.cl vitrinahub.cl *.vitrinahub.cl *.catops.cl;
-    root /var/www/catops/webroot;
+    root /var/www/catops/current/webroot;
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
@@ -62,7 +64,7 @@ server {
     location ~ ^/index\.php(?:/|$) {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root/index.php;
-        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
     }
 
     location ~ \.php$ { return 404; }
@@ -71,27 +73,9 @@ server {
 
 Configura el proxy para conservar el encabezado `Host` original y no inyectar `X-Forwarded-Host` como fuente de autoridad. `HostHeaderMiddleware` valida el host recibido; los dominios propios solo se aceptan después de la verificación DNS almacenada por CatOps.
 
-## HTTPS recomendado: Caddy
+## HTTPS de dominios propios
 
-Nginx puede recibir el tráfico de cualquier hostname, pero necesita un certificado previamente emitido para cada dominio. Para emitir certificados de forma controlada se recomienda Caddy con TLS bajo demanda y el endpoint interno de CatOps. El endpoint solo autoriza dominios que ya existen como `custom`, `verified` y `active`.
-
-```caddyfile
-{
-    email ops@catops.cl
-    on_demand_tls {
-        ask https://catops.cl/internal/tls/allow?token={env.DOMAIN_TLS_ASK_TOKEN}
-    }
-}
-
-https:// {
-    tls {
-        on_demand
-    }
-    reverse_proxy 127.0.0.1:7777
-}
-```
-
-El token de `DOMAIN_TLS_ASK_TOKEN` es un secreto de infraestructura. Excluye la ruta `/internal/tls/allow` del registro de query strings del proxy si tu configuración registra URLs completas.
+El cron `bin/cake domains provision` procesa dominios verificados, ejecuta el provisionador aprobado por `sudo`, crea el vhost de Nginx y emite el certificado con Certbot. Si Certbot o Nginx fallan, el dominio queda en `failed` con el resumen operativo para reintentar desde administración.
 
 ## Límites y seguridad
 
