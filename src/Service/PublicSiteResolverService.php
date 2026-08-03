@@ -55,6 +55,7 @@ class PublicSiteResolverService
                     'type' => 'custom',
                     'verified' => true,
                     'active' => true,
+                    'status' => 'active',
                 ])
                 ->first();
 

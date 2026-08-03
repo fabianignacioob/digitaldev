@@ -202,6 +202,7 @@ class DemosCommand extends Command
             'email' => self::OWNER_EMAIL,
             'role' => 'user',
             'active' => true,
+            'status' => 'active',
             'email_verified' => true,
         ];
         if (!$owner) {

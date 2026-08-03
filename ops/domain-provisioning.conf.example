@@ -1,0 +1,6 @@
+# Root-owned: /etc/catops/domain-provisioning.conf (0600). No application secrets.
+CATOPS_ROOT=/var/www/catops/current
+PHP_FPM_SOCKET=/run/php/php8.2-fpm.sock
+NGINX_SITES_AVAILABLE=/etc/nginx/sites-available
+NGINX_SITES_ENABLED=/etc/nginx/sites-enabled
+LETSENCRYPT_EMAIL=ops@example.com

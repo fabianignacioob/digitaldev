@@ -229,9 +229,9 @@
       <article class="domain-setup">
         <div class="domain-setup-heading">
           <strong><?= h($domain->domain) ?></strong>
-          <span class="status <?= $domain->verified && $domain->active ? '' : 'draft' ?>"><?= $domain->verified && $domain->active ? 'Verificado' : 'Pendiente' ?></span>
+          <span class="status <?= ($domain->status ?? '') === 'active' ? '' : 'draft' ?>"><?= h(match ($domain->status ?? 'pending_dns') { 'active' => 'Activo', 'verified' => 'Listo para activar', 'provisioning' => 'Configurando', 'failed' => 'Error técnico', default => 'Pendiente DNS' }) ?></span>
         </div>
-        <?php if ($domain->verified && $domain->active): ?>
+        <?php if (($domain->status ?? '') === 'active'): ?>
           <p class="meta">Activo en <a href="<?= h($domainService->publicUrl($domain)) ?>" target="_blank" rel="noopener"><?= h($domainService->publicUrl($domain)) ?></a>.</p>
         <?php else: ?>
           <p class="meta">En el proveedor DNS de tu dominio, agrega este registro TXT para demostrar que eres su propietario:</p>
@@ -240,11 +240,16 @@
             <dt>Nombre</dt><dd><code><?= h($domainService->verificationRecordName($domain)) ?></code></dd>
             <dt>Valor</dt><dd><code><?= h($domain->verification_token) ?></code></dd>
           </dl>
-          <p class="meta">Luego dirige el tráfico: para <strong>www</strong> usa un CNAME a <code><?= h($domainService->routingCnameTarget()) ?></code>. Para el dominio raíz usa un registro A a <code><?= h($domainService->routingIpv4() ?? 'la IP pública configurada por CatOps') ?></code>.</p>
+          <p class="meta">Luego dirige el tráfico con uno de estos registros, según permita tu proveedor DNS:</p>
+          <?php foreach ($domainService->routingInstructions($domain) as $record): ?>
+            <dl class="domain-dns-record"><dt>Tipo</dt><dd><?= h($record['type']) ?></dd><dt>Nombre</dt><dd><code><?= h($record['name']) ?></code></dd><dt>Valor</dt><dd><code><?= h($record['value']) ?></code></dd></dl>
+          <?php endforeach; ?>
           <?php if ($domain->last_dns_error): ?><p class="form-error"><?= h($domain->last_dns_error) ?></p><?php endif; ?>
           <div class="form-actions">
             <?= $this->Form->postLink('Verificar DNS', '/sitios/' . (int)$site->id . '/dominios/' . (int)$domain->id . '/verificar', ['class' => 'button']) ?>
           </div>
+          <?php if (($domain->status ?? '') === 'verified' || ($domain->status ?? '') === 'provisioning'): ?><p class="meta">DNS validado. CatOps está preparando el certificado y la configuración segura; este paso puede tardar algunos minutos.</p><?php endif; ?>
+          <?php if (($domain->status ?? '') === 'failed'): ?><p class="form-error"><?= h($domain->provisioning_error ?: 'No fue posible terminar la configuración técnica.') ?></p><?php endif; ?>
         <?php endif; ?>
         <div class="form-actions form-actions-stacked">
           <?= $this->Form->postLink('Eliminar dominio', '/sitios/' . (int)$site->id . '/dominios/' . (int)$domain->id . '/eliminar', [

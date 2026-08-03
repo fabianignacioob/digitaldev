@@ -15,10 +15,19 @@
       <dl class="row mb-0">
         <dt class="col-sm-4">Tipo</dt><dd class="col-sm-8"><?= h($domain->type) ?></dd>
         <dt class="col-sm-4">Verificación</dt><dd class="col-sm-8"><?= $domain->verified ? 'Verificado' : 'Pendiente de verificación' ?></dd>
+        <dt class="col-sm-4">Ciclo técnico</dt><dd class="col-sm-8"><?= h($domain->status ?? 'pending_dns') ?></dd>
+        <dt class="col-sm-4">Último intento</dt><dd class="col-sm-8"><?= h($domain->provisioning_last_attempt_at ?? 'Sin intentos') ?></dd>
+        <?php if ($domain->provisioning_error): ?><dt class="col-sm-4">Error técnico</dt><dd class="col-sm-8 text-danger"><?= h($domain->provisioning_error) ?></dd><?php endif; ?>
         <dt class="col-sm-4">Enlace de la vitrina</dt><dd class="col-sm-8"><a href="<?= h($publicUrl) ?>" target="_blank" rel="noopener"><?= h($publicUrl) ?></a></dd>
         <dt class="col-sm-4">Creado</dt><dd class="col-sm-8"><?= h($domain->created) ?></dd>
       </dl>
     </div></section>
+    <?php if ($domain->type === 'custom' && $domain->verified): ?><section class="card admin-card mb-4"><div class="card-body">
+      <h2 class="h5">Provisionamiento</h2>
+      <p class="small text-muted">La acción solo vuelve a dejar el dominio en cola. El comando operativo realiza Nginx y TLS fuera de la solicitud web.</p>
+      <?= $this->Form->create(null, ['url' => '/admin/domains/' . $domain->id . '/retry-provisioning', 'data-admin-confirm' => '¿Volver a poner este dominio en cola?']) ?>
+      <textarea class="form-control form-control-sm mb-2" name="reason" required maxlength="500" placeholder="Motivo del reintento"></textarea><button class="btn btn-outline-primary w-100">Reintentar provisioning</button><?= $this->Form->end() ?>
+    </div></section><?php endif; ?>
     <section class="card admin-card mb-4"><div class="card-body">
       <h2 class="h5">Consistencia</h2>
       <?php if ($issues === []): ?><p class="text-success mb-0">No se detectaron conflictos de hostname, asociación ni estado.</p>

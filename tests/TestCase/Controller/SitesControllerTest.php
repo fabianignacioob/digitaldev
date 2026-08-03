@@ -458,6 +458,7 @@ class SitesControllerTest extends TestCase
             'type' => 'custom',
             'verified' => true,
             'active' => true,
+            'status' => 'active',
         ]));
 
         $previousDebug = Configure::read('debug');

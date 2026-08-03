@@ -39,6 +39,7 @@ class DomainsTable extends Table
                 'message' => 'Ingresa un hostname válido, sin protocolo ni rutas.',
             ])
             ->scalar('type')->maxLength('type', 30)
+            ->scalar('status')->maxLength('status', 30)->inList('status', ['pending_dns', 'verified', 'provisioning', 'active', 'failed'])
             ->boolean('verified')
             ->boolean('active')
             ->scalar('verification_token')->maxLength('verification_token', 120)->allowEmptyString('verification_token')

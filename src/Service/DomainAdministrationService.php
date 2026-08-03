@@ -23,12 +23,19 @@ class DomainAdministrationService
 
     public static function normalizeHostname(string $hostname): string
     {
-        return strtolower(rtrim(trim($hostname), '.'));
+        $hostname = strtolower(rtrim(trim($hostname), '.'));
+        if (function_exists('idn_to_ascii')) {
+            $ascii = idn_to_ascii($hostname, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+            if (is_string($ascii)) {
+                $hostname = strtolower($ascii);
+            }
+        }
+        return $hostname;
     }
 
     public static function isValidHostname(string $hostname): bool
     {
-        if ($hostname === '' || mb_strlen($hostname) > 180 || str_contains($hostname, '://') || str_contains($hostname, '/')) {
+        if ($hostname === '' || mb_strlen($hostname) > 180 || str_contains($hostname, '://') || str_contains($hostname, '/') || filter_var($hostname, FILTER_VALIDATE_IP)) {
             return false;
         }
 
@@ -70,6 +77,16 @@ class DomainAdministrationService
         $ip = trim((string)env('APP_CUSTOM_DOMAIN_IPV4', ''));
 
         return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? $ip : null;
+    }
+
+    /** @return list<array{type:string,name:string,value:string}> */
+    public function routingInstructions(object $domain): array
+    {
+        $instructions = [['type' => 'CNAME', 'name' => (string)$domain->domain, 'value' => $this->routingCnameTarget()]];
+        if ($this->routingIpv4()) {
+            $instructions[] = ['type' => 'A', 'name' => (string)$domain->domain, 'value' => (string)$this->routingIpv4()];
+        }
+        return $instructions;
     }
 
     public function canManageCustomDomains(int $userId): bool
@@ -123,6 +140,7 @@ class DomainAdministrationService
             'type' => 'custom',
             'verified' => false,
             'active' => false,
+            'status' => 'pending_dns',
             'verification_method' => 'dns_txt',
             'verification_token' => $this->newVerificationToken(),
             'verification_requested_at' => DateTime::now(),
@@ -144,6 +162,10 @@ class DomainAdministrationService
             throw new InvalidArgumentException('No puedes verificar este dominio.');
         }
 
+        $cooldown = max(0, (int)env('DOMAIN_DNS_VERIFY_COOLDOWN_SECONDS', 60));
+        if ($cooldown > 0 && $domain->verification_checked_at && $domain->verification_checked_at > DateTime::now()->subSeconds($cooldown)) {
+            throw new InvalidArgumentException('Espera un momento antes de volver a verificar DNS.');
+        }
         $domain->verification_checked_at = DateTime::now();
         try {
             $records = $this->dnsTxtResolver->records($this->verificationRecordName($domain));
@@ -159,8 +181,14 @@ class DomainAdministrationService
             throw new InvalidArgumentException($domain->last_dns_error);
         }
 
+        if (!$this->routingIsCorrect($domain)) {
+            $domain->last_dns_error = 'El TXT fue encontrado, pero el dominio aún no apunta a la infraestructura de CatOps. Revisa el registro CNAME o A y espera la propagación DNS.';
+            $this->domains()->saveOrFail($domain);
+            throw new InvalidArgumentException($domain->last_dns_error);
+        }
         $domain->verified = true;
-        $domain->active = true;
+        $domain->active = false;
+        $domain->status = 'verified';
         $domain->verified_at = DateTime::now();
         $domain->last_dns_error = null;
         $this->domains()->saveOrFail($domain);
@@ -198,8 +226,22 @@ class DomainAdministrationService
                 'type' => 'custom',
                 'verified' => true,
                 'active' => true,
+                'status' => 'active',
             ])
             ->count() === 1;
+    }
+
+    /** Allows Nginx/Certbot health checks before the public site is activated. */
+    public function isProvisioningCustomHostname(string $hostname): bool
+    {
+        $hostname = self::normalizeHostname($hostname);
+        if (!self::isValidHostname($hostname) || $this->isCatopsHostname($hostname)) {
+            return false;
+        }
+        return $this->domains()->find()->where([
+            'domain' => $hostname, 'type' => 'custom', 'verified' => true,
+            'status IN' => ['verified', 'provisioning'],
+        ])->count() === 1;
     }
 
     /** @return list<string> */
@@ -235,7 +277,7 @@ class DomainAdministrationService
             $issues[] = 'Hostname duplicado';
         }
 
-        if ((bool)$domain->active && !(bool)$domain->verified) {
+        if ((bool)$domain->active && (!(bool)$domain->verified || (string)($domain->status ?? '') !== 'active')) {
             $issues[] = 'Un dominio activo debe estar verificado';
         }
 
@@ -251,6 +293,7 @@ class DomainAdministrationService
         }
 
         $domain->active = true;
+        $domain->status = 'active';
         $this->domains()->saveOrFail($domain);
 
         return $domain;
@@ -259,8 +302,23 @@ class DomainAdministrationService
     public function deactivate(object $domain): object
     {
         $domain->active = false;
+        $domain->status = 'failed';
         $this->domains()->saveOrFail($domain);
 
+        return $domain;
+    }
+
+    public function retryProvisioning(object $domain, ?int $actorId = null): object
+    {
+        $domain = $this->domains()->get((int)$domain->id);
+        if ((string)$domain->type !== 'custom' || !(bool)$domain->verified) {
+            throw new InvalidArgumentException('Solo se pueden reintentar dominios propios ya verificados.');
+        }
+        $domain->status = 'verified';
+        $domain->active = false;
+        $domain->provisioning_error = null;
+        $this->domains()->saveOrFail($domain);
+        $this->auditLogService->log($actorId, 'domain.provisioning_queued', 'domains', (int)$domain->id, ['domain' => $domain->domain]);
         return $domain;
     }
 
@@ -299,9 +357,26 @@ class DomainAdministrationService
 
     private function isCatopsHostname(string $hostname): bool
     {
-        $baseDomain = $this->urlService->baseDomain();
+        foreach (array_unique([$this->urlService->publicBaseDomain(), $this->urlService->platformDomain(), 'catops.cl', 'vitrinahub.cl', 'srv93.catops.cl']) as $baseDomain) {
+            if ($hostname === $baseDomain || str_ends_with($hostname, '.' . $baseDomain)) {
+                return true;
+            }
+        }
+        return $hostname === 'localhost' || str_ends_with($hostname, '.localhost');
+    }
 
-        return $hostname === $baseDomain || str_ends_with($hostname, '.' . $baseDomain);
+    private function routingIsCorrect(object $domain): bool
+    {
+        try {
+            $cnameRecords = $this->dnsTxtResolver->cnameRecords((string)$domain->domain);
+            if (in_array($this->routingCnameTarget(), $cnameRecords, true)) {
+                return true;
+            }
+            $ip = $this->routingIpv4();
+            return $ip !== null && in_array($ip, $this->dnsTxtResolver->aRecords((string)$domain->domain), true);
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     private function newVerificationToken(): string

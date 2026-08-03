@@ -13,6 +13,7 @@
       <div class="col-6 col-md-2"><select class="form-select" name="type"><option value="">Tipo</option><option value="subdomain" <?= $filters['type'] === 'subdomain' ? 'selected' : '' ?>>Subdominio</option><option value="custom" <?= $filters['type'] === 'custom' ? 'selected' : '' ?>>Dominio propio</option></select></div>
       <div class="col-6 col-md-2"><select class="form-select" name="active"><option value="">Estado</option><option value="1" <?= $filters['active'] === '1' ? 'selected' : '' ?>>Activo</option><option value="0" <?= $filters['active'] === '0' ? 'selected' : '' ?>>Inactivo</option></select></div>
       <div class="col-6 col-md-2"><select class="form-select" name="verified"><option value="">Verificación</option><option value="1" <?= $filters['verified'] === '1' ? 'selected' : '' ?>>Verificado</option><option value="0" <?= $filters['verified'] === '0' ? 'selected' : '' ?>>Pendiente</option></select></div>
+      <div class="col-6 col-md-2"><select class="form-select" name="status"><option value="">Ciclo técnico</option><?php foreach (['pending_dns' => 'DNS pendiente', 'verified' => 'Por provisionar', 'provisioning' => 'Provisionando', 'active' => 'Activo', 'failed' => 'Fallido'] as $value => $label): ?><option value="<?= $value ?>" <?= $filters['status'] === $value ? 'selected' : '' ?>><?= $label ?></option><?php endforeach; ?></select></div>
       <div class="col-6 col-md-2"><button class="btn btn-primary w-100">Filtrar</button></div>
     </form>
   </div>
@@ -29,7 +30,7 @@
           <td><?= h($domain->site->name ?? 'Vitrina eliminada') ?></td>
           <td><?= h($domain->site->user->email ?? '—') ?></td>
           <td><?= h($domain->type) ?></td>
-          <td><span class="badge badge-<?= $domain->active ? 'success' : 'secondary' ?> badge-status"><?= $domain->active ? 'activo' : 'inactivo' ?></span></td>
+          <td><span class="badge badge-<?= ($domain->status ?? '') === 'active' ? 'success' : 'secondary' ?> badge-status"><?= h($domain->status ?? 'pending_dns') ?></span></td>
           <td><span class="badge badge-<?= $domain->verified ? 'success' : 'warning' ?> badge-status"><?= $domain->verified ? 'verificado' : 'pendiente' ?></span></td>
           <td><?= h($domain->created) ?></td>
           <td><small class="<?= $domain->admin_issues === [] ? 'text-muted' : 'text-danger' ?>"><?= h($domain->admin_issues === [] ? 'Sin conflictos' : implode(' · ', $domain->admin_issues)) ?></small></td>

@@ -137,7 +137,7 @@ class PublicUrlService
     public function preferredHostForSite(object $site): string
     {
         foreach ((array)($site->domains ?? []) as $domain) {
-            if ((string)($domain->type ?? '') === 'custom' && (bool)($domain->verified ?? false) && (bool)($domain->active ?? false)) {
+            if ((string)($domain->type ?? '') === 'custom' && (bool)($domain->verified ?? false) && (bool)($domain->active ?? false) && (string)($domain->status ?? '') === 'active') {
                 return $this->normalizeHost((string)$domain->domain);
             }
         }
@@ -149,6 +149,7 @@ class PublicUrlService
                 'type' => 'custom',
                 'verified' => true,
                 'active' => true,
+                'status' => 'active',
             ])
             ->orderByAsc('id')
             ->first();

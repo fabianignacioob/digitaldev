@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Install this root-owned file as /usr/local/sbin/provision-catops-domain (0750).
+# It accepts precisely one hostname and never evaluates input as shell code.
+source /etc/catops/domain-provisioning.conf
+DOMAIN=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in --domain) DOMAIN="${2:-}"; shift 2 ;; *) exit 64 ;; esac
+done
+[[ "$DOMAIN" =~ ^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$ ]] || exit 64
+[[ "$DOMAIN" != *.catops.cl && "$DOMAIN" != catops.cl && "$DOMAIN" != *.vitrinahub.cl && "$DOMAIN" != vitrinahub.cl && "$DOMAIN" != srv93.catops.cl ]] || exit 65
+
+VHOST="$NGINX_SITES_AVAILABLE/catops-$DOMAIN.conf"
+LINK="$NGINX_SITES_ENABLED/catops-$DOMAIN.conf"
+BACKUP="$(mktemp)"; CREATED=0; HAD_EXISTING=0
+rollback() { if [[ "$HAD_EXISTING" == 1 ]]; then cp "$BACKUP" "$VHOST"; else rm -f "$VHOST" "$LINK"; fi; nginx -t >/dev/null 2>&1 && systemctl reload nginx || true; rm -f "$BACKUP"; }
+trap rollback ERR
+[[ -e "$VHOST" ]] && { cp "$VHOST" "$BACKUP"; HAD_EXISTING=1; }
+cat > "$VHOST" <<EOF
+server {
+    listen 80; listen [::]:80;
+    server_name $DOMAIN;
+    root $CATOPS_ROOT/webroot;
+    index index.php;
+    location / { try_files \$uri \$uri/ /index.php?\$query_string; }
+    location ~ ^/index\.php(/|\$) { include fastcgi_params; fastcgi_param SCRIPT_FILENAME \$document_root/index.php; fastcgi_param HTTP_HOST \$host; fastcgi_pass unix:$PHP_FPM_SOCKET; }
+    location ~ \.php\$ { return 404; }
+}
+EOF
+ln -sfn "$VHOST" "$LINK"; CREATED=1
+nginx -t; systemctl reload nginx
+certbot --nginx --non-interactive --agree-tos --email "$LETSENCRYPT_EMAIL" -d "$DOMAIN"
+nginx -t; systemctl reload nginx
+STATUS="$(curl --silent --show-error --max-time 15 --resolve "$DOMAIN:443:127.0.0.1" -o /dev/null -w '%{http_code}' "https://$DOMAIN/")"
+[[ "$STATUS" =~ ^(200|301|302|404)$ ]] || { printf 'Health check returned HTTP %s\n' "$STATUS" >&2; exit 1; }
+rm -f "$BACKUP"; trap - ERR
+printf 'Provisioned %s successfully\n' "$DOMAIN"

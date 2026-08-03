@@ -16,6 +16,7 @@ class AdminDomainsController extends AdminController
             'type' => (string)$this->request->getQuery('type', ''),
             'active' => (string)$this->request->getQuery('active', ''),
             'verified' => (string)$this->request->getQuery('verified', ''),
+            'status' => (string)$this->request->getQuery('status', ''),
         ];
         $query = $this->fetchTable('Domains')->find()
             ->contain(['Sites.Users'])
@@ -36,6 +37,9 @@ class AdminDomainsController extends AdminController
         }
         if (in_array($filters['verified'], ['0', '1'], true)) {
             $query->where(['Domains.verified' => $filters['verified'] === '1']);
+        }
+        if (in_array($filters['status'], ['pending_dns', 'verified', 'provisioning', 'active', 'failed'], true)) {
+            $query->where(['Domains.status' => $filters['status']]);
         }
 
         $pagination = $this->paginateAdmin($query);
@@ -111,6 +115,22 @@ class AdminDomainsController extends AdminController
             'to_site_id' => $targetSiteId,
         ]);
         $this->Flash->success('Asociación de dominio actualizada.');
+
+        return $this->redirect(['action' => 'view', $id]);
+    }
+
+    public function retryProvisioning(int $id): Response
+    {
+        $this->request->allowMethod(['post']);
+        $reason = $this->adminReason();
+        $domain = $this->fetchTable('Domains')->get($id);
+        try {
+            (new DomainAdministrationService())->retryProvisioning($domain, (int)$this->currentUserId());
+        } catch (\InvalidArgumentException $exception) {
+            throw new BadRequestException($exception->getMessage());
+        }
+        $this->logAdminAction('admin.domain.provisioning_retried', 'domains', $id, ['reason' => $reason]);
+        $this->Flash->success('Dominio puesto nuevamente en cola de provisionamiento.');
 
         return $this->redirect(['action' => 'view', $id]);
     }

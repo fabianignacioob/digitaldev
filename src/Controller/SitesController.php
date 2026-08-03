@@ -626,6 +626,7 @@ class SitesController extends AppController
             'domain' => $domainName,
             'verified' => true,
             'active' => true,
+            'status' => 'active',
         ]) : $domains->newEntity([
             'site_id' => $siteId,
             'domain' => $domainName,

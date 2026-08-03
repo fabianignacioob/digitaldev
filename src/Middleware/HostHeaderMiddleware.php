@@ -114,7 +114,9 @@ class HostHeaderMiddleware implements MiddlewareInterface
 
         // Domains outside the CatOps zone are never accepted merely because they
         // look valid. They must have completed DNS ownership verification.
-        return (new DomainAdministrationService())->isActiveVerifiedCustomHostname($requestHost);
+        $domains = new DomainAdministrationService();
+        return $domains->isActiveVerifiedCustomHostname($requestHost)
+            || $domains->isProvisioningCustomHostname($requestHost);
     }
 
     private static function normalizeHostname(string $host): string

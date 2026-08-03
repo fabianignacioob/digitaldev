@@ -127,6 +127,8 @@ return function (RouteBuilder $routes): void {
             ->setPass(['id'])->setPatterns(['id' => '\\d+']);
         $builder->connect('/admin/domains/{id}/reassign', ['controller' => 'AdminDomains', 'action' => 'reassign'])
             ->setPass(['id'])->setPatterns(['id' => '\\d+']);
+        $builder->connect('/admin/domains/{id}/retry-provisioning', ['controller' => 'AdminDomains', 'action' => 'retryProvisioning'])
+            ->setPass(['id'])->setPatterns(['id' => '\\d+']);
         $builder->connect('/admin/system-status', ['controller' => 'AdminSystemStatus', 'action' => 'index']);
         $builder->connect('/suscripcion/extender-30', ['controller' => 'Subscriptions', 'action' => 'extendMonthly']);
         $builder->connect('/suscripcion/pagar-anual', ['controller' => 'Subscriptions', 'action' => 'payAnnual']);

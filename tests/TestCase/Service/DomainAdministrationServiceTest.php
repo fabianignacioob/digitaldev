@@ -50,17 +50,17 @@ class DomainAdministrationServiceTest extends TestCase
         $this->assertSame('_catops-verify.www.mi-negocio.cl', $service->verificationRecordName($domain));
 
         $resolver->recordsByHostname[$service->verificationRecordName($domain)] = [(string)$domain->verification_token];
+        $resolver->cnameByHostname['www.mi-negocio.cl'] = [$service->routingCnameTarget()];
         $domain = $service->verifyCustomDomain($domain, $userId);
         $this->assertTrue((bool)$domain->verified);
-        $this->assertTrue((bool)$domain->active);
+        $this->assertFalse((bool)$domain->active);
+        $this->assertSame('verified', $domain->status);
         $this->assertNull($domain->last_dns_error);
 
         $site->status = 'published';
         $site->published_at = DateTime::now();
         $this->table('Sites')->saveOrFail($site);
-        $result = (new PublicSiteResolverService())->resolveByHost('www.mi-negocio.cl');
-        $this->assertSame((int)$site->id, (int)$result['site']->id);
-        $this->assertNull($result['reason']);
+        $this->assertSame(PublicSiteResolverService::REASON_NOT_FOUND, (new PublicSiteResolverService())->resolveByHost('www.mi-negocio.cl')['reason']);
 
         $service->removeCustomDomain($domain, $userId);
         $this->assertSame(0, $this->table('Domains')->find()->where(['id' => $domain->id])->count());
@@ -114,6 +114,19 @@ class DomainAdministrationServiceTest extends TestCase
         $this->assertFalse((bool)$stored->active);
         $this->assertNotEmpty($stored->last_dns_error);
         $this->assertFalse($service->isActiveVerifiedCustomHostname('pendiente-ejemplo.cl'));
+    }
+
+    public function testReservedAndIpHostsAreRejected(): void
+    {
+        $userId = $this->createUser('domain-reserved-' . uniqid() . '@example.test');
+        $planSlug = $this->createPlan('reserved-' . uniqid(), true, 2);
+        $this->createSubscription($userId, $planSlug);
+        $site = $this->createSite($userId, 'reserved-' . uniqid());
+        $service = new DomainAdministrationService(dnsTxtResolver: new TestDnsTxtResolver());
+        foreach (['catops.cl', 'cliente.vitrinahub.cl', 'srv93.catops.cl', '127.0.0.1'] as $hostname) {
+            try { $service->requestCustomDomain($site, $userId, $hostname); $this->fail('Debe rechazarse ' . $hostname); }
+            catch (InvalidArgumentException) { $this->addToAssertionCount(1); }
+        }
     }
 
     private function createPlan(string $slug, bool $customDomainsEnabled, int $limit): string
@@ -226,9 +239,14 @@ class TestDnsTxtResolver extends DnsTxtResolver
 {
     /** @var array<string, list<string>> */
     public array $recordsByHostname = [];
+    public array $cnameByHostname = [];
+    public array $aByHostname = [];
 
     public function records(string $hostname): array
     {
         return $this->recordsByHostname[$hostname] ?? [];
     }
+
+    public function cnameRecords(string $hostname): array { return $this->cnameByHostname[$hostname] ?? []; }
+    public function aRecords(string $hostname): array { return $this->aByHostname[$hostname] ?? []; }
 }

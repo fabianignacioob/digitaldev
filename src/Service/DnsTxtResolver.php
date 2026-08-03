@@ -33,4 +33,39 @@ class DnsTxtResolver
 
         return $values;
     }
+
+    /** @return list<string> */
+    public function cnameRecords(string $hostname): array
+    {
+        return $this->values($hostname, DNS_CNAME, 'target');
+    }
+
+    /** @return list<string> */
+    public function aRecords(string $hostname): array
+    {
+        return $this->values($hostname, DNS_A, 'ip');
+    }
+
+    /** @return list<string> */
+    private function values(string $hostname, int $type, string $key): array
+    {
+        if (!function_exists('dns_get_record')) {
+            throw new RuntimeException('El servidor no tiene disponible la consulta DNS requerida para verificar el dominio.');
+        }
+
+        $records = @dns_get_record($hostname, $type);
+        if ($records === false) {
+            throw new RuntimeException('No fue posible consultar los registros DNS del dominio.');
+        }
+
+        $values = [];
+        foreach ($records as $record) {
+            $value = $record[$key] ?? null;
+            if (is_string($value) && $value !== '') {
+                $values[] = strtolower(rtrim($value, '.'));
+            }
+        }
+
+        return $values;
+    }
 }
