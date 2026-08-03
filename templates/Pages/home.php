@@ -63,23 +63,17 @@ $this->assign('metaDescription', 'Crea una vitrina digital para mostrar tu carta
   </div>
 </section>
 
-<section class="section-soft" id="beneficios">
-  <div class="container proof">
-    <div>
-      <span class="section-kicker">Pensado para el día a día</span>
-      <h2>Hecho para el día a día de un negocio pequeño</h2>
-      <p>Lo importante es que tu información esté clara, disponible y sea fácil de mantener.</p>
-      <ul class="benefit-list"><li>No necesitas programación</li><li>Funciona en celulares</li><li>Actualizas desde tu panel</li><li>Compartes un solo enlace</li></ul>
-      <div class="demo-note">Recibe consultas por WhatsApp y mantén precios, productos y servicios al día.</div>
-    </div>
-    <div class="proof-media"><img src="/img/responsive2.png" alt="Ejemplo de catálogo CatOps adaptado a computador, tablet y celular"></div>
-  </div>
-</section>
-
 <section class="section-soft" id="ejemplos">
-  <div class="container">
-    <div class="section-head"><span class="section-kicker">Así se ve tu información</span><h2>Tu negocio se ve bien desde cualquier pantalla</h2><p>La misma página se adapta para quien la abre desde un celular, tablet o computador. Es el formato que usan tus clientes cuando llegan desde WhatsApp o Instagram.</p></div>
-    <div class="proof-media"><img src="/img/headbanner.png" alt="CatOps mostrado en distintos dispositivos"></div>
+  <div class="container examples-showcase">
+    <div class="section-head"><span class="section-kicker">Así se ve tu información</span><h2>Una vitrina clara, lista para compartir</h2><p>Tu contenido se adapta a celular, tablet y computador. Revisa tres ejemplos reales de carta, catálogo y servicios.</p></div>
+    <div class="examples-layout">
+      <div class="proof-media"><img src="/img/headbanner.png" alt="CatOps mostrado en distintos dispositivos"></div>
+      <div class="demo-links" aria-label="Demos de vitrinas CatOps">
+        <a class="demo-link" href="/s/demo-carta" target="_blank" rel="noopener"><strong>Carta por categorías</strong><span>Casa Olivo, restaurante</span></a>
+        <a class="demo-link" href="/s/demo-catalogo" target="_blank" rel="noopener"><strong>Catálogo simple</strong><span>Dulce Lila, pastelería</span></a>
+        <a class="demo-link" href="/s/demo-servicio" target="_blank" rel="noopener"><strong>Servicios</strong><span>Ruta Norte, transportes</span></a>
+      </div>
+    </div>
   </div>
 </section>
 

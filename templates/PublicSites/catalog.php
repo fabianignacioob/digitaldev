@@ -423,12 +423,6 @@ $renderMenuItem = static function ($product) use ($formatPrice, $formatMeasure, 
 
         <section class="catalog-section" id="carta">
             <div class="container">
-                <div class="section-heading">
-                    <div class="section-kicker"><?= h($kindLabel) ?></div>
-                    <!-- <h2><?= h($sectionTitle) ?></h2> -->
-                    <!-- <p><?= h($isCatalog ? 'Revisa los productos disponibles y consulta por WhatsApp en un toque.' : 'Elige lo que quieres y envía tu pedido directo por WhatsApp.') ?></p> -->
-                </div>
-
                 <?= $this->element('public/products/' . ($productPresentation === 'menu' ? 'menu_list' : 'catalog_grid'), [
                     'site' => $site,
                     'activeProducts' => $activeProducts,

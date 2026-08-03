@@ -405,6 +405,42 @@ body.marketing-page {
     background: #fff;
     box-shadow: var(--shadow);
 }
+.marketing-page .examples-showcase .section-head {
+    max-width: 760px;
+    margin: 0 auto 34px;
+    text-align: center;
+}
+.marketing-page .examples-showcase .section-head h2 {
+    font-size: clamp(34px, 5vw, 52px);
+}
+.marketing-page .examples-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr);
+    gap: 28px;
+    align-items: stretch;
+}
+.marketing-page .demo-links { display: grid; gap: 12px; }
+.marketing-page .demo-link {
+    display: grid;
+    gap: 5px;
+    padding: 22px;
+    border: 1px solid rgba(3, 18, 53, .14);
+    border-radius: var(--radius);
+    color: var(--navy-900);
+    background: #fff;
+    box-shadow: 0 10px 22px rgba(3, 18, 53, .06);
+    text-decoration: none;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.marketing-page .demo-link:hover,
+.marketing-page .demo-link:focus-visible {
+    border-color: var(--orange-500);
+    color: var(--navy-900);
+    box-shadow: 0 14px 28px rgba(3, 18, 53, .1);
+    transform: translateY(-2px);
+}
+.marketing-page .demo-link strong { font-size: 18px; }
+.marketing-page .demo-link span { color: var(--ink-muted); font-size: 14px; }
 .marketing-page .benefit-list {
     display: grid;
     gap: 12px;
@@ -883,6 +919,9 @@ body.marketing-page {
     }
     .marketing-page .proof-media {
         order: 2;
+    }
+    .marketing-page .examples-layout {
+        grid-template-columns: 1fr;
     }
     .marketing-page .plan-card.featured {
         transform: none;
