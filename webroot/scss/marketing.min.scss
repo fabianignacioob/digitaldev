@@ -423,6 +423,7 @@ body.marketing-page {
 .marketing-page .demo-link {
     display: grid;
     gap: 5px;
+    align-content: start;
     padding: 22px;
     border: 1px solid rgba(3, 18, 53, .14);
     border-radius: var(--radius);
@@ -440,7 +441,8 @@ body.marketing-page {
     transform: translateY(-2px);
 }
 .marketing-page .demo-link strong { font-size: 18px; }
-.marketing-page .demo-link span { color: var(--ink-muted); font-size: 14px; }
+.marketing-page .demo-link span { color: var(--ink-muted); font-size: 14px; line-height: 1.5; }
+.marketing-page .demo-link .button { width: fit-content; margin-top: 9px; }
 .marketing-page .benefit-list {
     display: grid;
     gap: 12px;

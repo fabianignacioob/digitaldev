@@ -52,26 +52,15 @@ $this->assign('metaDescription', 'Crea una vitrina digital para mostrar tu carta
   </div>
 </section>
 
-<section class="section-blue" id="como-funciona">
-  <div class="container">
-    <div class="section-head"><span class="section-kicker">Cómo funciona</span><h2>Publica en tres pasos</h2><p>Sin instalar programas ni aprender herramientas difíciles.</p></div>
-    <div class="grid three steps">
-      <article class="step"><h3>Elige el tipo de vitrina</h3><p>Parte con una carta digital, catálogo de productos o catálogo de servicios.</p></article>
-      <article class="step"><h3>Agrega tu contenido</h3><p>Sube tu logo, fotos, productos, precios, descripciones y datos de contacto.</p></article>
-      <article class="step"><h3>Publica y comparte</h3><p>Activa tu enlace y compártelo donde tus clientes ya te encuentran.</p></article>
-    </div>
-  </div>
-</section>
-
 <section class="section-soft" id="ejemplos">
   <div class="container examples-showcase">
-    <div class="section-head"><span class="section-kicker">Así se ve tu información</span><h2>Una vitrina clara, lista para compartir</h2><p>Tu contenido se adapta a celular, tablet y computador. Revisa tres ejemplos reales de carta, catálogo y servicios.</p></div>
+    <div class="section-head"><span class="section-kicker">Ejemplos reales</span><h2>Así se ve la vitrina de tu negocio</h2><p>Conoce cómo se presenta una carta, un catálogo y una página de servicios. Cada ejemplo funciona en celular, tablet y computador.</p></div>
     <div class="examples-layout">
       <div class="proof-media"><img src="/img/headbanner.png" alt="CatOps mostrado en distintos dispositivos"></div>
       <div class="demo-links" aria-label="Demos de vitrinas CatOps">
-        <a class="demo-link" href="/s/demo-carta" target="_blank" rel="noopener"><strong>Carta por categorías</strong><span>Casa Olivo, restaurante</span></a>
-        <a class="demo-link" href="/s/demo-catalogo" target="_blank" rel="noopener"><strong>Catálogo simple</strong><span>Dulce Lila, pastelería</span></a>
-        <a class="demo-link" href="/s/demo-servicio" target="_blank" rel="noopener"><strong>Servicios</strong><span>Ruta Norte, transportes</span></a>
+        <article class="demo-link"><strong>Carta por categorías</strong><span>Para restaurantes, cafeterías y locales que organizan preparaciones por tipo.</span><a class="button" href="/s/demo-carta" target="_blank" rel="noopener">Ver ejemplo</a></article>
+        <article class="demo-link"><strong>Catálogo simple</strong><span>Para emprendimientos y tiendas que necesitan mostrar productos de forma directa.</span><a class="button" href="/s/demo-catalogo" target="_blank" rel="noopener">Ver ejemplo</a></article>
+        <article class="demo-link"><strong>Página de servicios</strong><span>Para empresas y profesionales que reciben consultas y cotizaciones por mensaje.</span><a class="button" href="/s/demo-servicio" target="_blank" rel="noopener">Ver ejemplo</a></article>
       </div>
     </div>
   </div>
@@ -80,10 +69,21 @@ $this->assign('metaDescription', 'Crea una vitrina digital para mostrar tu carta
 <section id="planes">
   <div class="container">
     <div class="plans-header">
-      <div class="section-head"><span class="section-kicker">Planes claros</span><h2>Elige un plan para partir simple y crecer con orden</h2><p>Renovación mensual o anual mediante pago seguro. Sin cobros automáticos.</p></div>
+      <div class="section-head"><span class="section-kicker">Planes</span><h2>Elige un plan para partir simple y crecer con orden</h2><p>Renovación mensual o anual mediante pago seguro. Sin cobros automáticos.</p></div>
       <div class="trial-box"><strong>Prueba gratuita</strong><span>7 días del plan Básico al publicar tu primera vitrina.</span></div>
     </div>
     <?= $this->element('marketing/plan_cards', compact('plans', 'currentUser')) ?>
+  </div>
+</section>
+
+<section class="section-blue" id="como-funciona">
+  <div class="container">
+    <div class="section-head"><span class="section-kicker">Cómo funciona</span><h2>Publica en tres pasos</h2><p>Sin instalar programas ni aprender herramientas difíciles.</p></div>
+    <div class="grid three steps">
+      <article class="step"><h3>Elige el tipo de vitrina</h3><p>Parte con una carta digital, catálogo de productos o catálogo de servicios.</p></article>
+      <article class="step"><h3>Agrega tu contenido</h3><p>Sube tu logo, fotos, productos, precios, descripciones y datos de contacto.</p></article>
+      <article class="step"><h3>Publica y comparte</h3><p>Activa tu enlace y compártelo donde tus clientes ya te encuentran.</p></article>
+    </div>
   </div>
 </section>
 

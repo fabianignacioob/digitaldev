@@ -476,7 +476,8 @@ class CatalogsControllerTest extends TestCase
         $this->post('/sitios/publicar/' . $siteId);
         $this->getPublicVitrina((string)$this->table('Sites')->get($siteId)->subdomain);
         $this->assertResponseOk();
-        $this->assertResponseContains('Desde $14.990');
+        $this->assertResponseContains('$14.990');
+        $this->assertResponseNotContains('Desde $14.990');
         $this->assertResponseContains('Familiar');
         $this->assertResponseContains('40 cm');
         $this->assertResponseContains('Pizza%20napolitana%20en');

@@ -267,19 +267,24 @@ $renderMenuItem = static function ($product) use ($formatPrice, $formatMeasure, 
         <div class="menu-item-copy">
             <div class="menu-item-heading">
                 <h3><?= h($product->name) ?></h3>
-                <span class="menu-item-price"><?= h($formatPrice($product)) ?></span>
+                <?php if (!$variants): ?>
+                    <span class="menu-item-price"><?= h($formatPrice($product)) ?></span>
+                <?php endif; ?>
             </div>
             <?php if ($product->description): ?>
                 <p class="menu-item-description"><?= h($product->description) ?></p>
             <?php endif; ?>
             <?php if ($variants): ?>
-                <div class="menu-item-variants" aria-label="Opciones de <?= h($product->name) ?>">
+                <div class="menu-item-variants" aria-label="Opciones y valores de <?= h($product->name) ?>">
                     <?php foreach ($variants as $variant): ?>
                         <?php
                         $variantAvailability = $variant->availability ?? 'available';
                         $measure = $formatMeasure($variant);
                         ?>
-                        <span><?= h(trim((string)$variant->name . ($measure ? ' ' . $measure : ''))) ?><?php if ($variantAvailability !== 'available'): ?> <small><?= h($availabilityLabels[$variantAvailability] ?? 'No disponible') ?></small><?php endif; ?></span>
+                        <div class="menu-item-variant">
+                            <span><?= h(trim((string)$variant->name . ($measure ? ' ' . $measure : ''))) ?><?php if ($variantAvailability !== 'available'): ?> <small><?= h($availabilityLabels[$variantAvailability] ?? 'No disponible') ?></small><?php endif; ?></span>
+                            <strong><?= $variant->price === null ? 'Consultar' : '$' . number_format((float)$variant->price, 0, ',', '.') ?></strong>
+                        </div>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>

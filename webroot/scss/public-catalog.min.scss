@@ -543,7 +543,6 @@
             line-height: 1.45;
         }
 
-        .menu-item-variants,
         .menu-item-meta {
             display: flex;
             flex-wrap: wrap;
@@ -553,8 +552,26 @@
             font-size: 12px;
         }
 
-        .menu-item-variants span:not(:last-child)::after {
-            content: ',';
+        .menu-item-variants {
+            display: grid;
+            gap: 5px;
+            margin-top: 8px;
+            color: rgba(var(--secondary-rgb), .72);
+            font-size: 12px;
+        }
+
+        .menu-item-variant {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: baseline;
+        }
+
+        .menu-item-variant strong {
+            color: var(--foreground);
+            font-size: 12px;
+            font-weight: 900;
+            white-space: nowrap;
         }
 
         .menu-item-variants small,
