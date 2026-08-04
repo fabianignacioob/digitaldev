@@ -663,6 +663,37 @@ class CatalogsControllerTest extends TestCase
         $this->assertResponseCode(400);
     }
 
+    public function testContentEditorAjaxMutationsReturnJsonWithoutRedirect(): void
+    {
+        $siteId = $this->createSite($this->userId, 'carta-categorias', 'ajax-' . uniqid());
+        $this->loginAs($this->userId);
+        $this->enableCsrfToken();
+        $this->configRequest(['headers' => [
+            'X-Requested-With' => 'XMLHttpRequest',
+            'Accept' => 'application/json',
+        ]]);
+
+        $this->post('/sitios/' . $siteId . '/carta/categorias', ['name' => 'Pizzas']);
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('"success":true');
+        $this->assertResponseContains('"refresh":true');
+        $category = $this->table('CatalogCategories')->find()->where(['site_id' => $siteId])->firstOrFail();
+        $this->assertSame('Pizzas', $category->name);
+
+        $this->enableCsrfToken();
+        $this->configRequest(['headers' => [
+            'X-Requested-With' => 'XMLHttpRequest',
+            'Accept' => 'application/json',
+        ]]);
+        $this->post('/carta/categorias/editar/' . $category->id, ['name' => 'Pizzas artesanales']);
+
+        $this->assertResponseOk();
+        $this->assertResponseContains('"success":true');
+        $this->assertResponseContains('"refresh":false');
+        $this->assertSame('Pizzas artesanales', $this->table('CatalogCategories')->get($category->id)->name);
+    }
+
     public function testColorBackgroundClearsImageAndUsesSelectedTypographyPublicly(): void
     {
         $siteId = $this->createSite($this->userId, 'carta-simple', 'estilo-' . uniqid(), 'Café Prueba');

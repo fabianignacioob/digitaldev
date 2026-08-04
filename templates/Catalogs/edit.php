@@ -43,6 +43,9 @@ foreach ($measurementTypes ?? [] as $measurementType) {
 </section>
 
 <?= $this->Html->script('sortable.min') ?>
+<?= $this->Html->script('/js/vendor/axios.min') ?>
+<?= $this->Html->script('/js/vendor/sweetalert2.all.min') ?>
+<?= $this->Html->script('/js/catalog-editor') ?>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const measurementUnits = <?= json_encode($measurementUnits, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
@@ -96,7 +99,7 @@ foreach ($measurementTypes ?? [] as $measurementType) {
         });
 
         const csrfToken = document.querySelector('input[name="_csrfToken"]')?.value;
-        if (!window.Sortable || !csrfToken) {
+        if (document.querySelector('[data-catalog-editor]') || !window.Sortable || !csrfToken) {
             return;
         }
 
@@ -179,6 +182,7 @@ foreach ($measurementTypes ?? [] as $measurementType) {
     });
 </script>
 
+<div data-catalog-editor>
 <section class="split">
     <article class="card">
         <h2>Diseño</h2>
@@ -186,6 +190,7 @@ foreach ($measurementTypes ?? [] as $measurementType) {
         <?= $this->Form->create($catalogSetting, [
             'type' => 'file',
             'url' => ['controller' => 'Catalogs', 'action' => 'updateSettings', $site->id],
+            'data-async-content' => 'true',
         ]) ?>
         <?= $this->Form->control('background_type', [
             'id' => 'background-type',
@@ -295,6 +300,8 @@ foreach ($measurementTypes ?? [] as $measurementType) {
             <?= $this->Form->create(null, [
                 'url' => ['controller' => 'Catalogs', 'action' => 'addCategory', $site->id],
                 'class' => 'category-create-form',
+                'data-async-content' => 'true',
+                'data-refresh' => 'true',
             ]) ?>
             <?= $this->Form->control('name', ['id' => 'category-create-name', 'label' => 'Nombre de categoría', 'placeholder' => 'Ej: Platos principales']) ?>
             <!-- <?= $this->Form->control('sort_order', ['id' => 'category-create-order', 'label' => 'Orden', 'type' => 'number', 'value' => 0]) ?> -->
@@ -309,6 +316,7 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                         <?= $this->Form->create($category, [
                             'url' => ['controller' => 'Catalogs', 'action' => 'updateCategory', $category->id],
                             'class' => 'inline-edit-form',
+                            'data-async-content' => 'true',
                         ]) ?>
                         <div>
                             <?= $this->Form->control('name', ['id' => 'category-' . (int)$category->id . '-name', 'label' => 'Categoría', 'value' => $category->name]) ?>
@@ -317,10 +325,12 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                         <div class="row-actions">
                             <button class="product-drag-handle category-drag-handle" type="button" aria-label="Mover <?= h($category->name) ?>" title="Arrastra para reordenar">↕</button>
                             <?= $this->Form->button('Guardar', ['class' => 'button secondary']) ?>
-                            <?= $this->Form->postLink('Eliminar', ['controller' => 'Catalogs', 'action' => 'deleteCategory', $category->id], [
-                                'class' => 'button danger',
-                                'confirm' => '¿Eliminar esta categoría?',
-                            ]) ?>
+                            <button
+                                class="button danger"
+                                type="button"
+                                data-async-action="/carta/categorias/eliminar/<?= (int)$category->id ?>"
+                                data-refresh="true"
+                                data-confirm="¿Eliminar esta categoría?">Eliminar</button>
                         </div>
                         <?= $this->Form->end() ?>
                     </div>
@@ -346,6 +356,8 @@ foreach ($measurementTypes ?? [] as $measurementType) {
             <?= $this->Form->create(null, [
                 'type' => 'file',
                 'url' => ['controller' => 'Catalogs', 'action' => 'addProduct', $site->id],
+                'data-async-content' => 'true',
+                'data-refresh' => 'true',
             ]) ?>
             <?= $this->Form->control('product_image', ['id' => 'product-create-image', 'label' => 'Imagen', 'type' => 'file']) ?>
             <p class="meta">JPG, PNG o WEBP. Si no subes imagen, se mostrará una imagen de respaldo.</p>
@@ -481,21 +493,32 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                             <div class="product-actions product-summary-actions">
                                 <button class="button secondary" type="button" data-toggle="collapse" data-target="#<?= h($collapseId) ?>" aria-expanded="false" aria-controls="<?= h($collapseId) ?>">Editar</button>
                                 <?php if ($product->image_path): ?>
-                                    <?= $this->Form->postLink('Quitar imagen', ['controller' => 'Catalogs', 'action' => 'deleteProductImage', $product->id], [
-                                        'class' => 'button secondary',
-                                        'confirm' => '¿Quitar la imagen de este elemento?',
+                                    <?= $this->Form->create(null, [
+                                        'url' => ['controller' => 'Catalogs', 'action' => 'deleteProductImage', $product->id],
+                                        'class' => 'inline-form',
+                                        'data-async-content' => 'true',
+                                        'data-refresh' => 'true',
+                                        'data-confirm' => '¿Quitar la imagen de este elemento?',
                                     ]) ?>
+                                    <?= $this->Form->button('Quitar imagen', ['class' => 'button secondary']) ?>
+                                    <?= $this->Form->end() ?>
                                 <?php endif; ?>
-                                <?= $this->Form->postLink('Eliminar', ['controller' => 'Catalogs', 'action' => 'deleteProduct', $product->id], [
-                                    'class' => 'button danger',
-                                    'confirm' => '¿Eliminar este elemento?',
+                                <?= $this->Form->create(null, [
+                                    'url' => ['controller' => 'Catalogs', 'action' => 'deleteProduct', $product->id],
+                                    'class' => 'inline-form',
+                                    'data-async-content' => 'true',
+                                    'data-refresh' => 'true',
+                                    'data-confirm' => '¿Eliminar este elemento?',
                                 ]) ?>
+                                <?= $this->Form->button('Eliminar', ['class' => 'button danger']) ?>
+                                <?= $this->Form->end() ?>
                             </div>
                             <div class="collapse product-edit-collapse" id="<?= h($collapseId) ?>">
                                 <?= $this->Form->create($product, [
                                     'type' => 'file',
                                     'url' => ['controller' => 'Catalogs', 'action' => 'updateProduct', $product->id],
                                     'class' => 'product-editor-form',
+                                    'data-async-content' => 'true',
                                 ]) ?>
                                 <div class="product-editor-grid">
                                     <div>
@@ -615,6 +638,8 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                                     <?= $this->Form->create(null, [
                                         'url' => ['controller' => 'Catalogs', 'action' => 'addVariant', $product->id],
                                         'class' => 'variant-form',
+                                        'data-async-content' => 'true',
+                                        'data-refresh' => 'true',
                                     ]) ?>
                                     <div class="variant-form-grid">
                                         <?= $this->Form->control('name', [
@@ -666,6 +691,7 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                                                 <?= $this->Form->create($variant, [
                                                     'url' => ['controller' => 'Catalogs', 'action' => 'updateVariant', $variant->id],
                                                     'class' => 'variant-editor-row',
+                                                    'data-async-content' => 'true',
                                                 ]) ?>
                                                 <div class="variant-form-grid">
                                                     <?= $this->Form->control('name', ['id' => 'variant-' . (int)$variant->id . '-name', 'label' => 'Opción', 'value' => $variant->name]) ?>
@@ -684,10 +710,12 @@ foreach ($measurementTypes ?? [] as $measurementType) {
                                                 </div>
                                                 <div class="product-actions variant-actions">
                                                     <?= $this->Form->button('Guardar opción', ['class' => 'button secondary']) ?>
-                                                    <?= $this->Form->postLink('Eliminar opción', ['controller' => 'Catalogs', 'action' => 'deleteVariant', $variant->id], [
-                                                        'class' => 'button danger',
-                                                        'confirm' => '¿Eliminar esta opción?',
-                                                    ]) ?>
+                                                    <button
+                                                        class="button danger"
+                                                        type="button"
+                                                        data-async-action="/carta/variantes/eliminar/<?= (int)$variant->id ?>"
+                                                        data-refresh="true"
+                                                        data-confirm="¿Eliminar esta opción?">Eliminar opción</button>
                                                 </div>
                                                 <?= $this->Form->end() ?>
                                             <?php endforeach; ?>
@@ -708,3 +736,4 @@ foreach ($measurementTypes ?? [] as $measurementType) {
 
 
 </section>
+</div>

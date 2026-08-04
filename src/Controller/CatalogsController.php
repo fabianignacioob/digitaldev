@@ -109,9 +109,7 @@ class CatalogsController extends AppController
             try {
                 $backgroundPath = $this->saveCatalogUpload('background_upload', $siteId, 'backgrounds');
             } catch (InvalidArgumentException | RuntimeException $exception) {
-                $this->Flash->error($exception->getMessage());
-
-                return $this->redirect(['action' => 'edit', $siteId]);
+                return $this->contentMutationResponse($siteId, false, $exception->getMessage());
             }
             if ($backgroundPath) {
                 $data['background_image_path'] = $backgroundPath;
@@ -135,12 +133,10 @@ class CatalogsController extends AppController
             if ($oldBackgroundPath && $oldBackgroundPath !== $catalogSetting->background_image_path) {
                 $this->imageStorage()->delete((string)$oldBackgroundPath);
             }
-            $this->Flash->success('Configuración de la carta guardada.');
-        } else {
-            $this->Flash->error('No pudimos guardar la configuración.');
+            return $this->contentMutationResponse($siteId, true, 'Configuración de la carta guardada.');
         }
 
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, false, 'No pudimos guardar la configuración.');
     }
 
     public function deleteBackground(int $siteId): Response
@@ -161,9 +157,7 @@ class CatalogsController extends AppController
         ]);
         $settings->saveOrFail($catalogSetting);
         $this->imageStorage()->delete((string)$oldBackgroundPath);
-        $this->Flash->success('Imagen de fondo eliminada.');
-
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, true, 'Imagen de fondo eliminada.', true);
     }
 
     public function addCategory(int $siteId): Response
@@ -175,14 +169,10 @@ class CatalogsController extends AppController
         $this->request->allowMethod(['post']);
         $site = $this->getOwnedSite($siteId);
         if (!$this->planService()->canUseCategories((int)$this->currentUserId(), $site)) {
-            $this->Flash->error('Esta plantilla no usa categorías.');
-
-            return $this->redirect(['action' => 'edit', $siteId]);
+            return $this->contentMutationResponse($siteId, false, 'Esta plantilla no usa categorías.');
         }
         if (!$this->planService()->canCreateCategory((int)$this->currentUserId(), $site)) {
-            $this->Flash->error('Tu plan llegó al máximo de categorías permitidas para esta vitrina.');
-
-            return $this->redirect(['action' => 'edit', $siteId]);
+            return $this->contentMutationResponse($siteId, false, 'Tu plan llegó al máximo de categorías permitidas para esta vitrina.');
         }
 
         $categories = $this->fetchTable('CatalogCategories');
@@ -193,12 +183,10 @@ class CatalogsController extends AppController
         ]);
 
         if ($categories->save($category)) {
-            $this->Flash->success('Categoría creada.');
-        } else {
-            $this->Flash->error('No pudimos crear la categoría. Revisa que no esté repetida.');
+            return $this->contentMutationResponse($siteId, true, 'Categoría creada.', true);
         }
 
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, false, 'No pudimos crear la categoría. Revisa que no esté repetida.');
     }
 
     public function deleteCategory(int $id): Response
@@ -214,10 +202,11 @@ class CatalogsController extends AppController
             ->firstOrFail();
         $siteId = (int)$category->site_id;
 
-        $this->fetchTable('CatalogCategories')->delete($category);
-        $this->Flash->success('Categoría eliminada. Los productos asociados quedaron sin categoría.');
+        if ($this->fetchTable('CatalogCategories')->delete($category)) {
+            return $this->contentMutationResponse($siteId, true, 'Categoría eliminada. Los productos asociados quedaron sin categoría.', true);
+        }
 
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, false, 'No pudimos eliminar la categoría.');
     }
 
     public function updateCategory(int $id): Response
@@ -233,9 +222,7 @@ class CatalogsController extends AppController
             ->firstOrFail();
         $siteId = (int)$category->site_id;
         if (!$this->planService()->canUseCategories((int)$this->currentUserId(), $category->site)) {
-            $this->Flash->error('Esta plantilla no usa categorías.');
-
-            return $this->redirect(['action' => 'edit', $siteId]);
+            return $this->contentMutationResponse($siteId, false, 'Esta plantilla no usa categorías.');
         }
 
         $categoryData = [
@@ -248,12 +235,10 @@ class CatalogsController extends AppController
         $category = $this->fetchTable('CatalogCategories')->patchEntity($category, $categoryData);
 
         if ($this->fetchTable('CatalogCategories')->save($category)) {
-            $this->Flash->success('Categoría actualizada.');
-        } else {
-            $this->Flash->error('No pudimos actualizar la categoría.');
+            return $this->contentMutationResponse($siteId, true, 'Categoría actualizada.');
         }
 
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, false, 'No pudimos actualizar la categoría.');
     }
 
     public function reorderCategories(int $siteId): Response
@@ -301,7 +286,11 @@ class CatalogsController extends AppController
             }
         });
 
-        return $this->response->withStatus(204);
+        if (!$this->isContentEditorRequest()) {
+            return $this->response->withStatus(204);
+        }
+
+        return $this->contentMutationResponse($siteId, true, 'Orden de categorías guardado.');
     }
 
     public function addProduct(int $siteId): Response
@@ -313,20 +302,20 @@ class CatalogsController extends AppController
         $this->request->allowMethod(['post']);
         $site = $this->getOwnedSite($siteId);
         if (!$this->planService()->canCreateCatalogItem((int)$this->currentUserId(), $site)) {
-            $this->Flash->error('Tu plan llegó al máximo de elementos permitidos para esta vitrina.');
-
-            return $this->redirect(['action' => 'edit', $siteId]);
+            return $this->contentMutationResponse($siteId, false, 'Tu plan llegó al máximo de elementos permitidos para esta vitrina.');
         }
 
-        $data = $this->normalizeProductData((array)$this->request->getData(), $site, true);
+        try {
+            $data = $this->normalizeProductData((array)$this->request->getData(), $site, true);
+        } catch (BadRequestException $exception) {
+            return $this->contentBadRequest($siteId, $exception);
+        }
         $data['site_id'] = $siteId;
         $data['sort_order'] = $this->nextProductSortOrder($siteId);
         try {
             $imagePath = $this->saveCatalogUpload('product_image', $siteId, 'products');
         } catch (InvalidArgumentException | RuntimeException $exception) {
-            $this->Flash->error($exception->getMessage());
-
-            return $this->redirect(['action' => 'edit', $siteId]);
+            return $this->contentMutationResponse($siteId, false, $exception->getMessage());
         }
         if ($imagePath) {
             $data['image_path'] = $imagePath;
@@ -336,12 +325,10 @@ class CatalogsController extends AppController
         $product = $products->newEntity($data);
 
         if ($products->save($product)) {
-            $this->Flash->success('Elemento agregado.');
-        } else {
-            $this->Flash->error('No pudimos agregar el elemento. Revisa nombre, valor y categoría.');
+            return $this->contentMutationResponse($siteId, true, 'Elemento agregado.', true);
         }
 
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, false, 'No pudimos agregar el elemento. Revisa nombre, valor y categoría.');
     }
 
     public function updateProduct(int $id): Response
@@ -357,14 +344,16 @@ class CatalogsController extends AppController
             ->firstOrFail();
         $site = $product->site;
         $siteId = (int)$product->site_id;
-        $data = $this->normalizeProductData((array)$this->request->getData(), $site, false, $product);
+        try {
+            $data = $this->normalizeProductData((array)$this->request->getData(), $site, false, $product);
+        } catch (BadRequestException $exception) {
+            return $this->contentBadRequest($siteId, $exception);
+        }
         $oldImagePath = $product->image_path;
         try {
             $imagePath = $this->saveCatalogUpload('product_image', $siteId, 'products');
         } catch (InvalidArgumentException | RuntimeException $exception) {
-            $this->Flash->error($exception->getMessage());
-
-            return $this->redirect(['action' => 'edit', $siteId]);
+            return $this->contentMutationResponse($siteId, false, $exception->getMessage());
         }
         if ($imagePath) {
             $data['image_path'] = $imagePath;
@@ -376,12 +365,10 @@ class CatalogsController extends AppController
             if ($imagePath && $oldImagePath) {
                 $this->imageStorage()->delete((string)$oldImagePath);
             }
-            $this->Flash->success('Elemento actualizado.');
-        } else {
-            $this->Flash->error('No pudimos actualizar el elemento.');
+            return $this->contentMutationResponse($siteId, true, 'Elemento actualizado.');
         }
 
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, false, 'No pudimos actualizar el elemento.');
     }
 
     public function addVariant(int $productId): Response
@@ -393,23 +380,23 @@ class CatalogsController extends AppController
         $this->request->allowMethod(['post']);
         $product = $this->getOwnedProduct($productId);
         if ($product->measurement_type_id === null) {
-            $this->Flash->error('Define primero el tipo de medida del producto antes de agregar variantes.');
-
-            return $this->redirect(['action' => 'edit', (int)$product->site_id]);
+            return $this->contentMutationResponse((int)$product->site_id, false, 'Define primero el tipo de medida del producto antes de agregar variantes.');
         }
         $variants = $this->fetchTable('CatalogProductVariants');
-        $data = $this->normalizeVariantData((array)$this->request->getData(), $product);
+        try {
+            $data = $this->normalizeVariantData((array)$this->request->getData(), $product);
+        } catch (BadRequestException $exception) {
+            return $this->contentBadRequest((int)$product->site_id, $exception);
+        }
         $data['catalog_product_id'] = $productId;
         $data['sort_order'] = $this->nextVariantSortOrder($productId);
 
         $variant = $variants->newEntity($data);
         if ($variants->save($variant)) {
-            $this->Flash->success('Opción agregada.');
-        } else {
-            $this->Flash->error('No pudimos agregar la opción. Revisa su nombre, medida y valor.');
+            return $this->contentMutationResponse((int)$product->site_id, true, 'Opción agregada.', true);
         }
 
-        return $this->redirect(['action' => 'edit', (int)$product->site_id]);
+        return $this->contentMutationResponse((int)$product->site_id, false, 'No pudimos agregar la opción. Revisa su nombre, medida y valor.');
     }
 
     public function updateVariant(int $id): Response
@@ -420,15 +407,17 @@ class CatalogsController extends AppController
 
         $this->request->allowMethod(['post', 'patch', 'put']);
         $variant = $this->getOwnedVariant($id);
-        $data = $this->normalizeVariantData((array)$this->request->getData(), $variant->catalog_product);
+        try {
+            $data = $this->normalizeVariantData((array)$this->request->getData(), $variant->catalog_product);
+        } catch (BadRequestException $exception) {
+            return $this->contentBadRequest((int)$variant->catalog_product->site_id, $exception);
+        }
         $variant = $this->fetchTable('CatalogProductVariants')->patchEntity($variant, $data);
         if ($this->fetchTable('CatalogProductVariants')->save($variant)) {
-            $this->Flash->success('Opción actualizada.');
-        } else {
-            $this->Flash->error('No pudimos actualizar la opción.');
+            return $this->contentMutationResponse((int)$variant->catalog_product->site_id, true, 'Opción actualizada.');
         }
 
-        return $this->redirect(['action' => 'edit', (int)$variant->catalog_product->site_id]);
+        return $this->contentMutationResponse((int)$variant->catalog_product->site_id, false, 'No pudimos actualizar la opción.');
     }
 
     public function deleteVariant(int $id): Response
@@ -441,9 +430,8 @@ class CatalogsController extends AppController
         $variant = $this->getOwnedVariant($id);
         $siteId = (int)$variant->catalog_product->site_id;
         $this->fetchTable('CatalogProductVariants')->deleteOrFail($variant);
-        $this->Flash->success('Opción eliminada.');
 
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, true, 'Opción eliminada.', true);
     }
 
     public function deleteProduct(int $id): Response
@@ -462,10 +450,10 @@ class CatalogsController extends AppController
 
         if ($this->fetchTable('CatalogProducts')->delete($product)) {
             $this->imageStorage()->delete((string)$oldImagePath);
+            return $this->contentMutationResponse($siteId, true, 'Producto eliminado.', true);
         }
-        $this->Flash->success('Producto eliminado.');
 
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, false, 'No pudimos eliminar el producto.');
     }
 
     public function deleteProductImage(int $id): Response
@@ -485,9 +473,7 @@ class CatalogsController extends AppController
         $product->image_path = null;
         $products->saveOrFail($product);
         $this->imageStorage()->delete((string)$oldImagePath);
-        $this->Flash->success('Imagen eliminada.');
-
-        return $this->redirect(['action' => 'edit', $siteId]);
+        return $this->contentMutationResponse($siteId, true, 'Imagen eliminada.', true);
     }
 
     public function reorderProducts(int $siteId): Response
@@ -531,7 +517,11 @@ class CatalogsController extends AppController
             }
         });
 
-        return $this->response->withStatus(204);
+        if (!$this->isContentEditorRequest()) {
+            return $this->response->withStatus(204);
+        }
+
+        return $this->contentMutationResponse($siteId, true, 'Orden de productos guardado.');
     }
 
     private function getOwnedSite(int $siteId): \App\Model\Entity\Site
@@ -730,5 +720,47 @@ class CatalogsController extends AppController
             ->first();
 
         return ((int)($lastVariant->sort_order ?? 0)) + 1;
+    }
+
+    private function contentMutationResponse(
+        int $siteId,
+        bool $success,
+        string $message,
+        bool $refresh = false,
+        int $errorStatus = 422,
+    ): Response {
+        if ($this->isContentEditorRequest()) {
+            return $this->response
+                ->withStatus($success ? 200 : $errorStatus)
+                ->withType('application/json')
+                ->withStringBody((string)json_encode([
+                    'success' => $success,
+                    'message' => $message,
+                    'refresh' => $refresh,
+                ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        }
+
+        if ($success) {
+            $this->Flash->success($message);
+        } else {
+            $this->Flash->error($message);
+        }
+
+        return $this->redirect(['action' => 'edit', $siteId]);
+    }
+
+    private function isContentEditorRequest(): bool
+    {
+        return $this->request->is('ajax')
+            || str_contains($this->request->getHeaderLine('Accept'), 'application/json');
+    }
+
+    private function contentBadRequest(int $siteId, BadRequestException $exception): Response
+    {
+        if (!$this->isContentEditorRequest()) {
+            throw $exception;
+        }
+
+        return $this->contentMutationResponse($siteId, false, $exception->getMessage(), false, 400);
     }
 }

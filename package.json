@@ -3,9 +3,15 @@
   "private": true,
   "scripts": {
     "build:css": "sass --no-source-map --style=compressed webroot/scss:webroot/css",
+    "build:js": "mkdir -p webroot/js/vendor && cp node_modules/axios/dist/axios.min.js webroot/js/vendor/axios.min.js && cp node_modules/sweetalert2/dist/sweetalert2.all.min.js webroot/js/vendor/sweetalert2.all.min.js",
+    "build:assets": "npm run build:css && npm run build:js",
     "watch:css": "sass --watch --no-source-map --style=compressed webroot/scss:webroot/css"
   },
   "devDependencies": {
     "sass": "^1.102.0"
+  },
+  "dependencies": {
+    "axios": "^1.19.0",
+    "sweetalert2": "^11.26.25"
   }
 }
