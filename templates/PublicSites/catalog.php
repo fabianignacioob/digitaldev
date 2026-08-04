@@ -213,38 +213,26 @@ $renderProduct = static function ($product) use ($productFallback, $formatPrice,
         <div class="product-body">
             <div class="product-heading">
                 <h3><?= h($product->name) ?></h3>
-                <?php
-                $formattedPrice = h($formatPrice($product));
-    if (stripos($formattedPrice, 'Desde') === 0) {
-        // Empieza con "Desde"
-        $parts = explode(' ', $formattedPrice, 2);
-        ?>
-                    <span class="price">
-                        <?= h($parts[0]) ?><br><?= h($parts[1] ?? '') ?>
-                    </span>
-                <?php } else { ?>
-                    <span class="price"><?= $formattedPrice ?></span>
-                <?php } ?>
-       
+                <?php if (!$variants): ?>
+                    <span class="price"><?= h($formatPrice($product)) ?></span>
+                <?php endif; ?>
             </div>
+            <?php if ($product->description): ?>
+                <p><?= h($product->description) ?></p>
+            <?php endif; ?>
             <?php if ($variants): ?>
-                <div class="product-variants" aria-label="Opciones de <?= h($product->name) ?>">
+                <div class="product-variants" aria-label="Opciones y valores de <?= h($product->name) ?>">
                     <?php foreach ($variants as $variant): ?>
                         <?php
                         $variantAvailability = $variant->availability ?? 'available';
                         $measure = $formatMeasure($variant);
                         ?>
-                        <div class="variant-row">
-                            <span><?= h(trim((string)$variant->name . ($measure ? ' ' . $measure : ''))) ?></span>
-                            <?php if ($variantAvailability !== 'available'): ?>
-                                <small><?= h($availabilityLabels[$variantAvailability] ?? 'No disponible') ?></small>
-                            <?php endif; ?>
+                        <div class="product-variant">
+                            <span><?= h(trim((string)$variant->name . ($measure ? ' ' . $measure : ''))) ?><?php if ($variantAvailability !== 'available'): ?> <small><?= h($availabilityLabels[$variantAvailability] ?? 'No disponible') ?></small><?php endif; ?></span>
+                            <strong><?= $variant->price === null ? 'Consultar' : '$' . number_format((float)$variant->price, 0, ',', '.') ?></strong>
                         </div>
                     <?php endforeach; ?>
                 </div>
-            <?php endif; ?>
-            <?php if ($product->description): ?>
-                <p><?= h($product->description) ?></p>
             <?php endif; ?>
             <?php if ($product->duration): ?>
                 <div class="duration"><?= h($product->duration) ?></div>

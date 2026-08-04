@@ -467,28 +467,33 @@
         }
 
         .product-variants {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px 3px;
+            display: grid;
+            gap: 5px;
+            margin-top: 2px;
             color: rgba(var(--secondary-rgb), .76);
-            font-size: 11px;
+            font-size: 12px;
         }
 
-        .variant-row {
-            display: inline-flex;
+        .product-variant {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
             align-items: baseline;
         }
 
-        .variant-row:not(:last-child)::after {
-            content: ',';
-        }
-
-        .variant-row span {
+        .product-variant span {
             color: var(--foreground);
             font-weight: 500;
         }
 
-        .variant-row small {
+        .product-variant strong {
+            color: var(--foreground);
+            font-size: 12px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .product-variant small {
             color: var(--primary);
             font-weight: 800;
             font-size: 12px;
